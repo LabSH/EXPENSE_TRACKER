@@ -15,10 +15,13 @@ memory: local
 도메인을 먼저 나누고, 그 안에 레이어를 넣는 방식.
 
 ```
-com.example
+com.expenseTracker
   expense/
     controller/    # HTTP 요청/응답 처리. @Controller, @RestController
-    service/       # 비즈니스 로직. @Service
+    facade/        # 여러 서비스를 조합하는 퍼사드. @Service
+                   # ExpenseFacade.java - 복잡한 비즈니스 흐름 오케스트레이션
+                   # controller는 facade만 호출, 직접 service 호출 금지
+    service/       # 단일 도메인 비즈니스 로직. @Service
     repository/    # DB 접근. JpaRepository 상속
     entity/        # DB 테이블 매핑. @Entity
     model/         # {Domain}Form, {Domain}DTO 형식으로 파일 네이밍
@@ -26,6 +29,7 @@ com.example
                    # ExpenseDTO.java   - 응답/전달 데이터 객체
   user/
     controller/
+    facade/        # UserFacade.java 등
     service/
     repository/
     entity/
@@ -52,9 +56,10 @@ com.example
 - [ ] 도메인 단위로 먼저 나뉘어 있는가?
 - [ ] 각 도메인 안에 controller, service, repository, entity가 있는가?
 - [ ] 도메인 경계가 명확히 분리되어 있는가?
+- [ ] facade가 있는 경우 controller → facade → service 호출 순서를 지키는가? (controller가 service를 직접 호출하지 않는가?)
 
 ### 2. 네이밍 컨벤션
-- [ ] 클래스명은 `{Domain}{Role}` 형식인가? (예: `ExpenseService`, `ExpenseRepository`)
+- [ ] 클래스명은 `{Domain}{Role}` 형식인가? (예: `ExpenseService`, `ExpenseRepository`, `ExpenseFacade`)
 - [ ] model 클래스는 `{Domain}Form` / `{Domain}DTO` 형식인가?
       (예: `ExpenseForm`, `ExpenseDTO`, `UserForm`, `UserDTO`)
 - [ ] 변수명·메서드명은 카멜케이스인가? (예: `expenseAmount`, `findByCategory`)
@@ -139,7 +144,7 @@ com.example
 
 ## 심각도
 - **Critical**: 레이어 중심 구조 사용, 도메인 경계 위반
-- **Warning**: 네이밍 불일치, 사소한 구조 문제
+- **Warning**: 네이밍 불일치, 사소한 구조 문제, facade 없이 복잡한 서비스 조합 로직이 controller에 존재
 - **Info**: 가독성·유지보수성 개선 제안
 
 ## 수정 처리 방침
