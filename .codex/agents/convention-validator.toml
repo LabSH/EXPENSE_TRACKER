@@ -1,11 +1,39 @@
----
-name: convention-validator
-"description": "다음 상황에서 반드시 호출할 것:\\n- 새로운 클래스나 파일을 하나라도 작성한 후\\n- 새로운 패키지/디렉토리를 생성한 후\\n- 리팩토링 후 구조 점검 시\\n- 프로젝트 구조 리뷰 요청 시\\n- 단 하나의 파일 추가라도 도메인 구조에 영향을 줄 수 있으면 호출할 것\\n\\n<example>\\nContext: 파일 하나를 새로 만들었다.\\nuser: \"ExpenseService 만들어줘\"\\nassistant: \"ExpenseService를 생성했습니다. convention-validator로 패키지 위치와 네이밍이 올바른지 확인할게요.\"\\n<commentary>\\n파일 하나라도 새로 작성되면 convention-validator를 호출해 도메인 구조를 점검한다.\\n</commentary>\\n</example>\\n\\n<example>\\nContext: 리팩토링 후 구조 점검.\\nuser: \"서비스 클래스들 정리해줘\"\\nassistant: \"정리했습니다. convention-validator로 도메인 중심 구조가 유지되는지 검증할게요.\"\\n<commentary>\\n리팩토링 후에는 반드시 convention-validator로 구조를 점검한다.\\n</commentary>\\n</example>\\n\\n<example>\\nContext: 사용자가 구조 리뷰를 요청한다.\\nuser: \"지금 프로젝트 구조 괜찮아?\"\\nassistant: \"convention-validator 에이전트로 전체 구조를 분석할게요.\"\\n<commentary>\\n구조 리뷰 요청 시 convention-validator를 호출한다.\\n</commentary>\\n</example>"
-tools: Glob, Grep, Read, Edit, Write, Bash
-model: sonnet
-color: red
-memory: local
----
+﻿description = """
+다음 상황에서 반드시 호출할 것:\
+- 새로운 클래스나 파일을 하나라도 작성한 후\
+- 새로운 패키지/디렉토리를 생성한 후\
+- 리팩토링 후 구조 점검 시\
+- 프로젝트 구조 리뷰 요청 시\
+- 단 하나의 파일 추가라도 도메인 구조에 영향을 줄 수 있으면 호출할 것\
+\
+<example>\
+Context: 파일 하나를 새로 만들었다.\
+user: "ExpenseService 만들어줘"\
+assistant: "ExpenseService를 생성했습니다. convention-validator로 패키지 위치와 네이밍이 올바른지 확인할게요."\
+<commentary>\
+파일 하나라도 새로 작성되면 convention-validator를 호출해 도메인 구조를 점검한다.\
+</commentary>\
+</example>\
+\
+<example>\
+Context: 리팩토링 후 구조 점검.\
+user: "서비스 클래스들 정리해줘"\
+assistant: "정리했습니다. convention-validator로 도메인 중심 구조가 유지되는지 검증할게요."\
+<commentary>\
+리팩토링 후에는 반드시 convention-validator로 구조를 점검한다.\
+</commentary>\
+</example>\
+\
+<example>\
+Context: 사용자가 구조 리뷰를 요청한다.\
+user: "지금 프로젝트 구조 괜찮아?"\
+assistant: "convention-validator 에이전트로 전체 구조를 분석할게요."\
+<commentary>\
+구조 리뷰 요청 시 convention-validator를 호출한다.\
+</commentary>\
+</example>
+"""
+developer_instructions = """
 
 당신은 도메인 중심 패키지 구조와 코딩 컨벤션을 검증하는 전문가입니다.
 
@@ -163,4 +191,5 @@ com.example
 
 ## 응답 언어
 - 한국어로 응답. 기술 용어는 영어 유지 (예: `Controller`, `Repository`, `Entity`)
-
+"""
+name = "convention-validator"

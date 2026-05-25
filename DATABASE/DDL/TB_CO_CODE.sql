@@ -1,0 +1,51 @@
+-- ============================================================
+-- MariaDB
+-- ============================================================
+CREATE TABLE `TB_CO_CODE` (
+  `CODE_ID`     varchar(30)    NOT NULL    COMMENT '공통코드ID',
+  `GROUP_ID`    varchar(30)    NOT NULL    COMMENT '그룹ID',
+  `CODE_NM`     varchar(200)   DEFAULT NULL COMMENT '코드명',
+  `SORT_SN`     decimal(10, 0) DEFAULT NULL COMMENT '정렬순번',
+  `USE_AT`      varchar(1)     DEFAULT NULL COMMENT '사용여부',
+  `DEL_AT`      varchar(1)     DEFAULT NULL COMMENT '삭제여부',
+  `RGS_DT`      datetime       DEFAULT NULL COMMENT '등록일시',
+  `RGS_USER_ID` varchar(30)    DEFAULT NULL COMMENT '등록사용자ID',
+  `UPD_DT`      datetime       DEFAULT NULL COMMENT '수정일시',
+  `UPD_USER_ID` varchar(30)    DEFAULT NULL COMMENT '수정사용자ID',
+  PRIMARY KEY (`CODE_ID`, `GROUP_ID`),
+  KEY `idx_code_01` (`CODE_ID`),
+  CONSTRAINT `fk_tb_co_code_group` FOREIGN KEY (`GROUP_ID`) REFERENCES `TB_CO_CODE_GROUP` (`GROUP_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='공통코드';
+
+
+-- ============================================================
+-- PostgreSQL
+-- ============================================================
+CREATE TABLE TB_CO_CODE (
+  CODE_ID     VARCHAR(30)     NOT NULL,
+  GROUP_ID    VARCHAR(30)     NOT NULL,
+  CODE_NM     VARCHAR(200),
+  SORT_SN     NUMERIC(10, 0),
+  USE_AT      VARCHAR(1),
+  DEL_AT      VARCHAR(1),
+  RGS_DT      TIMESTAMP,
+  RGS_USER_ID VARCHAR(30),
+  UPD_DT      TIMESTAMP,
+  UPD_USER_ID VARCHAR(30),
+  CONSTRAINT pk_tb_co_code       PRIMARY KEY (CODE_ID, GROUP_ID),
+  CONSTRAINT fk_tb_co_code_group FOREIGN KEY (GROUP_ID) REFERENCES TB_CO_CODE_GROUP (GROUP_ID)
+);
+
+CREATE INDEX idx_code_01 ON TB_CO_CODE (CODE_ID);
+
+COMMENT ON TABLE  TB_CO_CODE             IS '공통코드';
+COMMENT ON COLUMN TB_CO_CODE.CODE_ID     IS '공통코드ID';
+COMMENT ON COLUMN TB_CO_CODE.GROUP_ID    IS '그룹ID';
+COMMENT ON COLUMN TB_CO_CODE.CODE_NM     IS '코드명';
+COMMENT ON COLUMN TB_CO_CODE.SORT_SN     IS '정렬순번';
+COMMENT ON COLUMN TB_CO_CODE.USE_AT      IS '사용여부';
+COMMENT ON COLUMN TB_CO_CODE.DEL_AT      IS '삭제여부';
+COMMENT ON COLUMN TB_CO_CODE.RGS_DT      IS '등록일시';
+COMMENT ON COLUMN TB_CO_CODE.RGS_USER_ID IS '등록사용자ID';
+COMMENT ON COLUMN TB_CO_CODE.UPD_DT      IS '수정일시';
+COMMENT ON COLUMN TB_CO_CODE.UPD_USER_ID IS '수정사용자ID';

@@ -1,0 +1,18 @@
+-- ============================================================
+-- 초기 관리자 계정 (개발환경 DataInitializer로 자동 생성됨)
+-- 아래 SQL은 참고용. PASSWD 값은 BCrypt 해시여야 함.
+-- 예) BCryptPasswordEncoder.encode("admin1234") 결과값을 사용
+-- ============================================================
+
+-- INSERT INTO TB_CO_USER (USER_ID, LOGIN_ID, PASSWD, USER_NM, ROLE_CD, USE_AT, DEL_AT, RGS_DT, RGS_USER_ID)
+-- VALUES (
+--     gen_random_uuid(),
+--     'admin',
+--     '{BCrypt 해시값}',
+--     '관리자',
+--     'ROLE_ADMIN',
+--     'Y',
+--     'N',
+--     CURRENT_TIMESTAMP,
+--     'SYSTEM'
+-- );

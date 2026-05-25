@@ -1,11 +1,717 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Test</title>
-    <div th:replace="~{config :: config}"></div>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가계부 대시보드</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"DM Sans"', '"Gowun Dodum"', 'sans-serif'] },
+                    colors: {
+                        cream: { DEFAULT:'#F5F3EF', surface:'#FDFCFA', subtle:'#F0EDE7', border:'#E5E0D8' },
+                        ink:   { DEFAULT:'#2C2A26', soft:'#7C7870', muted:'#ADA89F' },
+                        sage:  { DEFAULT:'#3a845a', light:'#edf7f2', mid:'#8ec4a8' },
+                        blush: { DEFAULT:'#d95f3b', light:'#fef0ec' },
+                        sky:   { DEFAULT:'#4579c8', light:'#eef3fc' },
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+        @keyframes slideUp { from{opacity:0;transform:translateY(24px) scale(.98)} to{opacity:1;transform:none} }
+        @keyframes slideDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:none} }
+        @keyframes popIn   { from{opacity:0;transform:scale(.94) translateY(6px)} to{opacity:1;transform:none} }
+        .anim-fadeIn   { animation:fadeIn .2s ease forwards }
+        .anim-slideUp  { animation:slideUp .32s cubic-bezier(.22,1,.36,1) forwards }
+        .anim-slideDown{ animation:slideDown .25s cubic-bezier(.22,1,.36,1) both }
+        .anim-popIn    { animation:popIn .25s cubic-bezier(.22,1,.36,1) forwards }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+        input[type=number]{-moz-appearance:textfield}
+        ::-webkit-scrollbar{width:5px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:#E5E0D8;border-radius:3px}
+    </style>
 </head>
-<body>
-    <h1 class="text-3xl">테스트</h1>
+<body class="bg-cream font-sans text-ink">
+
+<div class="flex h-screen overflow-hidden">
+
+    <!-- 사이드바 래퍼 -->
+    <div id="sidebar-wrapper" class="shrink-0 transition-all duration-300 ease-out overflow-hidden" style="width:224px;margin-right:0">
+        <aside class="w-56 bg-cream-surface border-r border-cream-border flex flex-col px-4 py-7 h-screen sticky top-0 shrink-0 overflow-hidden">
+            <div class="pl-3 mb-9">
+                <div class="text-xl font-bold text-ink tracking-tight">가계부</div>
+                <div class="text-xs text-ink-muted mt-0.5" id="sidebar-month-label"></div>
+            </div>
+            <nav class="flex flex-col gap-1 flex-1" id="sidebar-nav"></nav>
+            <div class="mx-1 p-4 bg-sage-light rounded-xl border border-sage-mid">
+                <div class="flex items-center gap-1.5 mb-1">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sage"><path d="M23 6l-9.5 9.5-5-5L1 18M17 6h6v6"/></svg>
+                    <span class="text-xs font-semibold text-sage">이번 달 절약</span>
+                </div>
+                <div class="text-lg font-bold text-sage">+220,000원</div>
+                <div class="text-xs text-ink-soft mt-0.5">지난달 대비 11% ↑</div>
+            </div>
+            <div class="h-px bg-cream-border my-4"></div>
+            <a href="/admin" style="text-decoration:none"
+               class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border border-cream-border text-xs font-medium text-ink-muted hover:border-violet-300 hover:bg-violet-50 hover:text-violet-600 transition-all">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                관리자 페이지
+            </a>
+            <form th:action="@{/logout}" method="post" style="margin:0;margin-top:8px">
+                <button type="submit"
+                        class="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border border-cream-border text-xs font-medium text-ink-muted hover:border-blush hover:bg-blush-light hover:text-blush transition-all">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                    로그아웃
+                </button>
+            </form>
+        </aside>
+    </div>
+
+    <!-- 메인 영역 -->
+    <main id="main-area" class="flex-1 overflow-y-auto h-screen p-9">
+
+        <!-- 헤더 -->
+        <div class="flex justify-between items-start mb-8">
+            <div class="flex items-center gap-3.5">
+                <button id="btn-toggle-sidebar" class="w-9 h-9 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+                </button>
+                <div>
+                    <h1 id="page-title" class="font-bold text-ink tracking-tight text-3xl"></h1>
+                    <div class="flex items-center gap-2 mt-1.5">
+                        <button id="btn-prev-month" class="w-6 h-6 rounded-lg border border-cream-border flex items-center justify-center text-ink-muted hover:bg-cream-subtle transition-colors">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                        </button>
+                        <span id="month-nav-label" class="text-xs text-ink-muted w-20 text-center"></span>
+                        <button id="btn-next-month" class="w-6 h-6 rounded-lg border border-cream-border flex items-center justify-center text-ink-muted hover:bg-cream-subtle transition-colors">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <button id="btn-open-modal" class="flex items-center gap-2 px-5 py-3 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-md shadow-sage/30">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                내역 추가
+            </button>
+        </div>
+
+        <!-- 요약 카드 -->
+        <div class="grid grid-cols-3 gap-4 mb-8" id="summary-cards"></div>
+
+        <!-- 메인 그리드 -->
+        <div class="grid gap-5" style="grid-template-columns:1fr 288px">
+            <div class="flex flex-col gap-5">
+                <!-- 도넛 차트 -->
+                <div id="chart-section" class="bg-cream-surface border border-cream-border rounded-2xl p-6">
+                    <h3 class="text-sm font-semibold text-ink mb-5">이번 달 수입 분석</h3>
+                    <div id="donut-chart"></div>
+                </div>
+                <!-- 최근 내역 -->
+                <div class="bg-cream-surface border border-cream-border rounded-2xl p-6">
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-sm font-semibold text-ink">최근 내역</h3>
+                        <button class="text-xs font-medium text-sage hover:opacity-70 transition-opacity">전체보기 →</button>
+                    </div>
+                    <div id="transactions-list"></div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-5">
+                <!-- 카테고리 -->
+                <div class="bg-cream-surface border border-cream-border rounded-2xl p-6">
+                    <h3 class="text-sm font-semibold text-ink mb-5">카테고리별 지출</h3>
+                    <div id="categories-list"></div>
+                </div>
+                <!-- 예산 도넛 -->
+                <div class="bg-cream-surface border border-cream-border rounded-2xl p-6">
+                    <h3 class="text-sm font-semibold text-ink mb-4">이번 달 예산</h3>
+                    <div id="budget-donut"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- 내역 추가 모달 -->
+<div id="add-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-md">
+    <div class="anim-slideUp bg-cream-surface rounded-2xl w-[460px] shadow-2xl overflow-hidden">
+        <div id="modal-header" class="px-7 pt-6 pb-5 border-b border-cream-border bg-blush-light">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-ink">내역 추가</h2>
+                <button id="btn-close-modal" class="w-8 h-8 rounded-full bg-cream-border flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="flex gap-2">
+                <button id="type-expense" class="flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all bg-blush border-blush text-white">지출</button>
+                <button id="type-income"  class="flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-cream-border bg-transparent text-ink-soft hover:bg-cream-subtle">수입</button>
+            </div>
+        </div>
+        <div class="px-7 py-5 flex flex-col gap-4 max-h-[60vh] overflow-y-auto">
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">
+                        <span class="flex items-center gap-1">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+                            사용일자
+                        </span>
+                    </label>
+                    <input type="date" id="modal-date" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">
+                        <span class="flex items-center gap-1">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9ZM3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2M6 14h.01M10 14h4"/></svg>
+                            결제수단
+                        </span>
+                    </label>
+                    <div class="relative" id="payment-dd-wrap">
+                        <button id="payment-dd-btn" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border text-sm flex justify-between items-center bg-cream transition-colors">
+                            <span id="payment-dd-label">카드</span>
+                            <svg id="payment-dd-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ink-muted transition-transform duration-200"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+                        <div id="payment-dd-options" class="hidden absolute top-[calc(100%+6px)] left-0 right-0 bg-cream-surface border border-cream-border rounded-xl overflow-hidden z-30 shadow-lg"></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">카테고리</label>
+                <div id="category-chips" class="flex flex-wrap gap-1.5"></div>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">
+                    <span class="flex items-center gap-1">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 7v13a2 2 0 0 0 2 2h16v-4M21 16a2 2 0 0 1 0-4h2v4z"/></svg>
+                        금액
+                    </span>
+                </label>
+                <div class="relative">
+                    <input type="number" id="modal-amount" placeholder="0" class="w-full px-3.5 py-2.5 pr-8 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                    <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-ink-muted pointer-events-none">원</span>
+                </div>
+                <p id="amount-preview" class="hidden text-xs text-ink-muted mt-1 pl-1"></p>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">상세내용</label>
+                <input id="modal-desc" placeholder="예: 마트 장보기" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">메모 <span class="font-normal text-ink-muted">(선택)</span></label>
+                <textarea id="modal-memo" placeholder="추가 메모를 입력하세요" rows="2" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors resize-none leading-relaxed"></textarea>
+            </div>
+        </div>
+        <div class="px-7 pb-6 flex gap-2.5">
+            <button id="btn-modal-cancel" class="flex-1 py-3 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
+            <button id="btn-modal-submit" class="py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 bg-blush" style="flex:2">저장하기</button>
+        </div>
+    </div>
+</div>
+
+<!-- Tweaks 패널 -->
+<div id="tweaks-panel" class="hidden anim-popIn fixed bottom-6 right-6 bg-cream-surface border border-cream-border rounded-2xl p-5 w-56 shadow-xl z-50">
+    <p class="text-sm font-bold text-ink mb-4">Tweaks</p>
+    <label class="flex justify-between items-center mb-3.5 text-sm text-ink-soft cursor-pointer">
+        차트 표시
+        <input type="checkbox" id="tweak-chart" checked class="accent-sage">
+    </label>
+    <label class="flex justify-between items-center mb-3.5 text-sm text-ink-soft cursor-pointer">
+        컴팩트 모드
+        <input type="checkbox" id="tweak-compact" class="accent-sage">
+    </label>
+</div>
+
+<script>
+// ── 아이콘 ────────────────────────────────────────────────────────────
+const IC = {
+    grid:   'M3 3h7v7H3V3m11 0h7v7h-7V3M3 14h7v7H3v-7m11 0h7v7h-7v-7',
+    up:     'M12 19V5m-7 7 7-7 7 7',
+    down:   'M12 5v14m7-7-7 7-7-7',
+    target: 'M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10M12 8v4l3 3',
+    chart:  'M3 3v18h18M7 16V8m5 8v-5m5 5V4',
+    cog:    'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6m6.2-1.5q.07-.49.07-1t-.07-1l2.16-1.68a.5.5 0 0 0 .12-.63l-2.05-3.54a.5.5 0 0 0-.6-.22L16 6.46A7.4 7.4 0 0 0 14.28 5.5l-.37-2.72A.49.49 0 0 0 13.43 2h-2.86a.49.49 0 0 0-.48.42L9.72 5.14A7.4 7.4 0 0 0 8 6.12l-2.56-1.03a.5.5 0 0 0-.6.22L2.79 8.85a.5.5 0 0 0 .12.63L5.07 11.2Q5 11.6 5 12t.07.8L2.91 14.48a.5.5 0 0 0-.12.63l2.05 3.54c.12.22.37.3.6.22L8 17.54a7.4 7.4 0 0 0 1.72 1l.37 2.72c.07.27.3.47.58.47h2.86c.28 0 .51-.2.57-.47l.38-2.72a7.4 7.4 0 0 0 1.72-1l2.56 1.03c.24.09.49 0 .6-.22l2.05-3.54a.5.5 0 0 0-.12-.63z',
+    lock:   'M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2M7 11V7a5 5 0 0 1 10 0v4',
+    plus:   'M12 5v14M5 12h14',
+    chevL:  'M15 18l-6-6 6-6',
+    chevR:  'M9 18l6-6-6-6',
+    menu:   'M3 12h18M3 6h18M3 18h12',
+    close:  'M18 6 6 18M6 6l12 12',
+    piggy:  'M19 5c-1.5 0-2.8.4-3.9 1H11C6.1 6 2 10.1 2 15c0 1.5.4 2.9 1 4.2V21h4v-1.5c.5.1 1 .2 1.5.2s1-.1 1.5-.2V21h4v-1.8c.7-.5 1.3-1 1.8-1.7H17c1.7 0 3-1.3 3-3v-1c.6 0 1-.4 1-1V8c0-.6-.4-1-1-1',
+    wallet: 'M21 12V7H5a2 2 0 0 1 0-4h14v4M3 7v13a2 2 0 0 0 2 2h16v-4M21 16a2 2 0 0 1 0-4h2v4z',
+    trend:  'M23 6l-9.5 9.5-5-5L1 18M17 6h6v6',
+    cal:    'M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',
+    card:   'M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9ZM3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2M6 14h.01M10 14h4',
+    cart:   'M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0',
+};
+
+function svgIcon(d, size=18, cls='') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${cls}"><path d="${d||''}"/></svg>`;
+}
+
+// ── 데이터 ────────────────────────────────────────────────────────────
+const ALL_DATA = {
+    '2026-01':{ income:3200000, expense:1850000,
+        transactions:[
+            {id:1,date:'2026-01-25',category:'급여',  desc:'1월 급여',       amount:3200000, icon:'wallet'},
+            {id:2,date:'2026-01-20',category:'식비',  desc:'이마트 장보기',  amount:-72000,  icon:'cart'},
+            {id:3,date:'2026-01-18',category:'교통',  desc:'T머니 충전',    amount:-30000,  icon:'trend'},
+            {id:4,date:'2026-01-15',category:'공과금',desc:'가스요금',       amount:-38000,  icon:'target'},
+            {id:5,date:'2026-01-10',category:'외식',  desc:'신년 가족 외식', amount:-95000,  icon:'piggy'},
+        ],
+        categories:[
+            {name:'식비',amount:280000,color:'#3a845a',pct:35},
+            {name:'외식',amount:195000,color:'#4579c8',pct:24},
+            {name:'교통',amount:88000, color:'#d95f3b',pct:11},
+            {name:'기타',amount:169000,color:'#ADA89F',pct:30},
+        ],
+    },
+    '2026-02':{ income:3200000, expense:1620000,
+        transactions:[
+            {id:1,date:'2026-02-25',category:'급여', desc:'2월 급여',      amount:3200000, icon:'wallet'},
+            {id:2,date:'2026-02-22',category:'카페', desc:'스타벅스',      amount:-6500,   icon:'piggy'},
+            {id:3,date:'2026-02-18',category:'식비', desc:'쿠팡 장보기',   amount:-54000,  icon:'cart'},
+            {id:4,date:'2026-02-14',category:'외식', desc:'발렌타인 외식', amount:-68000,  icon:'piggy'},
+            {id:5,date:'2026-02-05',category:'의료', desc:'병원비',         amount:-45000,  icon:'target'},
+        ],
+        categories:[
+            {name:'식비',amount:210000,color:'#3a845a',pct:30},
+            {name:'외식',amount:168000,color:'#4579c8',pct:24},
+            {name:'의료',amount:95000, color:'#d95f3b',pct:14},
+            {name:'기타',amount:155000,color:'#ADA89F',pct:32},
+        ],
+    },
+    '2026-03':{ income:3500000, expense:2140000,
+        transactions:[
+            {id:1,date:'2026-03-25',category:'급여',  desc:'3월 급여',       amount:3200000, icon:'wallet'},
+            {id:2,date:'2026-03-20',category:'부수입',desc:'프리랜서 작업',  amount:300000,  icon:'trend'},
+            {id:3,date:'2026-03-18',category:'쇼핑',  desc:'봄옷 구매',      amount:-145000, icon:'cart'},
+            {id:4,date:'2026-03-15',category:'식비',  desc:'마켓컬리',       amount:-68000,  icon:'cart'},
+            {id:5,date:'2026-03-10',category:'문화',  desc:'콘서트 티켓',    amount:-88000,  icon:'target'},
+        ],
+        categories:[
+            {name:'쇼핑',amount:345000,color:'#3a845a',pct:38},
+            {name:'식비',amount:198000,color:'#4579c8',pct:22},
+            {name:'문화',amount:148000,color:'#d95f3b',pct:16},
+            {name:'기타',amount:137000,color:'#ADA89F',pct:24},
+        ],
+    },
+    '2026-04':{ income:3550000, expense:1791000,
+        transactions:[
+            {id:1, date:'2026-04-23',category:'식비',  desc:'마켓컬리 장보기', amount:-68500,  icon:'cart'},
+            {id:2, date:'2026-04-23',category:'급여',  desc:'4월 급여',        amount:3200000, icon:'wallet'},
+            {id:3, date:'2026-04-22',category:'교통',  desc:'T머니 충전',      amount:-30000,  icon:'trend'},
+            {id:4, date:'2026-04-21',category:'외식',  desc:'점심 — 삼겹살',  amount:-18000,  icon:'piggy'},
+            {id:5, date:'2026-04-20',category:'문화',  desc:'넷플릭스 구독',  amount:-17000,  icon:'target'},
+            {id:6, date:'2026-04-19',category:'카페',  desc:'스타벅스',        amount:-6500,   icon:'piggy'},
+            {id:7, date:'2026-04-18',category:'쇼핑',  desc:'무신사 의류',    amount:-89000,  icon:'cart'},
+            {id:8, date:'2026-04-17',category:'부수입',desc:'프리랜서 작업',  amount:350000,  icon:'trend'},
+            {id:9, date:'2026-04-16',category:'의료',  desc:'약국',            amount:-12000,  icon:'target'},
+            {id:10,date:'2026-04-15',category:'공과금',desc:'전기요금',        amount:-42000,  icon:'target'},
+        ],
+        categories:[
+            {name:'식비',amount:245000,color:'#3a845a',pct:31},
+            {name:'쇼핑',amount:189000,color:'#4579c8',pct:24},
+            {name:'교통',amount:98000, color:'#d95f3b',pct:12},
+            {name:'문화',amount:87000, color:'#7c5cbf',pct:11},
+            {name:'기타',amount:172000,color:'#ADA89F',pct:22},
+        ],
+    },
+};
+
+const CATEGORIES = ['식비','교통','카페','외식','쇼핑','문화','의료','공과금','급여','부수입','기타'];
+const PAYMENT_OPTIONS = ['카드','현금','계좌이체','기타'];
+const NOW = new Date();
+const CURRENT_KEY = `${NOW.getFullYear()}-${String(NOW.getMonth()+1).padStart(2,'0')}`;
+
+// ── 상태 ──────────────────────────────────────────────────────────────
+let sidebarOpen = true;
+let currentKey = localStorage.getItem('가계부_월') || CURRENT_KEY;
+let activeNav = 'dashboard';
+let modalType = 'expense';
+let selectedCategory = '식비';
+let selectedPayment = '카드';
+
+// ── 초기화 ────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    initSidebar();
+    renderAll();
+    initModal();
+
+    document.getElementById('btn-toggle-sidebar').addEventListener('click', toggleSidebar);
+    document.getElementById('btn-prev-month').addEventListener('click', () => moveMonth(-1));
+    document.getElementById('btn-next-month').addEventListener('click', () => moveMonth(1));
+    document.getElementById('btn-open-modal').addEventListener('click', openModal);
+    document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+    document.getElementById('btn-modal-cancel').addEventListener('click', closeModal);
+    document.getElementById('btn-modal-submit').addEventListener('click', closeModal);
+    document.getElementById('add-modal').addEventListener('click', e => { if (e.target === document.getElementById('add-modal')) closeModal(); });
+    document.getElementById('type-expense').addEventListener('click', () => setModalType('expense'));
+    document.getElementById('type-income').addEventListener('click', () => setModalType('income'));
+    document.getElementById('modal-amount').addEventListener('input', updateAmountPreview);
+    document.getElementById('payment-dd-btn').addEventListener('click', e => { e.stopPropagation(); togglePaymentDropdown(); });
+    document.getElementById('tweak-chart').addEventListener('change', applyTweaks);
+    document.getElementById('tweak-compact').addEventListener('change', applyTweaks);
+    document.addEventListener('click', () => closePaymentDropdown());
+
+    window.addEventListener('message', e => {
+        if (e.data?.type === '__activate_edit_mode') document.getElementById('tweaks-panel').classList.remove('hidden');
+        if (e.data?.type === '__deactivate_edit_mode') document.getElementById('tweaks-panel').classList.add('hidden');
+    });
+    window.parent.postMessage({type:'__edit_mode_available'}, '*');
+});
+// ── 사이드바 ──────────────────────────────────────────────────────────
+function initSidebar() {
+    const items = [
+        {id:'dashboard', label:'대시보드', icon:'grid',   href:null},
+        {id:'income',    label:'수입',     icon:'up',     href:null},
+        {id:'expense',   label:'지출',     icon:'down',   href:null},
+        {id:'budget',    label:'예산',     icon:'target', href:null},
+        {id:'report',    label:'리포트',   icon:'chart',  href:null},
+        {id:'settings',  label:'설정',     icon:'cog',    href:'가계부 설정.html'},
+    ];
+    document.getElementById('sidebar-nav').innerHTML = items.map((item, idx) => {
+        const isActive = item.id === activeNav;
+        const cls = `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-all anim-slideDown w-full text-left ${isActive ? 'bg-sage-light text-sage font-semibold' : 'text-ink-soft hover:bg-cream-subtle font-normal'}`;
+        const style = `animation-delay:${idx * 0.05}s`;
+        if (item.href) {
+            return `<a href="${item.href}" class="${cls}" style="${style};text-decoration:none" data-nav="${item.id}">${svgIcon(IC[item.icon], 17)}${item.label}</a>`;
+        }
+        return `<button class="${cls}" style="${style}" data-nav="${item.id}" onclick="setActiveNav('${item.id}')">${svgIcon(IC[item.icon], 17)}${item.label}</button>`;
+    }).join('');
+}
+
+
+function setActiveNav(id) {
+    activeNav = id;
+    document.querySelectorAll('[data-nav]').forEach(el => {
+        const isActive = el.dataset.nav === id;
+        el.classList.toggle('bg-sage-light', isActive);
+        el.classList.toggle('text-sage', isActive);
+        el.classList.toggle('font-semibold', isActive);
+        el.classList.toggle('text-ink-soft', !isActive);
+        el.classList.toggle('font-normal', !isActive);
+    });
+}
+
+function toggleSidebar() {
+    sidebarOpen = !sidebarOpen;
+    const wrapper = document.getElementById('sidebar-wrapper');
+    wrapper.style.width = sidebarOpen ? '224px' : '0px';
+    wrapper.style.marginRight = sidebarOpen ? '0' : '-224px';
+}
+
+// ── 월 이동 ───────────────────────────────────────────────────────────
+function moveMonth(dir) {
+    const [y, m] = currentKey.split('-').map(Number);
+    const d = new Date(y, m - 1 + dir, 1);
+    currentKey = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    localStorage.setItem('가계부_월', currentKey);
+    renderAll();
+}
+
+// ── 전체 렌더링 ───────────────────────────────────────────────────────
+function renderAll() {
+    const [cy, cm] = currentKey.split('-').map(Number);
+    const monthLabel = `${cy}년 ${cm}월`;
+    const data = ALL_DATA[currentKey] || {income:0, expense:0, transactions:[], categories:[]};
+    const {income, expense, transactions, categories} = data;
+    const balance = income - expense;
+    const savingRate = income > 0 ? Math.round(balance / income * 100) : 0;
+    const expensePct = income > 0 ? Math.round(expense / income * 100) : 0;
+    const compact = document.getElementById('tweak-compact').checked;
+
+    document.getElementById('page-title').textContent = `${monthLabel} 가계부`;
+    document.getElementById('page-title').className = `font-bold text-ink tracking-tight ${compact ? 'text-2xl' : 'text-3xl'}`;
+    document.getElementById('month-nav-label').textContent = monthLabel;
+    document.getElementById('sidebar-month-label').textContent = monthLabel;
+    document.getElementById('main-area').className = `flex-1 overflow-y-auto h-screen ${compact ? 'p-6' : 'p-9'}`;
+    document.getElementById('btn-next-month').style.visibility = currentKey < CURRENT_KEY ? 'visible' : 'hidden';
+    document.getElementById('chart-section').style.display = document.getElementById('tweak-chart').checked ? '' : 'none';
+
+    renderSummaryCards(income, expense, balance, savingRate, expensePct);
+    renderDonutChart(income, expense);
+    renderTransactions(transactions, compact);
+    renderCategories(categories);
+    renderBudgetDonut(expensePct, expense, balance);
+}
+
+// ── 요약 카드 ─────────────────────────────────────────────────────────
+function renderSummaryCards(income, expense, balance, savingRate, expensePct) {
+    function card(label, amount, sub, colorCls, bgCls) {
+        return `<div class="${bgCls||'bg-cream-surface'} border border-cream-border rounded-2xl p-6 flex flex-col gap-2">
+            <span class="text-xs font-medium text-ink-soft tracking-wide uppercase">${label}</span>
+            <span class="text-2xl font-bold tracking-tight ${colorCls}">
+                ${Math.abs(amount).toLocaleString('ko-KR')}<span class="text-sm font-normal text-ink-muted ml-1">원</span>
+            </span>
+            <span class="text-xs text-ink-muted">${sub}</span>
+        </div>`;
+    }
+    document.getElementById('summary-cards').innerHTML =
+        card('총 수입', income, income > 0 ? '이번 달 예상 대비 +8%' : '아직 내역 없음', 'text-sage', 'bg-sage-light') +
+        card('총 지출', expense, `예산의 ${expensePct}% 사용`, 'text-blush') +
+        card('잔 액', balance, `저축률 ${savingRate}%`, 'text-sky');
+}
+
+// ── 도넛 차트 ─────────────────────────────────────────────────────────
+function renderDonutChart(income, expense) {
+    const saving = income - expense;
+    const total = income || 1;
+    const segments = [
+        {label:'수입', value:income,  color:'#3a845a', pct:income/total},
+        {label:'지출', value:expense, color:'#d95f3b', pct:expense/total},
+        {label:'저축', value:saving,  color:'#4579c8', pct:Math.max(0, saving/total)},
+    ];
+    const R = 13, CX = 18, CY = 18, circ = 2 * Math.PI * R;
+    let offset = 0;
+    const arcs = segments.map(s => {
+        const dash = s.pct * circ;
+        const arc = {...s, dash, gap: circ - dash, offset};
+        offset += dash;
+        return arc;
+    });
+
+    const svgArcs = arcs.map((a, i) =>
+        `<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${a.color}" stroke-width="4"
+            stroke-dasharray="${a.dash} ${a.gap}" stroke-dashoffset="${-a.offset}"
+            style="transition:stroke-width 0.15s;cursor:pointer" class="donut-arc" data-idx="${i}"/>`
+    ).join('');
+
+    const legend = segments.map((s, i) =>
+        `<div class="flex items-center gap-3 cursor-pointer transition-opacity duration-150 donut-legend-item" data-idx="${i}">
+            <div class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${s.color}"></div>
+            <div class="flex-1 min-w-0">
+                <div class="text-xs text-ink-soft mb-0.5">${s.label}</div>
+                <div class="text-sm font-semibold text-ink tracking-tight">${s.value.toLocaleString('ko-KR')}원</div>
+            </div>
+            <div class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-cream-subtle" style="color:${s.color}">${Math.round(s.pct*100)}%</div>
+        </div>`
+    ).join('');
+
+    document.getElementById('donut-chart').innerHTML = `
+        <div class="flex items-center gap-10">
+            <div class="relative w-40 h-40 shrink-0">
+                <svg viewBox="0 0 36 36" class="w-full h-full -rotate-90">
+                    <circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="#F0EDE7" stroke-width="4"/>
+                    ${svgArcs}
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span class="text-[11px] text-ink-muted mb-0.5" id="donut-center-label">이번 달</span>
+                    <span class="text-sm font-bold text-ink" id="donut-center-value">수입 분석</span>
+                </div>
+            </div>
+            <div class="flex flex-col gap-4 flex-1">${legend}</div>
+        </div>`;
+
+    const centerLabel = document.getElementById('donut-center-label');
+    const centerValue = document.getElementById('donut-center-value');
+
+    function setHover(idx) {
+        document.querySelectorAll('.donut-arc').forEach((c, i) => c.setAttribute('stroke-width', i === idx ? '5' : '4'));
+        document.querySelectorAll('.donut-legend-item').forEach((el, i) => el.style.opacity = idx !== null && i !== idx ? '0.3' : '1');
+        if (idx !== null) {
+            centerLabel.textContent = segments[idx].label;
+            centerValue.textContent = `${Math.round(segments[idx].pct * 100)}%`;
+        } else {
+            centerLabel.textContent = '이번 달';
+            centerValue.textContent = '수입 분석';
+        }
+    }
+
+    document.querySelectorAll('.donut-arc').forEach((c, i) => {
+        c.addEventListener('mouseenter', () => setHover(i));
+        c.addEventListener('mouseleave', () => setHover(null));
+    });
+    document.querySelectorAll('.donut-legend-item').forEach((el, i) => {
+        el.addEventListener('mouseenter', () => setHover(i));
+        el.addEventListener('mouseleave', () => setHover(null));
+    });
+}
+
+// ── 거래 내역 ─────────────────────────────────────────────────────────
+function renderTransactions(transactions, compact) {
+    const el = document.getElementById('transactions-list');
+    if (!transactions.length) {
+        el.innerHTML = '<p class="text-center text-sm text-ink-muted py-8">이번 달 내역이 없어요</p>';
+        return;
+    }
+    el.innerHTML = transactions.map(t => {
+        const isIncome = t.amount > 0;
+        return `<div class="flex items-center gap-3.5 ${compact ? 'py-2.5' : 'py-3.5'} border-b border-cream-border last:border-0">
+            <div class="w-10 h-10 rounded-xl shrink-0 flex items-center justify-center ${isIncome ? 'bg-sage-light text-sage' : 'bg-cream-subtle text-ink-soft'}">
+                ${svgIcon(IC[t.icon] || IC.wallet, 17)}
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="text-sm font-medium text-ink truncate">${t.desc}</div>
+                <div class="text-xs text-ink-muted mt-0.5">${t.category} · ${t.date.slice(5).replace('-', '/')}</div>
+            </div>
+            <div class="text-sm font-semibold shrink-0 ${isIncome ? 'text-sage' : 'text-ink'}">
+                ${isIncome ? '+' : '-'}${Math.abs(t.amount).toLocaleString('ko-KR')}원
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ── 카테고리 바 ───────────────────────────────────────────────────────
+function renderCategories(categories) {
+    const el = document.getElementById('categories-list');
+    if (!categories.length) {
+        el.innerHTML = '<p class="text-center text-sm text-ink-muted py-4">데이터 없음</p>';
+        return;
+    }
+    el.innerHTML = categories.map(cat =>
+        `<div class="mb-3.5">
+            <div class="flex justify-between items-center mb-1.5">
+                <span class="text-sm font-medium text-ink">${cat.name}</span>
+                <span class="text-xs text-ink-soft">${cat.amount.toLocaleString()}원</span>
+            </div>
+            <div class="h-1.5 bg-cream-subtle rounded-full overflow-hidden">
+                <div class="h-full rounded-full transition-all duration-1000 ease-out" style="width:0%;background:${cat.color}" data-pct="${cat.pct}"></div>
+            </div>
+        </div>`
+    ).join('');
+    setTimeout(() => {
+        el.querySelectorAll('[data-pct]').forEach(bar => { bar.style.width = bar.dataset.pct + '%'; });
+    }, 50);
+}
+
+// ── 예산 도넛 ─────────────────────────────────────────────────────────
+function renderBudgetDonut(expensePct, expense, balance) {
+    document.getElementById('budget-donut').innerHTML = `
+        <div class="relative w-36 h-36 mx-auto mb-4">
+            <svg viewBox="0 0 36 36" class="w-full h-full -rotate-90">
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#F0EDE7" stroke-width="3.2"/>
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#3a845a" stroke-width="3.2"
+                    stroke-dasharray="${expensePct*0.68} ${100-expensePct*0.68}" stroke-linecap="round"/>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-2xl font-bold text-ink">${expensePct}%</span>
+                <span class="text-xs text-ink-muted">사용</span>
+            </div>
+        </div>
+        <div class="flex justify-between text-xs">
+            <div>
+                <div class="text-ink-muted mb-1">사용</div>
+                <div class="font-semibold text-ink">${Math.round(expense/10000)}만원</div>
+            </div>
+            <div class="text-right">
+                <div class="text-ink-muted mb-1">남은 예산</div>
+                <div class="font-semibold text-sage">${Math.round(balance/10000)}만원</div>
+            </div>
+        </div>`;
+}
+
+// ── 모달 ──────────────────────────────────────────────────────────────
+function initModal() {
+    document.getElementById('modal-date').value = new Date().toISOString().slice(0, 10);
+    renderPaymentOptions();
+    renderCategoryChips();
+}
+
+function openModal() {
+    modalType = 'expense';
+    selectedCategory = '식비';
+    selectedPayment = '카드';
+    document.getElementById('modal-amount').value = '';
+    document.getElementById('modal-desc').value = '';
+    document.getElementById('modal-memo').value = '';
+    document.getElementById('amount-preview').classList.add('hidden');
+    document.getElementById('modal-date').value = new Date().toISOString().slice(0, 10);
+    setModalType('expense');
+    document.getElementById('add-modal').classList.remove('hidden');
+    document.getElementById('add-modal').classList.add('anim-fadeIn');
+}
+
+function closeModal() {
+    document.getElementById('add-modal').classList.add('hidden');
+}
+
+function setModalType(type) {
+    modalType = type;
+    const isIncome = type === 'income';
+    document.getElementById('modal-header').className = `px-7 pt-6 pb-5 border-b border-cream-border ${isIncome ? 'bg-sage-light' : 'bg-blush-light'}`;
+    const expBtn = document.getElementById('type-expense');
+    const incBtn = document.getElementById('type-income');
+    expBtn.className = `flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${!isIncome ? 'bg-blush border-blush text-white' : 'border-cream-border bg-transparent text-ink-soft hover:bg-cream-subtle'}`;
+    incBtn.className = `flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${isIncome ? 'bg-sage border-sage text-white' : 'border-cream-border bg-transparent text-ink-soft hover:bg-cream-subtle'}`;
+    document.getElementById('btn-modal-submit').className = `py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 ${isIncome ? 'bg-sage' : 'bg-blush'}`;
+    document.getElementById('btn-modal-submit').style.flex = '2';
+    renderCategoryChips();
+}
+
+function renderCategoryChips() {
+    const isIncome = modalType === 'income';
+    document.getElementById('category-chips').innerHTML = CATEGORIES.map(c => {
+        const active = c === selectedCategory;
+        const cls = active
+            ? (isIncome ? 'border-sage bg-sage-light text-sage' : 'border-blush bg-blush-light text-blush')
+            : 'border-cream-border text-ink-soft hover:bg-cream-subtle';
+        return `<button class="px-3 py-1.5 rounded-full text-xs border-2 transition-all font-medium ${cls}" onclick="selectCategory('${c}')">${c}</button>`;
+    }).join('');
+}
+
+function selectCategory(cat) {
+    selectedCategory = cat;
+    renderCategoryChips();
+}
+
+function renderPaymentOptions() {
+    document.getElementById('payment-dd-options').innerHTML = PAYMENT_OPTIONS.map(opt =>
+        `<div class="px-3.5 py-2.5 text-sm cursor-pointer transition-colors border-b border-cream-border last:border-0 ${opt === selectedPayment ? 'bg-sage-light text-sage font-semibold' : 'text-ink hover:bg-cream-subtle'}"
+              onclick="selectPayment('${opt}')">${opt}</div>`
+    ).join('');
+}
+
+function togglePaymentDropdown() {
+    const opts = document.getElementById('payment-dd-options');
+    const chevron = document.getElementById('payment-dd-chevron');
+    const isOpen = !opts.classList.contains('hidden');
+    opts.classList.toggle('hidden', isOpen);
+    chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+    document.getElementById('payment-dd-btn').classList.toggle('border-sage', !isOpen);
+}
+
+function closePaymentDropdown() {
+    document.getElementById('payment-dd-options').classList.add('hidden');
+    document.getElementById('payment-dd-chevron').style.transform = '';
+    document.getElementById('payment-dd-btn').classList.remove('border-sage');
+}
+
+function selectPayment(val) {
+    selectedPayment = val;
+    document.getElementById('payment-dd-label').textContent = val;
+    renderPaymentOptions();
+    closePaymentDropdown();
+}
+
+function updateAmountPreview() {
+    const val = document.getElementById('modal-amount').value;
+    const preview = document.getElementById('amount-preview');
+    if (val) {
+        preview.textContent = `${Number(val).toLocaleString('ko-KR')}원`;
+        preview.classList.remove('hidden');
+    } else {
+        preview.classList.add('hidden');
+    }
+}
+
+// ── Tweaks ────────────────────────────────────────────────────────────
+function applyTweaks() {
+    renderAll();
+    window.parent.postMessage({
+        type: '__edit_mode_set_keys',
+        edits: {
+            showChart: document.getElementById('tweak-chart').checked,
+            compactMode: document.getElementById('tweak-compact').checked,
+        }
+    }, '*');
+}
+</script>
 </body>
 </html>
