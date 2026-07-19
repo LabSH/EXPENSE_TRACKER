@@ -41,6 +41,7 @@ public class AdminController {
     @GetMapping("/users")
     public String usersPage(Model model) {
         model.addAttribute("users", userAdminService.findAllUsers());
+        model.addAttribute("stats", userAdminService.getStats());
         return "admin/users/index";
     }
 
@@ -54,11 +55,11 @@ public class AdminController {
         String toDate   = (to    != null && !to.isBlank())    ? to    : today;
         String levelCd  = (level != null && !level.isBlank()) ? level : "";
 
-        String levelName = levelCd.isEmpty() ? "전체 레벨"
+        String levelName = levelCd.isEmpty() ? "전체"
                 : codeService.findCodesByGroup("LOGLEVEL").stream()
                         .filter(c -> c.codeId().equals(levelCd))
                         .map(c -> c.codeNm())
-                        .findFirst().orElse("전체 레벨");
+                        .findFirst().orElse("전체");
 
         model.addAttribute("logs",               sysLogService.search(fromDate, toDate, levelCd));
         model.addAttribute("from",               fromDate);

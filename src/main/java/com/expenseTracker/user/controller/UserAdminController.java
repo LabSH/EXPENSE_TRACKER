@@ -3,6 +3,7 @@ package com.expenseTracker.user.controller;
 import com.expenseTracker.user.dto.AddUserRequest;
 import com.expenseTracker.user.dto.ChangeRoleRequest;
 import com.expenseTracker.user.dto.UserResponse;
+import com.expenseTracker.user.dto.UserStats;
 import com.expenseTracker.user.service.UserAdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin/users")
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -18,6 +21,16 @@ import org.springframework.web.bind.annotation.*;
 public class UserAdminController {
 
     private final UserAdminService userAdminService;
+
+    @GetMapping("/data")
+    public List<UserResponse> search(@RequestParam(defaultValue = "") String keyword) {
+        return keyword.isBlank() ? userAdminService.findAllUsers() : userAdminService.searchUsers(keyword);
+    }
+
+    @GetMapping("/stats")
+    public UserStats stats() {
+        return userAdminService.getStats();
+    }
 
     @PostMapping
     public ResponseEntity<UserResponse> add(@RequestBody AddUserRequest req,

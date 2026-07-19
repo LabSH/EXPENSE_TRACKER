@@ -1,9 +1,12 @@
 package com.expenseTracker.user.service;
 
 import com.expenseTracker.user.dto.UserResponse;
+import com.expenseTracker.user.dto.UserStats;
 import com.expenseTracker.user.entity.User;
 import com.expenseTracker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,14 +18,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserAdminService {
 
+    private static final int MAX_RESULTS = 100;
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     public List<UserResponse> findAllUsers() {
-        return userRepository.findByDelAtOrderByRgsDtDesc("N")
+        Pageable limit = PageRequest.of(0, MAX_RESULTS);
+        return userRepository.findByDelAtOrderByRgsDtDesc("N", limit)
                 .stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    public List<UserResponse> searchUsers(String keyword) {
+        Pageable limit = PageRequest.of(0, MAX_RESULTS);
+        return userRepository.findByDelAtAndUserNmContainingIgnoreCaseOrderByRgsDtDesc("N", keyword, limit)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public UserStats getStats() {
+        long total = userRepository.countByDelAt("N");
+        long active = userRepository.countByDelAtAndUseAt("N", "Y");
+        return new UserStats(total, active, total - active);
     }
 
     @Transactional
