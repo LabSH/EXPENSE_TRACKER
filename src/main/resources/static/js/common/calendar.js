@@ -71,7 +71,7 @@
         </div>
         <div class="flex gap-2 mt-3 pt-3 border-t border-admin-border">
             <button onclick="calSelectDate('${id}','${todayStr}')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold bg-violet-light text-violet hover:bg-violet hover:text-white transition-colors">오늘</button>
-            <button onclick="calSelectDate('${id}','')"            class="flex-1 py-1.5 rounded-lg text-xs font-semibold bg-admin-subtle text-ink-muted hover:bg-admin-border transition-colors">초기화</button>
+            <button onclick="calSelectDate('${id}','')"            class="flex-1 py-1.5 rounded-lg text-xs font-semibold bg-violet-light text-violet hover:bg-violet hover:text-white transition-colors">초기화</button>
         </div>`;
     }
 
