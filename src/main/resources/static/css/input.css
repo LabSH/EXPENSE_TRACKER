@@ -1,1 +1,112 @@
 @import "tailwindcss";
+@source "../../templates";
+
+@theme {
+    /* ── 폰트 ──────────────────────────── */
+    --font-sans:  "DM Sans", "Gowun Dodum", sans-serif;
+    --font-dodum: "Gowun Dodum", sans-serif;
+
+    /* ── Admin 테마 ─────────────────────── */
+    --color-admin:         #F2F0FA;
+    --color-admin-surface: #FDFCFF;
+    --color-admin-subtle:  #ECEAF5;
+    --color-admin-border:  #DDD9EE;
+
+    --color-ink:       #1E1B2E;
+    --color-ink-soft:  #6E6A85;
+    --color-ink-muted: #A8A4C0;
+
+    --color-violet:       #6246ea;
+    --color-violet-light: #f0eeff;
+    --color-violet-mid:   #b8aaee;
+
+    /* ── 사용자 화면 — cream 테마 ────────── */
+    --color-cream:         #F5F3EF;
+    --color-cream-surface: #FDFCFA;
+    --color-cream-subtle:  #F0EDE7;
+    --color-cream-border:  #E5E0D8;
+
+    /* ── 로그인/회원가입 플랫 토큰 ────────── */
+    --color-bg:          #F5F3EF;
+    --color-surface:     #FDFCFA;
+    --color-surface-2:   #F0EDE7;
+    --color-border:      #E5E0D8;
+    --color-text:        #2C2A26;
+    --color-text-soft:   #7C7870;
+    --color-text-muted:  #ADA89F;
+
+    /* ── 공통 색상 ───────────────────────── */
+    --color-blush:       #d95f3b;
+    --color-blush-light: #fef0ec;
+
+    --color-sky:       #4579c8;
+    --color-sky-light: #eef3fc;
+
+    --color-sage:       #3a845a;
+    --color-sage-light: #edf7f2;
+    --color-sage-mid:   #8ec4a8;
+
+    --color-green:       oklch(0.58 0.1 152);
+    --color-green-light: oklch(0.94 0.04 152);
+    --color-green-mid:   oklch(0.78 0.07 152);
+
+    --color-coral:       oklch(0.62 0.12 22);
+    --color-coral-light: oklch(0.95 0.04 22);
+
+    --color-blue:       oklch(0.60 0.09 240);
+    --color-blue-light: oklch(0.94 0.04 240);
+
+    --color-gold: rgb(220, 163, 47);
+
+    /* ── 커스텀 radius ──────────────────── */
+    --radius-sm-1:  8px;
+    --radius-md-1:  10px;
+    --radius-lg-1:  12px;
+    --radius-xl-1:  16px;
+    --radius-2xl-1: 20px;
+
+    /* ── 커스텀 shadow ──────────────────── */
+    --shadow-soft-sm:         0 2px 8px rgba(0,0,0,0.06);
+    --shadow-soft-md:         0 8px 24px rgba(0,0,0,0.10);
+    --shadow-soft-lg:         0 20px 60px rgba(0,0,0,0.15);
+    --shadow-btn-green:       0 4px 14px oklch(0.58 0.1 152 / 0.3);
+    --shadow-btn-green-hover: 0 6px 20px oklch(0.58 0.1 152 / 0.4);
+
+    /* ── 애니메이션 유틸리티 (로그인/회원가입) */
+    --animate-slide-up: slideUp 0.5s cubic-bezier(.22,1,.36,1) both;
+    --animate-fade-in:  fadeIn 0.4s ease both;
+    --animate-floaty:   floaty 4s ease-in-out infinite;
+}
+
+@keyframes slideUp {
+    0%   { opacity: 0; transform: translateY(24px) scale(0.98); }
+    100% { opacity: 1; transform: none; }
+}
+@keyframes fadeIn {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+@keyframes floaty {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-6px); }
+}
+
+@layer components {
+    .form-select {
+        appearance: none;
+        padding: 0.5rem 2.25rem 0.5rem 0.875rem;
+        border: 1px solid #DDD9EE;
+        border-radius: 0.75rem;
+        background-color: #FDFCFF;
+        color: #1E1B2E;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        cursor: pointer;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236E6A85' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        transition: border-color .15s;
+    }
+    .form-select:hover { background-color: #ECEAF5; }
+    .form-select:focus { outline: none; border-color: #6246ea; }
+}

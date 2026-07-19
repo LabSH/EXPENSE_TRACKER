@@ -1,5 +1,6 @@
 package com.expenseTracker.setting.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,10 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/setting")
 public class SettingController {
 
-    /** 설정 메인 페이지 뷰 반환 */
     @GetMapping("")
-    public String index() {
-        return "setting/index";
+    public String index(HttpServletRequest request) {
+        if ("true".equals(request.getHeader("HX-Request"))) return "setting/index :: content";
+        return "redirect:/";
     }
-
 }

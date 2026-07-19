@@ -128,6 +128,60 @@ CRUD 맥락이 아닌 서비스 고유 흐름은 의미에 맞는 이름을 사�
 <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 ```
 
+## 공통 라이브러리·정적 파일 참조 관리
+
+**모든 공통 라이브러리·CSS·JS 참조는 `config/config.html` 한 곳에만 선언한다.**
+
+- Google Fonts, Tailwind CSS(`output.css`), HTMX, 공통 JS 유틸(`calendar.js`, `dropdown.js`) 등은 모두 `config/config.html`의 `config` fragment에 등록되어 있다.
+- 모든 업무 페이지(`<head>`)에서는 개별 `<link>`·`<script>` 태그 대신 반드시 아래 한 줄만 사용한다:
+
+```html
+<!-- ✅ 올바른 방법 -->
+<th:block th:replace="~{config/config :: config}"></th:block>
+
+<!-- ❌ 잘못된 방법: 개별 페이지에 직접 참조 -->
+<link href="https://fonts.googleapis.com/..." rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/output.css}">
+<script src="/js/htmx.min.js"></script>
+```
+
+- 새 라이브러리를 추가할 때는 `config.html`만 수정할 것. 개별 페이지에 직접 추가 금지.
+- fragment·partial 템플릿에서 공통 파일을 중복 로드하지 말 것 (config에 이미 포함됨).
+
+## 공통 드롭다운 fragment
+
+코드성 데이터(`codes`)를 사용하는 드롭다운은 반드시 공통 fragment를 사용한다.
+인라인으로 드롭다운 HTML을 직접 구현하지 말 것.
+
+- fragment: `fragments/dropdown.html`
+- JS: `static/js/common/dropdown.js` — `config/config.html`에 이미 포함되어 있으므로 페이지에서 별도 추가 불필요
+
+```html
+<!-- ✅ 올바른 방법 -->
+<div th:replace="~{fragments/dropdown :: dropdown('dropId', '기본 레이블', ${codes['그룹ID']})}"></div>
+
+<!-- ❌ 잘못된 방법: 드롭다운을 페이지마다 직접 구현 -->
+<div class="relative">
+    <button onclick="toggle()">...</button>
+    <div class="hidden absolute ...">...</div>
+</div>
+```
+
+- `dropId`는 페이지 내에서 유일해야 한다.
+- items는 항상 `${codes['그룹ID']}` 형태로 전달한다 (`@ControllerAdvice`가 모든 페이지에 자동 주입).
+- 값 읽기는 JS에서 `Dropdown.getValue('dropId')`로 처리한다.
+
+## 모달 backdrop 클릭 동작 기준
+
+모달 종류에 따라 backdrop(배경 클릭) 닫기 동작을 구분한다.
+
+| 모달 종류 | backdrop 클릭 | 이유 |
+|---|---|---|
+| 단순 정보 확인 전용 | 닫힘 허용 | 취소와 동일한 효과 |
+| 등록 / 수정 / 삭제 | 닫히지 않음 | 입력 중 실수 클릭으로 내용 유실 방지 |
+
+backdrop 클릭 이벤트는 **정보 확인 모달에만** 등록하고, 등록·수정·삭제 모달에는 등록하지 않는다.
+
 ## 검증 체크리스트
 
 ### 1. 폴더 구조
@@ -140,12 +194,16 @@ CRUD 맥락이 아닌 서비스 고유 흐름은 의미에 맞는 이름을 사�
 - [ ] 금지 패턴(list, add, modify, 중복명)을 사용하지 않는가?
 - [ ] fragment 파일은 `fragments/` 하위에 있는가?
 
-### 3. Thymeleaf 컨벤션
+### 3. 공통 라이브러리 참조
+- [ ] `<head>`에 개별 `<link>`·`<script>` 태그 없이 `th:replace="~{config/config :: config}"` 한 줄만 사용하는가?
+- [ ] fragment·partial 내부에서 공통 JS/CSS 파일을 중복 로드하지 않는가?
+
+### 4. Thymeleaf 컨벤션
 - [ ] form의 action이 `th:action="@{...}"`인가? (CSRF 자동 처리)
 - [ ] 링크가 `th:href="@{...}"`인가?
 - [ ] `xmlns:th="http://www.thymeleaf.org"`가 html 태그에 선언되어 있는가?
 
-### 4. Spring Security 연동
+### 5. Spring Security 연동
 - [ ] 로그인 폼의 아이디 input에 `name="username"`이 있는가?
 - [ ] 로그인 폼의 비밀번호 input에 `name="password"`이 있는가?
 - [ ] 로그인 폼에 `onsubmit="event.preventDefault()"`가 없는가?
@@ -178,8 +236,8 @@ CRUD 맥락이 아닌 서비스 고유 흐름은 의미에 맞는 이름을 사�
 ```
 
 ## 심각도
-- **Critical**: CSRF 취약점 (action에 th: 미사용), Spring Security 필드명 오류, 잘못된 fragment 참조
-- **Warning**: 금지 파일명 패턴 사용, 도메인 폴더명 불일치, xmlns:th 누락
+- **Critical**: CSRF 취약점 (action에 th: 미사용), Spring Security 필드명 오류, 잘못된 fragment 참조, `config/config.html` 미사용 (개별 라이브러리 직접 참조)
+- **Warning**: 금지 파일명 패턴 사용, 도메인 폴더명 불일치, xmlns:th 누락, fragment 내 공통 JS/CSS 중복 로드
 - **Info**: 구조 개선 제안
 
 ## 수정 처리 방침

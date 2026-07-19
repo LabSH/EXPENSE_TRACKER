@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Comment;
 
 import java.io.Serializable;
 
@@ -17,8 +18,10 @@ import java.io.Serializable;
 public class CodeId implements Serializable {
 
     @Column(name = "CODE_ID", length = 30)
+    @Comment("공통코드ID")
     private String codeId;
 
     @Column(name = "GROUP_ID", length = 30)
+    @Comment("그룹ID")
     private String groupId;
 }

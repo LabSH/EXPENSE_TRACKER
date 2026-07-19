@@ -4,70 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로그인 · 가계부</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['DM Sans', 'Gowun Dodum', 'sans-serif'],
-                        dodum: ['Gowun Dodum', 'sans-serif'],
-                    },
-                    colors: {
-                        bg:          '#F5F3EF',
-                        surface:     '#FDFCFA',
-                        'surface-2': '#F0EDE7',
-                        border:      '#E5E0D8',
-                        text:        '#2C2A26',
-                        'text-soft': '#7C7870',
-                        'text-muted':'#ADA89F',
-                        green:       'oklch(0.58 0.1 152)',
-                        'green-light':'oklch(0.94 0.04 152)',
-                        'green-mid': 'oklch(0.78 0.07 152)',
-                        coral:       'oklch(0.62 0.12 22)',
-                        'coral-light':'oklch(0.95 0.04 22)',
-                        blue:        'oklch(0.60 0.09 240)',
-                        'blue-light':'oklch(0.94 0.04 240)',
-                        gold:        'rgb(220, 163, 47)',
-                    },
-                    borderRadius: {
-                        'sm-1': '8px',
-                        'md-1': '10px',
-                        'lg-1': '12px',
-                        'xl-1': '16px',
-                        '2xl-1':'20px',
-                    },
-                    boxShadow: {
-                        'soft-sm': '0 2px 8px rgba(0,0,0,0.06)',
-                        'soft-md': '0 8px 24px rgba(0,0,0,0.10)',
-                        'soft-lg': '0 20px 60px rgba(0,0,0,0.15)',
-                        'btn-green':'0 4px 14px oklch(0.58 0.1 152 / 0.3)',
-                        'btn-green-hover':'0 6px 20px oklch(0.58 0.1 152 / 0.4)',
-                    },
-                    keyframes: {
-                        slideUp: {
-                            '0%':   { opacity: 0, transform: 'translateY(24px) scale(0.98)' },
-                            '100%': { opacity: 1, transform: 'translateY(0) scale(1)' },
-                        },
-                        fadeIn: {
-                            '0%':   { opacity: 0 },
-                            '100%': { opacity: 1 },
-                        },
-                        floaty: {
-                            '0%,100%': { transform: 'translateY(0px)' },
-                            '50%':     { transform: 'translateY(-6px)' },
-                        },
-                    },
-                    animation: {
-                        'slide-up': 'slideUp 0.5s cubic-bezier(.22,1,.36,1) both',
-                        'fade-in':  'fadeIn 0.4s ease both',
-                        'floaty':   'floaty 4s ease-in-out infinite',
-                    },
-                },
-            },
-        };
-    </script>
+    <th:block th:replace="~{config/config :: config}"></th:block>
     <style>
         body { font-family: 'DM Sans', 'Gowun Dodum', sans-serif; background: #F5F3EF; color: #2C2A26; }
         input:focus { outline: none; }
@@ -209,10 +146,10 @@
                 <div class="flex flex-col">
                     <div class="flex justify-between items-center mb-1.5">
                         <label for="password" class="text-[12px] text-text-soft font-medium">비밀번호</label>
-                        <a href="#" class="text-[12px] text-green font-medium hover:underline">비밀번호 찾기</a>
+<!--                        <a href="#" class="text-[12px] text-green font-medium hover:underline">비밀번호 찾기</a>-->
                     </div>
                     <div class="relative">
-                        <input id="password" type="password" name="password" placeholder="••••••••"
+                        <input id="password" type="password" name="password" placeholder="비밀번호를 입력하세요"
                                class="w-full px-4 py-3 pr-10 rounded-md-1 border-[1.5px] border-border bg-bg text-[14px] text-text placeholder:text-text-muted tracking-widest focus:border-green transition-colors"/>
                         <button type="button" id="toggle-pw"
                                 class="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-soft transition" aria-label="비밀번호 보기">
@@ -225,16 +162,16 @@
                 </div>
 
                 <!-- 옵션 -->
-                <label class="flex items-center gap-2.5 cursor-pointer select-none group">
-          <span class="relative">
-            <input type="checkbox" id="remember" class="peer sr-only"/>
-            <span class="block w-[18px] h-[18px] rounded-[5px] border-[1.5px] border-border bg-bg peer-checked:bg-green peer-checked:border-green transition-colors"></span>
-            <svg class="absolute top-[3px] left-[3px] w-[12px] h-[12px] text-white opacity-0 peer-checked:opacity-100 transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 6 9 17l-5-5"/>
-            </svg>
-          </span>
-                    <span class="text-[13px] text-text-soft group-hover:text-text transition">로그인 상태 유지</span>
-                </label>
+<!--                <label class="flex items-center gap-2.5 cursor-pointer select-none group">-->
+<!--          <span class="relative">-->
+<!--            <input type="checkbox" id="remember" class="peer sr-only"/>-->
+<!--            <span class="block w-[18px] h-[18px] rounded-[5px] border-[1.5px] border-border bg-bg peer-checked:bg-green peer-checked:border-green transition-colors"></span>-->
+<!--            <svg class="absolute top-[3px] left-[3px] w-[12px] h-[12px] text-white opacity-0 peer-checked:opacity-100 transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">-->
+<!--              <path d="M20 6 9 17l-5-5"/>-->
+<!--            </svg>-->
+<!--          </span>-->
+<!--                    <span class="text-[13px] text-text-soft group-hover:text-text transition">로그인 상태 유지</span>-->
+<!--                </label>-->
 
                 <!-- 로그인 버튼 -->
                 <button type="submit"

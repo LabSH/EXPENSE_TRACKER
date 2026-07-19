@@ -106,6 +106,7 @@ public Map<String, Object> ajaxSave(@Valid DomainForm form, BindingResult result
 - 페치 타입을 고려하여 관계 명시적 정의 (`@OneToMany`, `@ManyToOne` 등)
 - N+1 문제 방지를 위해 기본적으로 `FetchType.LAZY` 선호
 - DB 제약 조건을 반영하여 `@Column(nullable = false)` 및 JPA 레벨 제약 조건 사용
+- JPA 필드는 논리에 맞는 `@Comment` 필수
 - 입력 Form 클래스: 도메인당 폼이 하나면 `{Domain}Form`, 여럿이면 `{Domain}{Action}Form` (예: `UserJoinForm`, `UserEditForm`) — 엔티티에는 사용하지 말 것
 - 출력 DTO 클래스: `{Domain}DTO`
 - 불필요한 경우 양방향 관계 지양; 사용 시 `mappedBy` 및 헬퍼 메서드 신중히 관리
@@ -151,6 +152,7 @@ public Map<String, Object> ajaxSave(@Valid DomainForm form, BindingResult result
 
 ### 코드 작성 원칙
 - `Optional` 올바르게 사용 — 서비스 메서드에서 `null` 반환 금지
+- 백엔드 메서드는 목적별 접두사(`find/get`, `save/add`, `update`, `delete`, `is/has/can`) 사용
 - Java 최신 문법은 필요할 때 자연스럽게 사용 — 의도적으로 쓰려 하지 말 것
 - 객체 생성 시 `new` 직접 사용 대신 빌더 패턴 사용 — `new`가 불가피한 경우(기본 생성자 강제, 라이브러리 요구 등)만 예외
 

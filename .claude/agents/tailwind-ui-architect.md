@@ -132,6 +132,54 @@ HTML + Tailwind에서 `@apply`는 컴포넌트 스타일 정의의 **정당한 �
   - Metadata/label: `text-xs`
 - 리뷰 시 color 차이만으로 hierarchy를 표현한 경우 (예: 파란 제목 vs 회색 본문) 플래그를 세우고 spacing/sizing 기반 대안 제안.
 
+## Rule 6: 패널 진입 애니메이션 — anim-up / anim-slideUp 구분
+
+**마스터-디테일 레이아웃에서 오른쪽(상세) 패널이 새 콘텐츠를 표시할 때**는 반드시 `anim-up`을 사용한다.
+
+### 정의
+
+각 페이지 `<style>` 블록에 아래 두 keyframe과 클래스를 포함시킬 것:
+
+```css
+@keyframes fadeSlideUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+@keyframes slideUp     { from{opacity:0;transform:translateY(24px) scale(.98)} to{opacity:1;transform:none} }
+.anim-up      { animation:fadeSlideUp .35s cubic-bezier(.22,1,.36,1) both }
+.anim-slideUp { animation:slideUp     .32s cubic-bezier(.22,1,.36,1) forwards }
+```
+
+### 사용 규칙
+
+| 상황 | 클래스 | 적용 대상 |
+|---|---|---|
+| 목록에서 항목 선택 → 상세 패널 갱신 | `anim-up` | **패널 컨테이너 전체** (border, bg 포함한 최외곽 div) |
+| 모달 팝업 | `anim-slideUp` | 모달 내부 카드 div |
+
+```html
+<!-- ✅ 올바른 방법: 컨테이너 전체에 anim-up -->
+<div id="detail-panel" class="anim-up bg-admin-surface border border-admin-border rounded-2xl">
+  <div class="px-7 py-5 border-b">...</div>  <!-- 헤더도 함께 움직임 -->
+  <div id="detail-content">...</div>
+</div>
+
+<!-- ❌ 잘못된 방법: 내부 콘텐츠에만 래퍼 삽입 -->
+<div id="detail-panel" class="bg-admin-surface border ...">
+  <div class="anim-up">...</div>  <!-- 헤더가 고정되고 내부만 움직임 -->
+</div>
+```
+
+### JS에서 재트리거
+
+같은 패널에 다른 항목을 선택할 때도 애니메이션이 반복되어야 한다. 클래스 제거 → reflow 강제 → 재추가 패턴을 사용:
+
+```javascript
+function animatePanel(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('anim-up');
+    void el.offsetWidth;          // reflow 강제 (이 줄 없으면 애니메이션 재실행 안 됨)
+    el.classList.add('anim-up');
+}
+```
+
 ---
 
 ## 구현 워크플로우

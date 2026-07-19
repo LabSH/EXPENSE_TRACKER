@@ -61,6 +61,7 @@ src/main/resources/static/js/
 - 파일명은 기존 프로젝트 규칙을 우선 따르고, 새 규칙이 필요하면 소문자 kebab-case를 사용한다.
 - 함수명과 변수명은 camelCase를 사용한다.
 - 상수는 UPPER_SNAKE_CASE를 사용한다.
+- 프론트 함수는 이벤트 바인딩 `bind...`, 이벤트 처리 `handle...` 접두사를 사용한다.
 - 이벤트 핸들러 함수는 의미가 드러나게 작성한다.
   - 예: `handleSaveClick`, `handleCategoryChange`, `bindSearchEvents`
 - 공통 함수는 동작이 명확한 이름을 사용한다.
