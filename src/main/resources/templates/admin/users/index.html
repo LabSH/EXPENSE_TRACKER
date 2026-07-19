@@ -222,6 +222,7 @@ async function userApi(url, opts = {}) {
 
 // ── 상태 ─────────────────────────────────────────────────────────
 var users = /*[[${users}]]*/ [];
+var stats = /*[[${stats}]]*/ { total: 0, active: 0, inactive: 0 };
 var selectedUserId = null;
 var newUserRole = '사용자';
 var changingRoleCd = null;
@@ -246,9 +247,7 @@ function renderUsersPanel() {
 }
 
 function renderUserList() {
-    const filtered = userKeyword
-        ? users.filter(u => u.userNm.includes(userKeyword))
-        : users;
+    const filtered = users;
 
     const header = `
         <div class="px-7 py-5 border-b border-admin-border flex items-center justify-between">
@@ -271,19 +270,11 @@ function renderUserList() {
             <button onclick="resetUserSearch()" class="px-2.5 py-2 rounded-xl border border-admin-border text-xs font-medium text-ink-soft hover:bg-admin-subtle transition-colors shrink-0">초기화</button>
         </div>`;
 
-    if (users.length === 0) {
-        return `
-            <div class="bg-admin-surface border border-admin-border rounded-2xl overflow-hidden">
-                ${header}${searchBar}
-                <p class="py-12 text-center text-sm text-ink-muted">등록된 사용자가 없어요</p>
-            </div>`;
-    }
-
     if (filtered.length === 0) {
         return `
             <div class="bg-admin-surface border border-admin-border rounded-2xl overflow-hidden">
                 ${header}${searchBar}
-                <p class="py-12 text-center text-sm text-ink-muted">검색 결과가 없어요</p>
+                <p class="py-12 text-center text-sm text-ink-muted">${userKeyword ? '검색 결과가 없어요' : '등록된 사용자가 없어요'}</p>
             </div>`;
     }
 
@@ -395,23 +386,28 @@ function renderUserDetail() {
 }
 
 function updateUserStats() {
-    const total = users.length;
-    const active = users.filter(u => u.useAt === 'Y').length;
-    document.getElementById('stat-total').textContent = total;
-    document.getElementById('stat-active').textContent = active;
-    document.getElementById('stat-inactive').textContent = total - active;
+    document.getElementById('stat-total').textContent = stats.total;
+    document.getElementById('stat-active').textContent = stats.active;
+    document.getElementById('stat-inactive').textContent = stats.inactive;
+}
+
+async function refreshStats() {
+    stats = await userApi('/admin/users/stats');
+    updateUserStats();
 }
 
 function selectUser(userId)  { selectedUserId = userId; renderUsersPanel(); }
 function deselectUser()       { selectedUserId = null;   renderUsersPanel(); }
 
-function searchUsers() {
+async function searchUsers() {
     userKeyword = document.getElementById('user-keyword')?.value.trim() ?? '';
+    users = await userApi(`/admin/users/data?keyword=${encodeURIComponent(userKeyword)}`);
     renderUsersPanel();
 }
 
-function resetUserSearch() {
+async function resetUserSearch() {
     userKeyword = '';
+    users = await userApi('/admin/users/data');
     renderUsersPanel();
 }
 
@@ -420,6 +416,7 @@ async function toggleUser(userId) {
         const updated = await userApi(`/admin/users/${userId}/status`, { method: 'PATCH' });
         users = users.map(u => u.userId === userId ? updated : u);
         renderUsersPanel();
+        refreshStats();
     } catch(e) { alert(e.message); }
 }
 
@@ -459,7 +456,7 @@ async function confirmAddUser() {
         newUserRole = '사용자';
         closeModal('modal-user-add');
         renderUsersPanel();
-        updateUserStats();
+        refreshStats();
     } catch(e) { alert(e.message); }
 }
 
@@ -537,7 +534,7 @@ async function confirmDeleteUser() {
         selectedUserId = null;
         closeModal('modal-user-delete');
         renderUsersPanel();
-        updateUserStats();
+        refreshStats();
     } catch(e) { alert(e.message); }
 }
 

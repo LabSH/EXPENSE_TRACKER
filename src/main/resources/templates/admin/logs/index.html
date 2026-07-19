@@ -120,7 +120,6 @@
         <div class="flex items-center justify-between px-6 py-4 border-b border-admin-border">
             <div class="flex items-center gap-3">
                 <h3 class="text-sm font-bold text-ink">상세내용</h3>
-                <span id="detail-level"></span>
             </div>
             <button onclick="closeLogDetail()"
                     class="w-7 h-7 rounded-lg flex items-center justify-center text-ink-muted hover:bg-admin-subtle hover:text-ink transition-colors">
@@ -131,6 +130,9 @@
         <!-- 본문 -->
         <div class="px-6 py-5 space-y-3">
             <div class="grid grid-cols-[100px_1fr] gap-x-4 gap-y-3 text-sm">
+                <span class="text-ink-muted">레벨</span>
+                <span id="detail-level" class="w-fit"></span>
+
                 <span class="text-ink-muted">시간</span>
                 <span id="detail-time" class="font-mono text-xs text-ink"></span>
 
@@ -205,7 +207,8 @@ async function searchLogs() {
 }
 
 function resetFilter() {
-    const today = new Date().toISOString().slice(0, 10);
+    const now   = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     CalendarPicker.setDate('from', today);
     CalendarPicker.setDate('to',   today);
     Dropdown.reset('level');
@@ -279,7 +282,7 @@ function openLogDetail(index) {
                     :                            'text-sage font-semibold';
 
     document.getElementById('detail-level').className =
-        `inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold ${lc.cls}`;
+        `inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold w-fit ${lc.cls}`;
     document.getElementById('detail-level').innerHTML = `${lc.icon}${log.level}`;
 
     document.getElementById('detail-time').textContent      = log.time        || '—';

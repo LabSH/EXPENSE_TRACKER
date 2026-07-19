@@ -220,6 +220,11 @@
                 <input id="item-nm" type="text" placeholder="항목명 입력..."
                        class="w-full px-3.5 py-2.5 rounded-xl border border-violet bg-admin text-sm text-ink outline-none" />
             </div>
+            <div id="item-code-id-wrap" class="hidden">
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">코드 ID</label>
+                <input id="item-code-id" type="text" readonly
+                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin-subtle text-sm text-ink-soft font-mono outline-none" />
+            </div>
             <div>
                 <label class="block text-xs font-medium text-ink-soft mb-1.5">정렬 순번</label>
                 <div class="flex items-center gap-2">
@@ -486,6 +491,7 @@ function openAddItem() {
         : 1;
     document.getElementById('item-nm').value = '';
     document.getElementById('item-seq').value = nextSeq;
+    document.getElementById('item-code-id-wrap').classList.add('hidden');
     setItemUse('Y');
     document.getElementById('modal-item-confirm').textContent = '추가하기';
     document.getElementById('modal-item-confirm').onclick = confirmAddItem;
@@ -499,6 +505,8 @@ function openEditItem(codeId, codeNm, sortSn, useAt) {
     document.getElementById('modal-item-title').textContent = '항목 수정';
     document.getElementById('item-nm').value = codeNm;
     document.getElementById('item-seq').value = sortSn;
+    document.getElementById('item-code-id').value = codeId;
+    document.getElementById('item-code-id-wrap').classList.remove('hidden');
     setItemUse(useAt);
     document.getElementById('modal-item-confirm').textContent = '저장하기';
     document.getElementById('modal-item-confirm').onclick = confirmEditItem;
