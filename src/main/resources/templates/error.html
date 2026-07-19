@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오류 · 가계부</title>
+    <th:block th:replace="~{config/config :: config}"></th:block>
+    <style>
+        body { font-family: 'DM Sans', 'Gowun Dodum', sans-serif; background: #F5F3EF; color: #2C2A26; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<main class="min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-[420px] text-center animate-fade-in">
+
+        <!-- 로고 -->
+        <div class="flex items-center justify-center gap-2 mb-10">
+            <div class="w-8 h-8 rounded-lg-1 bg-green flex items-center justify-center text-white font-bold text-sm">₩</div>
+            <div class="text-[15px] font-bold tracking-tight text-text">가계부</div>
+        </div>
+
+        <!-- 아이콘 -->
+        <div class="w-16 h-16 mx-auto rounded-xl-1 bg-coral-light flex items-center justify-center text-coral mb-6">
+            <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 8v4"/>
+                <path d="M12 16h.01"/>
+            </svg>
+        </div>
+
+        <div class="text-[13px] text-coral font-semibold tracking-[0.18em] uppercase mb-3" th:text="${status} + ' Error'">Error</div>
+        <h1 class="font-dodum text-[28px] leading-tight tracking-tight text-text mb-3">문제가 발생했어요</h1>
+        <p class="text-[14px] text-text-soft leading-relaxed mb-8">
+            요청을 처리할 수 없었어요.<br>
+            잠시 후 다시 시도해주세요.
+        </p>
+
+        <a th:href="@{/}"
+           class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg-1 bg-green text-white text-[14px] font-semibold shadow-btn-green hover:shadow-btn-green-hover hover:-translate-y-px transition-all">
+            홈으로 가기
+        </a>
+    </div>
+</main>
+</body>
+</html>
