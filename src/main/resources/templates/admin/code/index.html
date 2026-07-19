@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>코드 데이터 관리 — 가계부</title>
+    <th:block th:replace="~{config/config :: config}"></th:block>
+    <style>
+        @keyframes slideDown { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:none} }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        @keyframes slideUp { from{opacity:0;transform:translateY(24px) scale(.98)} to{opacity:1;transform:none} }
+        @keyframes fadeSlideUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+        .anim-slideDown { animation:slideDown .25s cubic-bezier(.22,1,.36,1) both }
+        .anim-fadeIn { animation:fadeIn .2s ease forwards }
+        .anim-slideUp { animation:slideUp .32s cubic-bezier(.22,1,.36,1) forwards }
+        .anim-up { animation:fadeSlideUp .35s cubic-bezier(.22,1,.36,1) both }
+        ::-webkit-scrollbar{width:5px} ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:#DDD9EE;border-radius:3px}
+        a{text-decoration:none;color:inherit}
+        .hidden { display: none !important; }
+        #item-seq::-webkit-inner-spin-button,
+        #item-seq::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+        #item-seq { -moz-appearance:textfield; }
+    </style>
+</head>
+<body class="bg-admin font-sans text-ink">
+
+<div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/admin-sidebar :: admin-sidebar('code')}"></div>
+
+    <!-- Main -->
+    <div id="admin-main-content" class="flex-1 overflow-hidden">
+    <style>.hidden{display:none !important}</style>
+    <main class="overflow-y-auto h-screen p-9">
+        <div class="flex items-start gap-4 mb-8">
+            <button id="sidebar-toggle" class="w-9 h-9 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors shrink-0 mt-1">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+            </button>
+            <div>
+                <div class="flex items-center gap-2.5 mb-1.5">
+                    <span class="px-2.5 py-1 rounded-full bg-violet-light text-violet text-xs font-semibold">관리자 모드</span>
+                </div>
+                <h1 class="text-3xl font-bold text-ink tracking-tight">코드 데이터 관리</h1>
+                <p class="text-sm text-ink-muted mt-1">시스템에서 사용하는 코드성 데이터를 관리합니다</p>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="grid gap-5 items-start" style="grid-template-columns:380px 1fr">
+
+            <!-- Left: 코드 그룹 목록 -->
+            <div class="bg-admin-surface border border-admin-border rounded-2xl overflow-hidden">
+                <div class="px-7 py-5 border-b border-admin-border flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-ink">코드 그룹</h3>
+                    <button onclick="openAddGroup()"
+                            class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-violet text-white text-xs font-semibold hover:opacity-90 transition-opacity">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                        분류 추가
+                    </button>
+                </div>
+                <!-- 검색 바 -->
+                <div class="px-4 py-3 border-b border-admin-border flex items-center gap-2">
+                    <div class="relative flex-1">
+                        <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        <input id="group-keyword" type="text" placeholder="그룹명 검색..."
+                               class="w-full pl-8 pr-3 py-2 rounded-xl border border-admin-border bg-admin text-xs text-ink outline-none focus:border-violet transition-colors"
+                               onkeydown="if(event.key==='Enter') reloadGroups()" />
+                    </div>
+                    <button onclick="reloadGroups()"
+                            class="px-3 py-2 rounded-xl bg-violet text-white text-xs font-semibold hover:opacity-90 transition-opacity shrink-0">검색</button>
+                    <button onclick="resetGroupSearch()"
+                            class="px-2.5 py-2 rounded-xl border border-admin-border text-xs font-medium text-ink-soft hover:bg-admin-subtle transition-colors shrink-0">초기화</button>
+                </div>
+
+                <div id="group-list" class="overflow-y-auto max-h-[490px]">
+                    <p th:if="${groups.empty}" class="py-8 text-center text-sm text-ink-muted">그룹이 없어요</p>
+                    <th:block th:if="${not groups.empty}">
+                        <div th:each="g, stat : ${groups}"
+                             class="group-item relative flex items-center cursor-pointer transition-colors hover:bg-admin-subtle"
+                             th:classappend="${not stat.last} ? 'border-b border-admin-border'"
+                             th:attr="data-group-id=${g.groupId}"
+                             onclick="selectGroup(this.dataset.groupId)">
+                            <div class="flex-1 px-5 py-4 min-w-0">
+                                <p class="text-sm font-medium text-ink" th:text="${g.groupNm}">그룹명</p>
+                                <p class="text-xs text-ink-muted mt-0.5">
+                                    <th:block th:text="${g.itemCount}">0</th:block>개 항목
+                                </p>
+                            </div>
+                            <div class="group-actions shrink-0 hidden gap-1 pr-3">
+                                <button th:attr="data-group-id=${g.groupId},data-group-nm=${g.groupNm}"
+                                        onclick="event.stopPropagation();openEditGroup(this.dataset.groupId,this.dataset.groupNm)"
+                                        class="w-7 h-7 rounded-lg bg-admin-surface border border-admin-border flex items-center justify-center text-ink-soft hover:border-violet hover:text-violet transition-colors">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                                </button>
+                                <button th:attr="data-group-id=${g.groupId},data-group-nm=${g.groupNm}"
+                                        onclick="event.stopPropagation();openDeleteGroup(this.dataset.groupId,this.dataset.groupNm)"
+                                        class="w-7 h-7 rounded-lg bg-admin-surface border border-admin-border flex items-center justify-center text-ink-soft hover:border-blush hover:text-blush transition-colors">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+
+            <!-- Right: 항목 목록 -->
+            <div id="item-panel" class="bg-admin-surface border border-admin-border rounded-2xl overflow-hidden">
+                <div class="px-7 py-5 border-b border-admin-border flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-ink" id="item-panel-title">그룹을 선택하세요</h3>
+                    <button id="add-item-btn" onclick="openAddItem()"
+                            class="hidden items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-violet text-white text-xs font-semibold hover:opacity-90 transition-opacity">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                        항목 추가
+                    </button>
+                </div>
+                <div id="item-list">
+                    <div class="py-16 text-center text-ink-muted">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-3 opacity-25">
+                            <path d="M12 2c-5.52 0-10 2.24-10 5s4.48 5 10 5 10-2.24 10-5-4.48-5-10-5M2 7v5c0 2.76 4.48 5 10 5s10-2.24 10-5V7M2 12v5c0 2.76 4.48 5 10 5s10-2.24 10-5v-5"/>
+                        </svg>
+                        <p class="text-sm font-medium">코드 그룹을 선택하세요</p>
+                        <p class="text-xs mt-1 text-ink-muted">왼쪽에서 그룹을 클릭하면 항목이 표시돼요</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<!-- ── 분류 추가 모달 ──────────────────────────────────── -->
+<div id="modal-add-group" class="hidden anim-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-md">
+    <div class="anim-slideUp bg-admin-surface rounded-2xl w-96 shadow-2xl overflow-hidden">
+        <div class="px-7 pt-6 pb-5 border-b border-admin-border bg-violet-light flex justify-between items-center">
+            <h2 class="text-base font-bold text-ink">코드 분류 추가</h2>
+            <button onclick="closeModal('modal-add-group')" class="w-8 h-8 rounded-full bg-admin-border flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="px-7 py-5 flex flex-col gap-4">
+            <div>
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">그룹 ID <span class="text-blush">*</span></label>
+                <input id="add-group-id" type="text" placeholder="예: CATEGORY, PAYMENT..."
+                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
+                <p class="text-xs text-ink-muted mt-1">영문 대문자 + 언더스코어 권장 (자동 변환)</p>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">그룹명 <span class="text-blush">*</span></label>
+                <input id="add-group-nm" type="text" placeholder="예: 카테고리, 결제수단..."
+                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
+            </div>
+        </div>
+        <div class="px-7 pb-6 flex gap-2.5">
+            <button onclick="closeModal('modal-add-group')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+            <button onclick="confirmAddGroup()" class="flex-[2] py-3 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">추가하기</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── 분류 수정 모달 ──────────────────────────────────── -->
+<div id="modal-edit-group" class="hidden anim-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-md">
+    <div class="anim-slideUp bg-admin-surface rounded-2xl w-96 shadow-2xl overflow-hidden">
+        <div class="px-7 pt-6 pb-5 border-b border-admin-border bg-violet-light flex justify-between items-center">
+            <h2 class="text-base font-bold text-ink">코드 분류 수정</h2>
+            <button onclick="closeModal('modal-edit-group')" class="w-8 h-8 rounded-full bg-admin-border flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="px-7 py-5 flex flex-col gap-4">
+            <div>
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">그룹 ID</label>
+                <input id="edit-group-id" type="text" readonly
+                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin-subtle text-sm text-ink-soft font-mono outline-none" />
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">그룹명 <span class="text-blush">*</span></label>
+                <input id="edit-group-nm" type="text"
+                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
+            </div>
+        </div>
+        <div class="px-7 pb-6 flex gap-2.5">
+            <button onclick="closeModal('modal-edit-group')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+            <button onclick="confirmEditGroup()" class="flex-[2] py-3 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">저장하기</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── 분류 삭제 모달 ──────────────────────────────────── -->
+<div id="modal-delete-group" class="hidden anim-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-md">
+    <div class="anim-slideUp bg-admin-surface rounded-2xl w-80 shadow-2xl overflow-hidden">
+        <div class="px-7 pt-6 pb-5 border-b border-admin-border bg-blush/10 flex justify-between items-center">
+            <h2 class="text-base font-bold text-ink">분류 삭제</h2>
+            <button onclick="closeModal('modal-delete-group')" class="w-8 h-8 rounded-full bg-admin-border flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="px-7 py-5">
+            <p class="text-sm text-ink mb-1.5"><span id="delete-group-name" class="font-semibold text-blush"></span> 분류를 삭제하시겠어요?</p>
+            <p class="text-xs text-ink-muted">해당 분류의 모든 항목도 함께 삭제돼요. 복구할 수 없어요.</p>
+        </div>
+        <div class="px-7 pb-6 flex gap-2.5">
+            <button onclick="closeModal('modal-delete-group')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+            <button id="confirm-delete-group-btn" class="flex-[2] py-3 rounded-xl bg-blush text-white text-sm font-semibold hover:opacity-90 transition-opacity">삭제하기</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── 항목 추가/수정 모달 ─────────────────────────────── -->
+<div id="modal-item" class="hidden anim-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-md">
+    <div class="anim-slideUp bg-admin-surface rounded-2xl w-96 shadow-2xl overflow-hidden">
+        <div class="px-7 pt-6 pb-5 border-b border-admin-border bg-violet-light flex justify-between items-center">
+            <h2 id="modal-item-title" class="text-base font-bold text-ink">항목 추가</h2>
+            <button onclick="closeModal('modal-item')" class="w-8 h-8 rounded-full bg-admin-border flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="px-7 py-5 flex flex-col gap-4">
+            <div>
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">항목명 <span class="text-blush">*</span></label>
+                <input id="item-nm" type="text" placeholder="항목명 입력..."
+                       class="w-full px-3.5 py-2.5 rounded-xl border border-violet bg-admin text-sm text-ink outline-none" />
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">정렬 순번</label>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="adjustSeq(-1)"
+                            class="w-9 h-9 shrink-0 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:border-violet hover:text-violet hover:bg-violet-light transition-colors">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+                    </button>
+                    <input id="item-seq" type="number" min="1" value="1"
+                           class="flex-1 py-2.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors text-center" />
+                    <button type="button" onclick="adjustSeq(1)"
+                            class="w-9 h-9 shrink-0 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:border-violet hover:text-violet hover:bg-violet-light transition-colors">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-ink-soft mb-1.5">사용 여부</label>
+                <div class="flex gap-2">
+                    <button id="item-use-y" onclick="setItemUse('Y')"
+                            class="flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-violet bg-violet-light text-violet">사용</button>
+                    <button id="item-use-n" onclick="setItemUse('N')"
+                            class="flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle">미사용</button>
+                </div>
+            </div>
+        </div>
+        <div class="px-7 pb-6 flex gap-2.5">
+            <button onclick="closeModal('modal-item')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+            <button id="modal-item-confirm" class="flex-[2] py-3 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">추가하기</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── 항목 삭제 모달 ──────────────────────────────────── -->
+<div id="modal-delete-item" class="hidden anim-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-md">
+    <div class="anim-slideUp bg-admin-surface rounded-2xl w-80 shadow-2xl overflow-hidden">
+        <div class="px-7 pt-6 pb-5 border-b border-admin-border bg-blush/10 flex justify-between items-center">
+            <h2 class="text-base font-bold text-ink">항목 삭제</h2>
+            <button onclick="closeModal('modal-delete-item')" class="w-8 h-8 rounded-full bg-admin-border flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="px-7 py-5">
+            <p class="text-sm text-ink mb-1.5"><span id="delete-item-name" class="font-semibold text-blush"></span> 항목을 삭제하시겠어요?</p>
+            <p class="text-xs text-ink-muted">삭제한 데이터는 복구할 수 없어요.</p>
+        </div>
+        <div class="px-7 pb-6 flex gap-2.5">
+            <button onclick="closeModal('modal-delete-item')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+            <button id="confirm-delete-item-btn" class="flex-[2] py-3 rounded-xl bg-blush text-white text-sm font-semibold hover:opacity-90 transition-opacity">삭제하기</button>
+        </div>
+    </div>
+</div>
+
+<script>
+var codeSelectedGroup = null;
+var codeEditingCodeId = null;
+var codeItemUseAt = 'Y';
+var codeCurrentItems = [];
+
+// ── CSRF & fetch ─────────────────────────────────────────────────
+function codeCsrf() {
+    const raw = document.cookie.split('; ').find(r => r.startsWith('XSRF-TOKEN='))?.split('=')[1] ?? '';
+    return decodeURIComponent(raw);
+}
+
+async function codeApi(url, opts = {}) {
+    const method = (opts.method || 'GET').toUpperCase();
+    const headers = { 'Content-Type': 'application/json' };
+    if (method !== 'GET') headers['X-XSRF-TOKEN'] = codeCsrf();
+    const res = await fetch(url, { ...opts, headers });
+    if (!res.ok) { const msg = await res.text().catch(() => res.statusText); throw new Error(msg); }
+    return res.status === 204 ? null : res.json();
+}
+
+// ── modal util ───────────────────────────────────────────────────
+function openModal(id)  { document.getElementById(id)?.classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
+
+// ── group list (re-render after CRUD) ────────────────────────────
+async function reloadGroups() {
+    const keyword = document.getElementById('group-keyword')?.value.trim() ?? '';
+    const url = keyword ? `/admin/code/groups?keyword=${encodeURIComponent(keyword)}` : '/admin/code/groups';
+    const groups = await codeApi(url);
+    const list = document.getElementById('group-list');
+    if (groups.length === 0) {
+        list.innerHTML = '<p class="py-8 text-center text-sm text-ink-muted">그룹이 없어요</p>';
+        return;
+    }
+    list.innerHTML = groups.map((g, i) => {
+        const border = i < groups.length - 1 ? 'border-b border-admin-border' : '';
+        const active = codeSelectedGroup === g.groupId;
+        return `
+            <div class="group-item relative flex items-center cursor-pointer transition-colors ${border} ${active ? 'bg-violet-light' : 'hover:bg-admin-subtle'}"
+                 data-group-id="${g.groupId}" onclick="selectGroup('${g.groupId}')">
+                <div class="flex-1 px-5 py-4 min-w-0">
+                    <p class="text-sm font-medium ${active ? 'text-violet' : 'text-ink'}">${g.groupNm}</p>
+                    <p class="text-xs text-ink-muted mt-0.5">${g.itemCount}개 항목</p>
+                </div>
+                <div class="group-actions shrink-0 hidden gap-1 pr-3">
+                    <button onclick="event.stopPropagation();openEditGroup('${g.groupId}','${escQ(g.groupNm)}')"
+                            class="w-7 h-7 rounded-lg bg-admin-surface border border-admin-border flex items-center justify-center text-ink-soft hover:border-violet hover:text-violet transition-colors">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                    </button>
+                    <button onclick="event.stopPropagation();openDeleteGroup('${g.groupId}','${escQ(g.groupNm)}')"
+                            class="w-7 h-7 rounded-lg bg-admin-surface border border-admin-border flex items-center justify-center text-ink-soft hover:border-blush hover:text-blush transition-colors">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    </button>
+                </div>
+            </div>`;
+    }).join('');
+    bindGroupHover();
+}
+
+function bindGroupHover() {
+    document.querySelectorAll('.group-item').forEach(row => {
+        row.addEventListener('mouseenter', () => row.querySelector('.group-actions')?.classList.replace('hidden','flex'));
+        row.addEventListener('mouseleave', () => row.querySelector('.group-actions')?.classList.replace('flex','hidden'));
+    });
+}
+
+function resetGroupSearch() {
+    document.getElementById('group-keyword').value = '';
+    reloadGroups();
+}
+
+function escQ(s) { return String(s).replace(/'/g, "\\'"); }
+
+// ── group select ─────────────────────────────────────────────────
+async function selectGroup(groupId) {
+    codeSelectedGroup = groupId;
+
+    document.querySelectorAll('.group-item').forEach(el => {
+        const active = el.dataset.groupId === groupId;
+        el.classList.toggle('bg-violet-light', active);
+        el.classList.toggle('hover:bg-admin-subtle', !active);
+        const nm = el.querySelector('p.text-sm.font-medium');
+        if (nm) { nm.classList.toggle('text-violet', active); nm.classList.toggle('text-ink', !active); }
+    });
+
+    const nm = document.querySelector(`.group-item[data-group-id="${groupId}"] p.text-sm.font-medium`)?.textContent ?? groupId;
+    document.getElementById('item-panel-title').textContent = nm;
+    const addBtn = document.getElementById('add-item-btn');
+    addBtn.classList.remove('hidden');
+    addBtn.classList.add('flex');
+
+    const panel = document.getElementById('item-panel');
+    panel.classList.remove('anim-up');
+    void panel.offsetWidth;
+    panel.classList.add('anim-up');
+
+    await reloadItems();
+}
+
+// ── item list ────────────────────────────────────────────────────
+async function reloadItems() {
+    if (!codeSelectedGroup) return;
+    const items = await codeApi(`/admin/code/groups/${codeSelectedGroup}/items`);
+    codeCurrentItems = items;
+    const list = document.getElementById('item-list');
+    if (items.length === 0) {
+        list.innerHTML = '<p class="py-8 text-center text-sm text-ink-muted">항목이 없어요. 항목을 추가해보세요.</p>';
+        return;
+    }
+    list.innerHTML =
+        `<div class="grid px-7 py-2.5 bg-admin-subtle border-b border-admin-border text-xs font-semibold text-ink-muted uppercase tracking-wide" style="grid-template-columns:56px 1fr 80px 136px">
+            <span>순번</span><span>항목명</span><span>사용여부</span><span></span>
+        </div>` +
+        items.map(item => `
+            <div class="grid items-center px-7 py-3 border-b border-admin-border last:border-0 hover:bg-admin-subtle transition-colors" style="grid-template-columns:56px 1fr 80px 136px">
+                <span class="w-7 h-7 rounded-lg text-xs font-bold flex items-center justify-center bg-violet-light text-violet">${item.sortSn}</span>
+                <span class="text-sm text-ink">${item.codeNm}</span>
+                <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium w-fit ${item.useAt === 'Y' ? 'bg-sage-light text-sage' : 'bg-admin-subtle text-ink-muted'}">${item.useAt === 'Y' ? '사용' : '미사용'}</span>
+                <div class="flex gap-1.5 justify-end">
+                    <button onclick="openEditItem('${item.codeId}','${escQ(item.codeNm)}',${item.sortSn},'${item.useAt}')"
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-admin-subtle text-ink-soft border border-admin-border hover:bg-admin-border transition-colors">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>수정
+                    </button>
+                    <button onclick="openDeleteItem('${item.codeId}','${escQ(item.codeNm)}')"
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-blush-light text-blush border border-blush/30 hover:opacity-90 transition-opacity">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>삭제
+                    </button>
+                </div>
+            </div>`).join('');
+}
+
+// ── group CRUD ───────────────────────────────────────────────────
+function openAddGroup() {
+    document.getElementById('add-group-id').value = '';
+    document.getElementById('add-group-nm').value = '';
+    openModal('modal-add-group');
+    setTimeout(() => document.getElementById('add-group-id').focus(), 50);
+}
+
+async function confirmAddGroup() {
+    const groupId = document.getElementById('add-group-id').value.trim();
+    const groupNm = document.getElementById('add-group-nm').value.trim();
+    if (!groupId || !groupNm) return;
+    try {
+        await codeApi('/admin/code/groups', { method: 'POST', body: JSON.stringify({ groupId, groupNm }) });
+        closeModal('modal-add-group');
+        await reloadGroups();
+    } catch (e) { alert(e.message); }
+}
+
+function openEditGroup(groupId, groupNm) {
+    document.getElementById('edit-group-id').value = groupId;
+    document.getElementById('edit-group-nm').value = groupNm;
+    openModal('modal-edit-group');
+    setTimeout(() => document.getElementById('edit-group-nm').focus(), 50);
+}
+
+async function confirmEditGroup() {
+    const groupId = document.getElementById('edit-group-id').value;
+    const groupNm = document.getElementById('edit-group-nm').value.trim();
+    if (!groupNm) return;
+    try {
+        await codeApi(`/admin/code/groups/${groupId}`, { method: 'PATCH', body: JSON.stringify({ groupNm }) });
+        closeModal('modal-edit-group');
+        if (codeSelectedGroup === groupId) document.getElementById('item-panel-title').textContent = groupNm;
+        await reloadGroups();
+    } catch (e) { alert(e.message); }
+}
+
+function openDeleteGroup(groupId, groupNm) {
+    document.getElementById('delete-group-name').textContent = `"${groupNm}"`;
+    document.getElementById('confirm-delete-group-btn').onclick = () => confirmDeleteGroup(groupId);
+    openModal('modal-delete-group');
+}
+
+async function confirmDeleteGroup(groupId) {
+    try {
+        await codeApi(`/admin/code/groups/${groupId}`, { method: 'DELETE' });
+        closeModal('modal-delete-group');
+        if (codeSelectedGroup === groupId) {
+            codeSelectedGroup = null;
+            document.getElementById('item-panel-title').textContent = '그룹을 선택하세요';
+            const addBtn = document.getElementById('add-item-btn');
+            addBtn.classList.add('hidden');
+            addBtn.classList.remove('flex');
+            document.getElementById('item-list').innerHTML =
+                '<p class="py-8 text-center text-sm text-ink-muted">그룹이 삭제됐어요</p>';
+        }
+        await reloadGroups();
+    } catch (e) { alert(e.message); }
+}
+
+// ── item CRUD ────────────────────────────────────────────────────
+function adjustSeq(delta) {
+    const input = document.getElementById('item-seq');
+    input.value = Math.max(1, (parseInt(input.value) || 1) + delta);
+}
+
+function setItemUse(val) {
+    codeItemUseAt = val;
+    document.getElementById('item-use-y').className = `flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${val === 'Y' ? 'border-violet bg-violet-light text-violet' : 'border-admin-border text-ink-soft hover:bg-admin-subtle'}`;
+    document.getElementById('item-use-n').className = `flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${val === 'N' ? 'border-violet bg-violet-light text-violet' : 'border-admin-border text-ink-soft hover:bg-admin-subtle'}`;
+}
+
+function openAddItem() {
+    codeEditingCodeId = null;
+    codeItemUseAt = 'Y';
+    document.getElementById('modal-item-title').textContent = '항목 추가';
+    const nextSeq = codeCurrentItems.length > 0
+        ? Math.max(...codeCurrentItems.map(i => i.sortSn)) + 1
+        : 1;
+    document.getElementById('item-nm').value = '';
+    document.getElementById('item-seq').value = nextSeq;
+    setItemUse('Y');
+    document.getElementById('modal-item-confirm').textContent = '추가하기';
+    document.getElementById('modal-item-confirm').onclick = confirmAddItem;
+    openModal('modal-item');
+    setTimeout(() => document.getElementById('item-nm').focus(), 50);
+}
+
+function openEditItem(codeId, codeNm, sortSn, useAt) {
+    codeEditingCodeId = codeId;
+    codeItemUseAt = useAt;
+    document.getElementById('modal-item-title').textContent = '항목 수정';
+    document.getElementById('item-nm').value = codeNm;
+    document.getElementById('item-seq').value = sortSn;
+    setItemUse(useAt);
+    document.getElementById('modal-item-confirm').textContent = '저장하기';
+    document.getElementById('modal-item-confirm').onclick = confirmEditItem;
+    openModal('modal-item');
+    setTimeout(() => document.getElementById('item-nm').focus(), 50);
+}
+
+async function confirmAddItem() {
+    const codeNm = document.getElementById('item-nm').value.trim();
+    const sortSn = parseInt(document.getElementById('item-seq').value) || 1;
+    if (!codeNm) return;
+    try {
+        await codeApi(`/admin/code/groups/${codeSelectedGroup}/items`, {
+            method: 'POST',
+            body: JSON.stringify({ codeNm, sortSn, useAt: codeItemUseAt })
+        });
+        closeModal('modal-item');
+        await reloadItems();
+        await reloadGroups();
+    } catch (e) { alert(e.message); }
+}
+
+async function confirmEditItem() {
+    const codeNm = document.getElementById('item-nm').value.trim();
+    const sortSn = parseInt(document.getElementById('item-seq').value) || 1;
+    if (!codeNm) return;
+    try {
+        await codeApi(`/admin/code/groups/${codeSelectedGroup}/items/${codeEditingCodeId}`, {
+            method: 'PUT',
+            body: JSON.stringify({ codeNm, sortSn, useAt: codeItemUseAt })
+        });
+        closeModal('modal-item');
+        await reloadItems();
+    } catch (e) { alert(e.message); }
+}
+
+function openDeleteItem(codeId, codeNm) {
+    document.getElementById('delete-item-name').textContent = `"${codeNm}"`;
+    document.getElementById('confirm-delete-item-btn').onclick = () => confirmDeleteItem(codeId);
+    openModal('modal-delete-item');
+}
+
+async function confirmDeleteItem(codeId) {
+    try {
+        await codeApi(`/admin/code/groups/${codeSelectedGroup}/items/${codeId}`, { method: 'DELETE' });
+        closeModal('modal-delete-item');
+        await reloadItems();
+        await reloadGroups();
+    } catch (e) { alert(e.message); }
+}
+
+// ── init ─────────────────────────────────────────────────────────
+bindGroupHover();
+
+// 기능이 있는 모달(등록·수정·삭제)은 backdrop 클릭으로 닫히지 않음
+// 단순 정보 확인 전용 모달에만 backdrop 클릭 닫기를 적용할 것
+
+</script>
+</div>
+</div>
+
+</body>
+</html>

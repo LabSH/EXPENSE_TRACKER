@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="admin-sidebar(activePage)"
+     id="sidebar-wrap"
+     class="shrink-0 transition-all duration-300 overflow-hidden"
+     style="width:240px">
+    <aside class="w-60 bg-admin-surface border-r border-admin-border flex flex-col px-4 py-7 h-screen sticky top-0 overflow-hidden">
+        <div class="pl-3 mb-6">
+            <div class="flex items-center gap-2.5 mb-1">
+                <div class="w-8 h-8 rounded-xl bg-violet flex items-center justify-center">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <span class="text-lg font-bold text-ink tracking-tight">관리자</span>
+            </div>
+            <p class="text-xs text-ink-muted ml-0.5">Admin System</p>
+        </div>
+        <div class="h-px bg-admin-border mb-5"></div>
+        <nav class="flex flex-col gap-1 flex-1 relative" id="admin-sidebar-nav">
+            <div id="admin-nav-pill"
+                 class="absolute inset-x-0 rounded-xl bg-violet-light pointer-events-none"
+                 style="top:0;height:40px;opacity:0"></div>
+
+            <a href="/admin/code"
+               hx-get="/admin/code"
+               hx-target="#admin-main-content"
+               hx-select="#admin-main-content"
+               hx-push-url="true"
+               data-page="code"
+               onclick="moveAdminPillTo(this)"
+               class="relative z-[1] nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm anim-slideDown transition-colors"
+               th:classappend="${activePage == 'code'} ? 'text-violet font-semibold' : 'text-ink-soft font-normal'"
+               style="animation-delay:0s">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-5.52 0-10 2.24-10 5s4.48 5 10 5 10-2.24 10-5-4.48-5-10-5M2 7v5c0 2.76 4.48 5 10 5s10-2.24 10-5V7M2 12v5c0 2.76 4.48 5 10 5s10-2.24 10-5v-5"/></svg>
+                코드 데이터 관리
+            </a>
+            <a href="/admin/users"
+               hx-get="/admin/users"
+               hx-target="#admin-main-content"
+               hx-select="#admin-main-content"
+               hx-push-url="true"
+               data-page="users"
+               onclick="moveAdminPillTo(this)"
+               class="relative z-[1] nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm anim-slideDown transition-colors"
+               th:classappend="${activePage == 'users'} ? 'text-violet font-semibold' : 'text-ink-soft font-normal'"
+               style="animation-delay:.05s">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8m14 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                사용자 관리
+            </a>
+            <a href="/admin/logs"
+               hx-get="/admin/logs"
+               hx-target="#admin-main-content"
+               hx-select="#admin-main-content"
+               hx-push-url="true"
+               data-page="logs"
+               onclick="moveAdminPillTo(this)"
+               class="relative z-[1] nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm anim-slideDown transition-colors"
+               th:classappend="${activePage == 'logs'} ? 'text-violet font-semibold' : 'text-ink-soft font-normal'"
+               style="animation-delay:.1s">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8ZM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                시스템 로그
+            </a>
+        </nav>
+        <div class="h-px bg-admin-border mb-4"></div>
+        <a href="/" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border border-admin-border text-xs font-medium text-ink-muted hover:bg-admin-subtle hover:text-ink transition-all">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            사용자 페이지로
+        </a>
+    </aside>
+
+    <script>
+    (function () {
+        function updateAdminPill(link) {
+            var pill = document.getElementById('admin-nav-pill');
+            var nav  = document.getElementById('admin-sidebar-nav');
+            if (!pill || !nav || !link) return;
+            pill.style.top    = link.offsetTop + 'px';
+            pill.style.height = link.offsetHeight + 'px';
+            pill.style.opacity = '1';
+            nav.querySelectorAll('[data-page]').forEach(function (l) {
+                var active = l === link;
+                l.classList.toggle('text-violet',   active);
+                l.classList.toggle('font-semibold', active);
+                l.classList.toggle('text-ink-soft', !active);
+                l.classList.toggle('font-normal',   !active);
+            });
+        }
+
+        function initAdminPill() {
+            var nav  = document.getElementById('admin-sidebar-nav');
+            var pill = document.getElementById('admin-nav-pill');
+            if (!nav || !pill) return;
+            var active = nav.querySelector('[data-page][href="' + window.location.pathname + '"]');
+            if (!active) { pill.style.opacity = '0'; return; }
+            pill.style.transition = 'none';
+            updateAdminPill(active);
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    pill.style.transition = 'top .28s cubic-bezier(.4,0,.2,1), height .28s cubic-bezier(.4,0,.2,1)';
+                });
+            });
+        }
+
+        /* 사이드바 토글 — 콘텐츠 교체 후에도 새 버튼에 재바인딩 */
+        function initSidebarToggle() {
+            var btn = document.getElementById('sidebar-toggle');
+            if (!btn) return;
+            btn.addEventListener('click', function () {
+                var wrap = document.getElementById('sidebar-wrap');
+                var isOpen = wrap.style.width !== '0px';
+                wrap.style.width       = isOpen ? '0px'   : '240px';
+                wrap.style.marginRight = isOpen ? '-240px' : '0';
+            });
+        }
+
+        /* HTMX 콘텐츠 교체 후 토글 재바인딩 + pill URL 동기화 (뒤로가기 등) */
+        document.addEventListener('htmx:afterSettle', function () {
+            initSidebarToggle();
+            var nav  = document.getElementById('admin-sidebar-nav');
+            var pill = document.getElementById('admin-nav-pill');
+            if (!nav || !pill) return;
+            var active = nav.querySelector('[data-page][href="' + window.location.pathname + '"]');
+            if (active) {
+                updateAdminPill(active);
+            } else {
+                pill.style.opacity = '0';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            initAdminPill();
+            initSidebarToggle();
+        });
+
+        /* onclick에서 호출 — 클릭 즉시 pill 이동 */
+        window.moveAdminPillTo = function (link) {
+            var pill = document.getElementById('admin-nav-pill');
+            if (pill) pill.style.transition = 'top .28s cubic-bezier(.4,0,.2,1), height .28s cubic-bezier(.4,0,.2,1)';
+            updateAdminPill(link);
+        };
+    }());
+    </script>
+</div>
+
+</body>
+</html>

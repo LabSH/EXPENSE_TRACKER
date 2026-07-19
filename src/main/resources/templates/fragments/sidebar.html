@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<div th:fragment="sidebar"
+     id="sidebar-wrapper"
+     class="shrink-0 transition-all duration-300 ease-out overflow-hidden"
+     style="width:224px;margin-right:0">
+    <aside class="w-56 bg-cream-surface border-r border-cream-border flex flex-col px-4 py-7 h-screen sticky top-0 shrink-0 overflow-hidden">
+        <div class="pl-3 mb-9">
+            <div class="text-xl font-bold text-ink tracking-tight">가계부</div>
+            <div class="text-xs text-ink-muted mt-0.5" id="sidebar-month-label"></div>
+        </div>
+
+        <nav class="flex flex-col gap-1 flex-1 relative" id="sidebar-nav">
+            <div id="nav-pill"
+                 class="absolute inset-x-0 rounded-xl bg-sage-light pointer-events-none"
+                 style="top:0;height:40px;opacity:0"></div>
+
+            <button hx-get="/dashboard" hx-target="#main-content" hx-push-url="true"
+                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-sage font-semibold"
+                    data-nav="dashboard" onclick="setActiveNav('dashboard')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 3h7v7H3V3m11 0h7v7h-7V3M3 14h7v7H3v-7m11 0h7v7h-7v-7"/>
+                </svg>
+                대시보드
+            </button>
+
+            <button hx-get="/income" hx-target="#main-content" hx-push-url="true"
+                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
+                    data-nav="income" onclick="setActiveNav('income')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 19V5m-7 7 7-7 7 7"/>
+                </svg>
+                수입
+            </button>
+
+            <button hx-get="/expense" hx-target="#main-content" hx-push-url="true"
+                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
+                    data-nav="expense" onclick="setActiveNav('expense')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14m7-7-7 7-7-7"/>
+                </svg>
+                지출
+            </button>
+
+            <button hx-get="/fixed-expense" hx-target="#main-content" hx-push-url="true"
+                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
+                    data-nav="fixed-expense" onclick="setActiveNav('fixed-expense')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 2l4 4-4 4M3 13v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4m14 2v1a4 4 0 0 1-4 4H3"/>
+                </svg>
+                고정지출
+            </button>
+
+            <button hx-get="/budget" hx-target="#main-content" hx-push-url="true"
+                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
+                    data-nav="budget" onclick="setActiveNav('budget')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10M12 8v4l3 3"/>
+                </svg>
+                예산
+            </button>
+
+            <button hx-get="/report" hx-target="#main-content" hx-push-url="true"
+                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
+                    data-nav="report" onclick="setActiveNav('report')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 3v18h18M7 16V8m5 8v-5m5 5V4"/>
+                </svg>
+                리포트
+            </button>
+
+            <button hx-get="/setting" hx-target="#main-content" hx-push-url="true"
+                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
+                    data-nav="settings" onclick="setActiveNav('settings')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6m6.2-1.5q.07-.49.07-1t-.07-1l2.16-1.68a.5.5 0 0 0 .12-.63l-2.05-3.54a.5.5 0 0 0-.6-.22L16 6.46A7.4 7.4 0 0 0 14.28 5.5l-.37-2.72A.49.49 0 0 0 13.43 2h-2.86a.49.49 0 0 0-.48.42L9.72 5.14A7.4 7.4 0 0 0 8 6.12l-2.56-1.03a.5.5 0 0 0-.6.22L2.79 8.85a.5.5 0 0 0 .12.63L5.07 11.2Q5 11.6 5 12t.07.8L2.91 14.48a.5.5 0 0 0-.12.63l2.05 3.54c.12.22.37.3.6.22L8 17.54a7.4 7.4 0 0 0 1.72 1l.37 2.72c.07.27.3.47.58.47h2.86c.28 0 .51-.2.57-.47l.38-2.72a7.4 7.4 0 0 0 1.72-1l2.56 1.03c.24.09.49 0 .6-.22l2.05-3.54a.5.5 0 0 0-.12-.63z"/>
+                </svg>
+                설정
+            </button>
+        </nav>
+
+        <div class="mx-1 p-4 bg-sage-light rounded-xl border border-sage-mid">
+            <div class="flex items-center gap-1.5 mb-1">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-sage"><path d="M23 6l-9.5 9.5-5-5L1 18M17 6h6v6"/></svg>
+                <span class="text-xs font-semibold text-sage">이번 달 절약</span>
+            </div>
+            <div class="text-lg font-bold text-sage">+220,000원</div>
+            <div class="text-xs text-ink-soft mt-0.5">지난달 대비 11% ↑</div>
+        </div>
+        <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <div class="h-px bg-cream-border my-4"></div>
+            <a href="/admin" style="text-decoration:none"
+               class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border border-cream-border text-xs font-medium text-ink-muted hover:border-violet-300 hover:bg-violet-50 hover:text-violet-600 transition-all">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                관리자 페이지
+            </a>
+        </th:block>
+        <form th:action="@{/logout}" method="post" style="margin:0;margin-top:8px">
+            <button type="submit"
+                    class="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border border-cream-border text-xs font-medium text-ink-muted hover:border-blush hover:bg-blush-light hover:text-blush transition-all">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                로그아웃
+            </button>
+        </form>
+    </aside>
+</div>
+
+</body>
+</html>
