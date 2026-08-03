@@ -12,6 +12,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final SysLogInterceptor sysLogInterceptor;
 
+    /** 정적 리소스를 제외한 모든 요청에 시스템 로그 인터셉터 등록 */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(sysLogInterceptor)

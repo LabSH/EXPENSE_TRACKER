@@ -2,14 +2,17 @@ package com.expenseTracker.code.entity;
 
 import com.expenseTracker.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Comment("공통코드")
 @Table(name = "TB_CO_CODE", indexes = {
@@ -22,7 +25,7 @@ public class Code extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("groupId")
-    @JoinColumn(name = "GROUP_ID")
+    @JoinColumn(name = "GROUP_ID", nullable = false)
     @Comment("공통코드그룹")
     private CodeGroup codeGroup;
 

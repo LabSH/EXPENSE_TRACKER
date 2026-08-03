@@ -42,11 +42,12 @@ public class SysLogService {
 
     private final SysLogRepository sysLogRepository;
 
+    /** 최소 로그 레벨 이상인 경우에만 시스템 로그를 별도 트랜잭션으로 기록 */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void write(String levelCd, String userId,
-                      String httpMethod, String requestUri,
-                      int httpStatus, int responseMs,
-                      String errorMsg, String clientIp) {
+    public void addLog(String levelCd, String userId,
+                       String httpMethod, String requestUri,
+                       int httpStatus, int responseMs,
+                       String errorMsg, String clientIp) {
         String minLevelCd   = NAME_TO_CODE.getOrDefault(minLevel.toUpperCase(), LEVEL_INFO);
         int    minPriority  = PRIORITY.getOrDefault(minLevelCd, 2);
         int    thisPriority = PRIORITY.getOrDefault(levelCd, 2);
@@ -55,21 +56,21 @@ public class SysLogService {
             return;
         }
 
-        SysLog log = new SysLog();
-        log.setLogDt(LocalDateTime.now());
-        log.setLogLevelCd(levelCd);
-        log.setUserId(userId);
-        log.setHttpMethod(httpMethod);
-        log.setRequestUri(requestUri);
-        log.setHttpStatus(httpStatus);
-        log.setResponseMs(responseMs);
-        log.setErrorMsg(errorMsg);
-        log.setClientIp(clientIp);
-        sysLogRepository.save(log);
+        sysLogRepository.save(SysLog.builder()
+                .logLevelCd(levelCd)
+                .userId(userId)
+                .httpMethod(httpMethod)
+                .requestUri(requestUri)
+                .httpStatus(httpStatus)
+                .responseMs(responseMs)
+                .errorMsg(errorMsg)
+                .clientIp(clientIp)
+                .build());
     }
 
+    /** 기간·레벨 조건으로 시스템 로그 검색 (기간 미지정 시 전체기간으로 대체) */
     @Transactional(readOnly = true)
-    public List<SysLogResponse> search(String from, String to, String levelCd) {
+    public List<SysLogResponse> searchLogs(String from, String to, String levelCd) {
         LocalDateTime fromDt = (from != null && !from.isBlank())
                 ? LocalDate.parse(from).atStartOfDay()
                 : LocalDateTime.of(1970, 1, 1, 0, 0, 0);

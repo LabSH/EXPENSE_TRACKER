@@ -2,17 +2,17 @@ package com.expenseTracker.code.entity;
 
 import com.expenseTracker.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Comment("공통코드그룹")
 @Table(name = "TB_CO_CODE_GROUP")
@@ -30,7 +30,4 @@ public class CodeGroup extends BaseEntity {
     @Column(name = "GROUP_NM", length = 200)
     @Comment("그룹명")
     private String groupNm;
-
-    @OneToMany(mappedBy = "codeGroup", fetch = FetchType.LAZY)
-    private List<Code> codes = new ArrayList<>();
 }

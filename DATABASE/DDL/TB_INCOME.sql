@@ -1,0 +1,37 @@
+-- ============================================================
+-- PostgreSQL
+-- ============================================================
+CREATE TABLE TB_INCOME (
+  INCOME_ID      BIGSERIAL      NOT NULL,
+  USER_ID        VARCHAR(36)    NOT NULL,
+  INCOME_TYPE_CD VARCHAR(30)    NOT NULL,
+  INCOME_DT      DATE           NOT NULL,
+  AMOUNT         NUMERIC(15, 2) NOT NULL,
+  CONTENT        VARCHAR(200),
+  MEMO           VARCHAR(500),
+  USE_AT         VARCHAR(1)     DEFAULT 'Y',
+  DEL_AT         VARCHAR(1)     DEFAULT 'N',
+  RGS_DT         TIMESTAMP,
+  RGS_USER_ID    VARCHAR(30),
+  UPD_DT         TIMESTAMP,
+  UPD_USER_ID    VARCHAR(30),
+  CONSTRAINT pk_tb_income      PRIMARY KEY (INCOME_ID),
+  CONSTRAINT fk_tb_income_user FOREIGN KEY (USER_ID) REFERENCES TB_CO_USER (USER_ID)
+);
+
+CREATE INDEX ix_tb_income_user_id ON TB_INCOME (USER_ID);
+
+COMMENT ON TABLE  TB_INCOME                IS '수입';
+COMMENT ON COLUMN TB_INCOME.INCOME_ID      IS '수입ID';
+COMMENT ON COLUMN TB_INCOME.USER_ID        IS '사용자ID';
+COMMENT ON COLUMN TB_INCOME.INCOME_TYPE_CD IS '소득종류코드 (공통코드 INCOMETYPE 그룹 참조)';
+COMMENT ON COLUMN TB_INCOME.INCOME_DT      IS '소득일자';
+COMMENT ON COLUMN TB_INCOME.AMOUNT         IS '금액';
+COMMENT ON COLUMN TB_INCOME.CONTENT        IS '내용';
+COMMENT ON COLUMN TB_INCOME.MEMO           IS '메모';
+COMMENT ON COLUMN TB_INCOME.USE_AT         IS '사용여부';
+COMMENT ON COLUMN TB_INCOME.DEL_AT         IS '삭제여부';
+COMMENT ON COLUMN TB_INCOME.RGS_DT         IS '등록일시';
+COMMENT ON COLUMN TB_INCOME.RGS_USER_ID    IS '등록사용자ID';
+COMMENT ON COLUMN TB_INCOME.UPD_DT         IS '수정일시';
+COMMENT ON COLUMN TB_INCOME.UPD_USER_ID    IS '수정사용자ID';

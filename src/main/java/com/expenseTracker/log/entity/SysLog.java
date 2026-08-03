@@ -1,16 +1,22 @@
 package com.expenseTracker.log.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
 @Comment("시스템로그")
 @Table(name = "TB_SYS_LOGS", indexes = {
@@ -26,7 +32,8 @@ public class SysLog {
     @Comment("로그ID")
     private Long logId;
 
-    @Column(name = "LOG_DT", nullable = false)
+    @CreationTimestamp
+    @Column(name = "LOG_DT", nullable = false, updatable = false)
     @Comment("로그일시")
     private LocalDateTime logDt;
 

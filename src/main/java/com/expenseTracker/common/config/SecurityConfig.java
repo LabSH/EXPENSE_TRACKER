@@ -68,6 +68,7 @@ public class SecurityConfig {
 
     private static class CsrfCookieFilter extends OncePerRequestFilter {
 
+        /** CSRF 토큰을 강제로 읽어 응답 쿠키에 반영시킴 */
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
                 throws ServletException, IOException {

@@ -1,0 +1,2 @@
+- [DTO naming pattern](project_dto_naming_pattern.md) — codebase uses dto/Request/Response everywhere, not model/Form/DTO; don't mass-rename without confirming scheme first
+- [Build tool](project_build_tool.md) — Gradle project, use `./gradlew compileJava -q` to verify Java edits compile

@@ -1,0 +1,62 @@
+{
+  "description": "프로젝트 수준의 Hooks",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "description": "프롬프트 제출 시 항상 적용: 프롬프트 키워드 분석 후 관련 스킬 힌트 자동 주입",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/skill-check.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "description": "파일 수정 도구 실행 후 변경된 파일을 .claude/modified-files.log에 자동 기록",
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-tool-tracker.sh"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "description": "/agent 모델을 사용 시 ./claude/subagent.log 경로로 로그 생성",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "input=$(cat); mkdir -p .claude/log; agent=$(echo \"$input\" | jq -r '.agent_type'); sid=$(echo \"$input\" | jq -r '.session_id'); echo \"[$(date)] [$agent] [session:$sid] 서브에이전트 시작\" >> .claude/log/subagent.log"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "description": "/agent 모델을 종료 시 ./claude/subagent.log 경로로 로그 생성",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "input=$(cat); mkdir -p .claude/log; agent=$(echo \"$input\" | jq -r '.agent_type // \"unknown\"'); sid=$(echo \"$input\" | jq -r '.session_id // \"unknown\"'); echo \"[$(date)] [$agent] [session:$sid] 서브에이전트 종료\" >> .claude/log/subagent.log"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "description": "컨텍스트 압축 전 변경 파일 목록 기반 보고서 자동 생성",
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-compact-report.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

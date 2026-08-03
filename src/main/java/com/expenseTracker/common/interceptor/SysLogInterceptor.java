@@ -21,6 +21,7 @@ public class SysLogInterceptor implements HandlerInterceptor {
 
     private final SysLogService sysLogService;
 
+    /** 요청 처리 시작 시각을 기록 */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (handler instanceof HandlerMethod) {
@@ -29,6 +30,7 @@ public class SysLogInterceptor implements HandlerInterceptor {
         return true;
     }
 
+    /** 요청 처리 완료 후 처리시간·상태코드·예외 정보를 시스템 로그로 기록 */
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
                                 Object handler, Exception ex) {
@@ -62,7 +64,7 @@ public class SysLogInterceptor implements HandlerInterceptor {
 
             String errorMsg = resolved != null ? resolved.getMessage() : null;
 
-            sysLogService.write(
+            sysLogService.addLog(
                     levelCd,
                     resolveUserId(),
                     request.getMethod(),
@@ -77,6 +79,7 @@ public class SysLogInterceptor implements HandlerInterceptor {
         }
     }
 
+    /** 인증 정보에서 로그인 사용자ID를 추출 (비인증 시 null) */
     private String resolveUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getName())) {
@@ -85,6 +88,7 @@ public class SysLogInterceptor implements HandlerInterceptor {
         return auth.getName();
     }
 
+    /** X-Forwarded-For 헤더를 우선하여 클라이언트 IP를 추출 */
     private String resolveClientIp(HttpServletRequest request) {
         String forwarded = request.getHeader("X-Forwarded-For");
         if (forwarded != null && !forwarded.isBlank()) {

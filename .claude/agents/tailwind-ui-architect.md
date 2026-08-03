@@ -152,7 +152,10 @@ HTML + Tailwind에서 `@apply`는 컴포넌트 스타일 정의의 **정당한 �
 | 상황 | 클래스 | 적용 대상 |
 |---|---|---|
 | 목록에서 항목 선택 → 상세 패널 갱신 | `anim-up` | **패널 컨테이너 전체** (border, bg 포함한 최외곽 div) |
+| 모달 팝업 배경(backdrop) | 없음 (애니메이션 적용 금지) | 모달 최외곽 div (`fixed inset-0 ...`) |
 | 모달 팝업 | `anim-slideUp` | 모달 내부 카드 div |
+
+배경에 `anim-fadeIn` 등을 추가로 적용하지 말 것 — 카드가 `anim-slideUp`으로 뜨는 동안 배경은 즉시 나타나는 것이 프로젝트 표준 동작이다.
 
 ```html
 <!-- ✅ 올바른 방법: 컨테이너 전체에 anim-up -->
@@ -178,6 +181,52 @@ function animatePanel(id) {
     void el.offsetWidth;          // reflow 강제 (이 줄 없으면 애니메이션 재실행 안 됨)
     el.classList.add('anim-up');
 }
+```
+
+## Rule 7: 필터바 컨트롤(드롭다운/인풋/버튼) 크기 통일 + 아이콘-텍스트 광학 중앙정렬
+
+**하나의 필터바/액션바에 나열되는 드롭다운, 텍스트 인풋, 버튼은 동일한 패딩·간격·폰트 크기 공식을 공유한다.**
+
+### 표준 공식
+
+```
+px-3.5 py-2 gap-2 text-sm rounded-xl
+```
+
+- 아이콘이 좌측에 오버레이되는 인풋(검색창 등)만 예외로 `pl-8`(아이콘 폭만큼 확장), 우측은 동일하게 `pr-3.5` 유지.
+- 폰트 크기를 버튼마다 다르게(`text-xs` vs `text-sm`) 섞지 말 것 — flex 행의 line-height가 달라져 버튼 높이 자체가 서로 달라진다.
+
+```html
+<!-- ✅ 올바른 방법: 드롭다운/인풋/버튼이 같은 공식 -->
+<button class="flex items-center gap-2 px-3.5 py-2 rounded-xl border ... text-sm ...">...</button>
+<input class="pl-8 pr-3.5 ... rounded-xl border ... text-sm ...">
+<button class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-sage ... text-sm ...">...</button>
+
+<!-- ❌ 잘못된 방법: 버튼마다 padding/gap/font-size가 제각각 -->
+<button class="px-4 py-2 gap-1.5 text-xs ...">검색</button>
+<button class="px-3.5 py-2 gap-1.5 text-xs ...">초기화</button>
+```
+
+### 아이콘-텍스트 광학 중앙정렬
+
+`flex items-center`로 svg 아이콘과 텍스트를 나란히 두면, 아이콘은 기하학적으로 정확히 중앙에 오지만 텍스트는 폰트 메트릭(특히 한글 폴백 폰트 Gowun Dodum과 DM Sans의 메트릭 차이) 때문에 살짝 위로 떠 보인다. `items-center`만으로는 해결되지 않는다.
+
+- **버튼(아이콘+텍스트를 직접 마크업할 수 있는 경우)**: 텍스트를 `<span>`으로 감싸고 `translate-y-[2px]`로 보정.
+  - `leading-none`으로 line-height를 줄여서 맞추는 방식은 **금지** — line-height가 flex 행의 높이 계산에도 쓰여서 버튼 전체가 옆 컴포넌트보다 얇아지는 부작용이 생긴다. `translate`는 box 크기에 영향을 주지 않고 시각적으로만 이동하므로 이 용도에 맞다.
+- **네이티브 `<input>` (span으로 감쌀 수 없음)**: 상하 패딩을 비대칭으로 줘서 텍스트만 내린다. 총합은 `py-2`(16px)와 동일하게 유지.
+  - 예: `pt-[10px] pb-[6px]` (버튼의 `translate-y-[2px]`와 시각적으로 대응하는 비율).
+- **절대 위치 아이콘** (입력창 좌측 돋보기 아이콘처럼 `top-1/2 -translate-y-1/2`로 배치된 경우)은 박스 높이 기준으로 이미 중앙정렬이라 패딩을 바꿔도 영향받지 않는다 — 별도 보정 불필요.
+
+```html
+<!-- ✅ 올바른 방법 -->
+<button class="flex items-center gap-2 px-3.5 py-2 ...">
+    <svg width="13" height="13" ...>...</svg>
+    <span class="translate-y-[2px]">검색</span>
+</button>
+<input class="pl-8 pr-3.5 pt-[10px] pb-[6px] ..." placeholder="내용 검색...">
+
+<!-- ❌ 잘못된 방법: line-height를 줄여서 정렬 시도 (버튼이 옆 컴포넌트보다 얇아짐) -->
+<span class="leading-none">검색</span>
 ```
 
 ---

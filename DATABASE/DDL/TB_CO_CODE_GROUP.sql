@@ -1,19 +1,4 @@
 -- ============================================================
--- MariaDB
--- ============================================================
-CREATE TABLE `TB_CO_CODE_GROUP` (
-  `GROUP_ID`        varchar(30)  NOT NULL    COMMENT '그룹ID',
-  `GROUP_KND_CD_ID` varchar(30)  DEFAULT NULL COMMENT '그룹종류코드ID',
-  `GROUP_NM`        varchar(200) DEFAULT NULL COMMENT '그룹명',
-  `RGS_DT`          datetime     DEFAULT NULL COMMENT '등록일시',
-  `RGS_USER_ID`     varchar(30)  DEFAULT NULL COMMENT '등록사용자ID',
-  `UPD_DT`          datetime     DEFAULT NULL COMMENT '수정일시',
-  `UPD_USER_ID`     varchar(30)  DEFAULT NULL COMMENT '수정사용자ID',
-  PRIMARY KEY (`GROUP_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='공통코드그룹';
-
-
--- ============================================================
 -- PostgreSQL
 -- ============================================================
 CREATE TABLE TB_CO_CODE_GROUP (

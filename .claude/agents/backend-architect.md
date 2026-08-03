@@ -107,8 +107,9 @@ public Map<String, Object> ajaxSave(@Valid DomainForm form, BindingResult result
 - N+1 문제 방지를 위해 기본적으로 `FetchType.LAZY` 선호
 - DB 제약 조건을 반영하여 `@Column(nullable = false)` 및 JPA 레벨 제약 조건 사용
 - JPA 필드는 논리에 맞는 `@Comment` 필수
-- 입력 Form 클래스: 도메인당 폼이 하나면 `{Domain}Form`, 여럿이면 `{Domain}{Action}Form` (예: `UserJoinForm`, `UserEditForm`) — 엔티티에는 사용하지 말 것
-- 출력 DTO 클래스: `{Domain}DTO`
+- 입력/출력 클래스는 용도에 따라 구분 — 엔티티에는 사용하지 말 것
+  - Thymeleaf `th:object` 서버사이드 폼 바인딩: `model/{Domain}Form` (도메인당 폼 하나면 `{Domain}Form`, 여럿이면 `{Domain}{Action}Form` — 예: `UserJoinForm`, `UserEditForm`)
+  - JSON Ajax 요청/응답: `dto/{Action}{Domain}Request`, `dto/{Domain}Response` (예: `AddFixedExpenseRequest`, `FixedExpenseResponse`)
 - 불필요한 경우 양방향 관계 지양; 사용 시 `mappedBy` 및 헬퍼 메서드 신중히 관리
 - 감사 필드에는 `@CreationTimestamp` / `@UpdateTimestamp` 사용
 
@@ -135,7 +136,8 @@ public Map<String, Object> ajaxSave(@Valid DomainForm form, BindingResult result
 - 엔티티: `@Getter` + `@NoArgsConstructor(access = PROTECTED)` 조합 사용
 - 엔티티에 `@Data`, `@EqualsAndHashCode` 금지 — 연관관계 무한 순환 위험
 - `@Builder`는 엔티티보다 Form/DTO 클래스에 사용
-- Form/DTO 클래스는 Lombok 클래스로 작성 — Java 레코드 사용 금지 (`{Domain}Form`, `{Domain}DTO` 규칙 유지)
+- `model/{Domain}Form`(th:object 폼 바인딩)은 Lombok 클래스로 작성 — Java 레코드 사용 금지
+- `dto/` 하위 Request/Response(JSON Ajax)는 Java record로 작성 — 불변 데이터 전달에 적합
 
 ### Validation
 - 입력 검증 어노테이션(`@NotNull`, `@NotBlank`, `@Size` 등)은 `{Domain}Form` 클래스에 선언

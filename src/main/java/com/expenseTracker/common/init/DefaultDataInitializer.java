@@ -8,8 +8,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 @Component
 @RequiredArgsConstructor
 public class DefaultDataInitializer implements ApplicationRunner {
@@ -28,7 +26,6 @@ public class DefaultDataInitializer implements ApplicationRunner {
                     .roleCd("ROLE_ADMIN")
                     .useAt("Y")
                     .delAt("N")
-                    .rgsDt(LocalDateTime.now())
                     .rgsUserId("SYSTEM")
                     .build();
             userRepository.save(admin);

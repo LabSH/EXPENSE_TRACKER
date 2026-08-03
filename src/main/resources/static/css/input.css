@@ -58,7 +58,13 @@
 
     --color-gold: rgb(220, 163, 47);
 
+    /* ── 소셜 로그인 브랜드 컬러 ─────────── */
+    --color-kakao:     #FEE500;
+    --color-kakao-ink: #3C1E1E;
+    --color-naver:     #03C75A;
+
     /* ── 커스텀 radius ──────────────────── */
+    --radius-xs-1:  5px;
     --radius-sm-1:  8px;
     --radius-md-1:  10px;
     --radius-lg-1:  12px;
@@ -76,6 +82,24 @@
     --animate-slide-up: slideUp 0.5s cubic-bezier(.22,1,.36,1) both;
     --animate-fade-in:  fadeIn 0.4s ease both;
     --animate-floaty:   floaty 4s ease-in-out infinite;
+
+    /* ── 플랫 페이지 폰트 사이즈 (로그인/회원가입/에러) ─
+       Tailwind 기본 스케일(xs=12/sm=14/lg=18/2xl=24)에서
+       벗어나는 값만 토큰화. 기본값과 일치하는 12/14/18/24px는
+       text-xs/text-sm/text-lg/text-2xl을 그대로 사용할 것. */
+    --text-3xs-1: 0.625rem;    /* 10px */
+    --text-2xs-1: 0.6875rem;   /* 11px */
+    --text-xs-1:  0.8125rem;   /* 13px */
+    --text-sm-1:  0.9375rem;   /* 15px */
+    --text-2xl-1: 1.75rem;     /* 28px */
+    --text-4xl-1: 2.5rem;      /* 40px, 회원가입 히어로 타이틀 */
+    --text-4xl-1--line-height: 1.18;
+    --text-4xl-2: 2.625rem;    /* 42px, 로그인 히어로 타이틀 */
+    --text-4xl-2--line-height: 1.15;
+
+    /* ── 플랫 페이지 보더/트래킹 ─────────── */
+    --border-width-hairline: 1.5px;
+    --tracking-label: 0.18em;
 }
 
 @keyframes slideUp {
@@ -90,6 +114,10 @@
     0%, 100% { transform: translateY(0px); }
     50%       { transform: translateY(-6px); }
 }
+
+/* flex/grid 등 display 유틸리티와 함께 쓰여도 항상 숨김이 이기도록 강제
+   (unlayered 규칙이라 어떤 @layer utilities 클래스보다도 우선순위가 높음) */
+.hidden { display: none !important; }
 
 @layer components {
     .form-select {
@@ -109,4 +137,17 @@
     }
     .form-select:hover { background-color: #ECEAF5; }
     .form-select:focus { outline: none; border-color: #6246ea; }
+
+    /* 회원가입 약관 동의 체크박스 (join.html 4회 반복 → 추출) */
+    .chk-box {
+        @apply block w-4.5 h-4.5 rounded-xs-1 border-hairline border-border bg-bg peer-checked:bg-green peer-checked:border-green transition-colors;
+    }
+    .chk-check {
+        @apply absolute top-0.75 left-0.75 w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition;
+    }
+
+    /* 설정 페이지 액션 버튼 (setting/index.html 5회 반복 → 추출, 색상만 변형) */
+    .btn-setting {
+        @apply flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all;
+    }
 }

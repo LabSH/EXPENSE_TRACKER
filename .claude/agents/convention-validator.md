@@ -24,9 +24,10 @@ com.expenseTracker
     service/       # 단일 도메인 비즈니스 로직. @Service
     repository/    # DB 접근. JpaRepository 상속
     entity/        # DB 테이블 매핑. @Entity
-    model/         # {Domain}Form, {Domain}DTO 형식으로 파일 네이밍
-                   # ExpenseForm.java  - 입력 객체 (폼 데이터, 요청 파라미터)
-                   # ExpenseDTO.java   - 응답/전달 데이터 객체
+    model/         # Thymeleaf th:object 폼 바인딩 전용: {Domain}Form (Lombok)
+                   # ExpenseForm.java  - th:object로 직접 바인딩하는 서버사이드 폼 객체
+    dto/           # JSON Ajax 요청/응답 전용: {Action}{Domain}Request, {Domain}Response (record)
+                   # AddExpenseRequest.java / ExpenseResponse.java
   user/
     controller/
     facade/        # UserFacade.java 등
@@ -60,8 +61,8 @@ com.example
 
 ### 2. 네이밍 컨벤션
 - [ ] 클래스명은 `{Domain}{Role}` 형식인가? (예: `ExpenseService`, `ExpenseRepository`, `ExpenseFacade`)
-- [ ] model 클래스는 `{Domain}Form` / `{Domain}DTO` 형식인가?
-      (예: `ExpenseForm`, `ExpenseDTO`, `UserForm`, `UserDTO`)
+- [ ] th:object 폼 바인딩 클래스는 `model/{Domain}Form` 형식인가? (예: `UserJoinForm`)
+- [ ] JSON Ajax 요청/응답 클래스는 `dto/{Action}{Domain}Request` / `dto/{Domain}Response` 형식인가? (예: `AddExpenseRequest`, `ExpenseResponse`)
 - [ ] 변수명·메서드명은 카멜케이스인가? (예: `expenseAmount`, `findByCategory`)
 - [ ] 상수는 대문자 + 언더스코어인가? (예: `MAX_AMOUNT`, `DEFAULT_CATEGORY`)
 - [ ] 패키지명은 소문자, 도메인 의미를 담고 있는가?
@@ -112,6 +113,42 @@ com.example
 - [ ] 매직 넘버/스트링 대신 상수 또는 enum 사용
 - [ ] 모든 메서드에 1줄 Javadoc 주석이 있는가? (`/** 간략 설명 */` 형식, 메서드 바로 위에 작성)
 
+### 5. 검증(Validation) 컨벤션
+
+**입력 검증은 Form/Request 클래스에서 jakarta.validation 어노테이션으로 선언한다.**
+서비스 레이어에서 `if (x == null || x.isBlank())` 같은 수동 null/blank 체크를 만들지 않는다 — 검증은 요청 경계(컨트롤러)에서 끝내고, 서비스는 이미 유효한 값이 들어온다고 신뢰한다.
+
+```java
+// 올바른 예 — Form/Request 클래스에 검증 규칙 선언
+public record ExpenseAddRequest(
+        @NotBlank(message = "내용은 필수입니다.")
+        @Size(max = 200, message = "내용은 200자를 넘을 수 없습니다.")
+        String content,
+
+        @NotNull(message = "금액은 필수입니다.")
+        BigDecimal amount
+) {}
+
+// 컨트롤러에서 @Valid로 바인딩
+@PostMapping("/expense")
+public ExpenseResponse add(@Valid @RequestBody ExpenseAddRequest req, Authentication auth) { ... }
+```
+
+```java
+// 잘못된 예 — 서비스 레이어에서 수동 검증 (중복, 경계 원칙 위반)
+public void addExpense(String content, BigDecimal amount) {
+    if (content == null || content.isBlank() || amount == null) {
+        throw new IllegalArgumentException("내용과 금액은 필수입니다.");
+    }
+    ...
+}
+```
+
+- [ ] 사용자 입력을 받는 Form/Request 클래스(`{Domain}Form`, `{Domain}Request`)에 `@NotBlank`, `@NotNull`, `@Size` 등 jakarta.validation 어노테이션이 선언되어 있는가?
+- [ ] 해당 요청을 받는 컨트롤러 메서드 파라미터에 `@Valid`가 붙어 있는가?
+- [ ] 서비스 레이어에 Form/Request에서 이미 검증 가능한 필드(null/blank/길이 등)를 재검증하는 코드가 없는가?
+- [ ] 소유자 검증, 상태(삭제 여부 등) 검증처럼 DB 조회가 필요한 비즈니스 규칙만 서비스 레이어에 남아 있는가?
+
 ## 검증 결과 형식
 
 ```
@@ -133,6 +170,10 @@ com.example
 **상태**: 통과 / 경고 / 실패
 [분석 내용]
 
+### 검증(Validation) 컨벤션
+**상태**: 통과 / 경고 / 실패
+[분석 내용]
+
 ### 반드시 수정
 1. [문제 설명 + 위치 + 수정 방법]
 
@@ -145,7 +186,7 @@ com.example
 
 ## 심각도
 - **Critical**: 레이어 중심 구조 사용, 도메인 경계 위반
-- **Warning**: 네이밍 불일치, 사소한 구조 문제, facade 없이 복잡한 서비스 조합 로직이 controller에 존재
+- **Warning**: 네이밍 불일치, 사소한 구조 문제, facade 없이 복잡한 서비스 조합 로직이 controller에 존재, Form/Request 클래스에 검증 어노테이션 없이 서비스에서 수동 검증
 - **Info**: 가독성·유지보수성 개선 제안
 
 ## 수정 처리 방침

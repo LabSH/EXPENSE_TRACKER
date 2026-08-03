@@ -9,10 +9,374 @@
             </button>
             <h1 class="font-bold text-ink tracking-tight text-3xl">고정지출</h1>
         </div>
-        <div class="flex items-center justify-center h-64 bg-cream-surface border border-cream-border rounded-2xl">
-            <p class="text-ink-muted text-sm">고정지출 페이지 준비 중</p>
+
+        <div id="fe-panel" class="bg-cream-surface border border-cream-border rounded-2xl overflow-hidden">
+            <!-- 카드 헤더 -->
+            <div class="px-6 py-4 border-b border-cream-border flex items-center justify-between">
+                <h3 class="text-sm font-semibold text-ink">고정지출 내역</h3>
+                <span id="fe-count" class="text-xs text-ink-muted">총 0건</span>
+            </div>
+
+            <!-- 필터 바 -->
+            <div class="px-6 py-3 border-b border-cream-border flex items-center gap-3 flex-wrap">
+                <div th:replace="~{fragments/dropdown :: dropdown('fe-payment-filter', '결제수단', ${paymentMethods})}"></div>
+                <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-filter', '주기', ${expenseCycles})}"></div>
+
+                <div class="relative">
+                    <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <input id="fe-keyword" type="text" placeholder="내용 검색..."
+                           class="pl-8 pr-3.5 pt-[10px] pb-[6px] rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                </div>
+
+                <div class="w-px h-5 bg-cream-border"></div>
+                <button id="btn-fe-search"
+                        class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <span>검색</span>
+                </button>
+                <button id="btn-fe-search-reset"
+                        class="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">
+                    <span>초기화</span>
+                </button>
+
+                <button id="btn-open-fixed-expense-modal"
+                        class="ml-auto flex items-center gap-2 px-3.5 py-2 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-md shadow-sage/30">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                    <span>추가</span>
+                </button>
+            </div>
+
+            <!-- 컬럼 헤더 -->
+            <div class="grid px-6 py-3 bg-cream-subtle border-b border-cream-border text-xs font-semibold text-ink-muted uppercase tracking-wide" style="grid-template-columns:1fr 140px 120px 130px 1fr 90px">
+                <span>내용</span><span>결제수단</span><span>지출주기</span><span>금액</span><span>메모</span><span class="text-right">관리</span>
+            </div>
+
+            <!-- 목록 -->
+            <div id="fe-list"></div>
         </div>
     </main>
+
+    <!-- 고정지출 추가 모달 -->
+    <div id="fixed-expense-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-md">
+        <div class="anim-slideUp bg-cream-surface rounded-2xl w-full max-w-[38rem] mx-4 shadow-2xl overflow-hidden">
+            <div class="px-7 pt-6 pb-5 border-b border-cream-border bg-sage-light">
+                <div class="flex justify-between items-center">
+                    <h2 id="fe-modal-title" class="text-lg font-bold text-ink">고정지출 추가</h2>
+                    <button id="btn-close-fixed-expense-modal" class="w-8 h-8 rounded-full bg-cream-border flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="px-7 py-5 flex flex-col gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">결제수단</label>
+                    <div th:replace="~{fragments/dropdown :: dropdown('fe-payment-dd', '선택', ${paymentMethods})}"></div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">지출주기</label>
+                    <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-dd', '선택', ${expenseCycles})}"></div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">카테고리</label>
+                    <div th:replace="~{fragments/dropdown :: dropdown('fe-category-dd', '선택', ${categories})}"></div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">기준일 <span class="font-normal text-ink-muted">(주기 계산 기준. 매일 주기는 불필요)</span></label>
+                    <div class="relative" id="fe-anchor-dt-wrap">
+                        <button type="button" id="fe-anchor-dt-btn" onclick="togglePicker('fe-anchor-dt')"
+                                class="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink hover:bg-cream-subtle transition-colors">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+                            <span id="fe-anchor-dt-label">날짜 선택</span>
+                        </button>
+                        <div id="fe-anchor-dt-cal" class="hidden z-50 anim-slideDown"></div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">금액</label>
+                    <div class="relative">
+                        <input type="text" inputmode="numeric" id="fe-amount" placeholder="0"
+                               class="w-full px-3.5 py-2.5 pr-8 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                        <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-ink-muted pointer-events-none">원</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">내용</label>
+                    <input id="fe-content" placeholder="예: 넷플릭스 구독료"
+                           class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">메모 <span class="font-normal text-ink-muted">(선택)</span></label>
+                    <textarea id="fe-memo" placeholder="추가 메모를 입력하세요" rows="2"
+                              class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors resize-none leading-relaxed"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">첨부파일 <span class="font-normal text-ink-muted">(선택)</span></label>
+                    <label for="fe-file-input" id="fe-file-dropzone"
+                           class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl border border-dashed border-cream-border text-sm text-ink-soft cursor-pointer hover:bg-cream-subtle transition-colors">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                        파일 선택 또는 드래그해서 놓기
+                    </label>
+                    <input type="file" id="fe-file-input" multiple class="hidden">
+                    <div id="fe-file-list" class="mt-2 flex flex-col gap-1.5"></div>
+                </div>
+            </div>
+            <div class="px-7 pb-6 flex gap-2.5">
+                <button id="btn-cancel-fixed-expense" class="flex-1 py-3 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
+                <button id="btn-submit-fixed-expense" class="py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 bg-sage" style="flex:2">추가하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        var FIXED_EXPENSES = /*[[${fixedExpenses}]]*/ [];
+    </script>
+    <script>
+        var feFileGroupId = '';
+        var feAttachedFiles = [];
+        var feEditingId = null;
+        var feCurrentList = FIXED_EXPENSES;
+
+        function feEscapeHtml(s) {
+            return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function renderFixedExpenses(list) {
+            feCurrentList = list;
+            document.getElementById('fe-count').textContent = `총 ${list.length}건`;
+
+            const box = document.getElementById('fe-list');
+            if (list.length === 0) {
+                box.innerHTML = `<p class="py-16 text-center text-sm text-ink-muted">등록된 고정지출이 없어요</p>`;
+                return;
+            }
+
+            box.innerHTML = list.map((fe, i) => {
+                const border = i < list.length - 1 ? 'border-b border-cream-border' : '';
+                return `
+                    <div class="grid items-center px-6 py-4 ${border}" style="grid-template-columns:1fr 140px 120px 130px 1fr 90px">
+                        <span class="text-sm text-ink">${feEscapeHtml(fe.content)}</span>
+                        <span class="text-sm text-ink-soft">${feEscapeHtml(fe.paymentMethodNm) || '-'}</span>
+                        <span class="text-sm text-ink-soft">
+                            ${feEscapeHtml(fe.expenseCycleNm) || '-'}
+                            ${fe.nextDueDt ? `<br><span class="text-xs text-ink-muted">다음 ${feEscapeHtml(fe.nextDueDt)}</span>` : ''}
+                        </span>
+                        <span class="text-sm font-semibold text-ink">${Math.round(Number(fe.amount)).toLocaleString('ko-KR')}원</span>
+                        <span class="text-sm text-ink-muted">${feEscapeHtml(fe.memo)}</span>
+                        <span class="text-right">
+                            <button type="button" onclick="openEditFixedExpenseModal(${fe.fixedExpenseId})"
+                                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-cream-subtle text-ink-soft border border-cream-border hover:bg-cream-border transition-colors">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg><span>수정</span>
+                            </button>
+                        </span>
+                    </div>`;
+            }).join('');
+        }
+
+        async function searchFixedExpenses() {
+            const keyword = document.getElementById('fe-keyword').value.trim();
+            const paymentMethodCd = Dropdown.getValue('fe-payment-filter');
+            const expenseCycleCd = Dropdown.getValue('fe-cycle-filter');
+            const params = new URLSearchParams({ keyword, paymentMethodCd, expenseCycleCd });
+            const result = await feApi(`/fixed-expense/data?${params}`);
+            renderFixedExpenses(result);
+        }
+
+        async function resetFixedExpenseFilter() {
+            document.getElementById('fe-keyword').value = '';
+            Dropdown.reset('fe-payment-filter');
+            Dropdown.reset('fe-cycle-filter');
+            const result = await feApi('/fixed-expense/data');
+            renderFixedExpenses(result);
+        }
+
+        function feCsrf() {
+            const raw = document.cookie.split('; ').find(r => r.startsWith('XSRF-TOKEN='))?.split('=')[1] ?? '';
+            return decodeURIComponent(raw);
+        }
+
+        async function feApi(url, opts = {}) {
+            const method = (opts.method || 'GET').toUpperCase();
+            const headers = { 'Content-Type': 'application/json' };
+            if (method !== 'GET') headers['X-XSRF-TOKEN'] = feCsrf();
+            const res = await fetch(url, { ...opts, headers });
+            if (!res.ok) { const msg = await res.text().catch(() => res.statusText); throw new Error(msg); }
+            return res.status === 204 ? null : res.json();
+        }
+
+        function feFormatFileSize(bytes) {
+            if (bytes < 1024) return `${bytes}B`;
+            if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
+            return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
+        }
+
+        function renderFeFileList() {
+            const box = document.getElementById('fe-file-list');
+            box.innerHTML = feAttachedFiles.map(f => `
+                <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-cream border border-cream-border text-xs">
+                    <span class="truncate text-ink" title="${feEscapeHtml(f.orgFileNm)}">${feEscapeHtml(f.orgFileNm)}</span>
+                    <span class="flex items-center gap-2 shrink-0 ml-2">
+                        <span class="text-ink-muted">${feFormatFileSize(f.fileSize)}</span>
+                        <button type="button" class="text-ink-muted hover:text-blush transition-colors" onclick="removeFeFile('${f.fileId}')">삭제</button>
+                    </span>
+                </div>`).join('');
+        }
+
+        async function feUploadFiles(files) {
+            if (files.length === 0) return;
+
+            const formData = new FormData();
+            if (feFileGroupId) formData.append('fileGroupId', feFileGroupId);
+            files.forEach(f => formData.append('files', f));
+
+            try {
+                const res = await fetch('/files', { method: 'POST', headers: { 'X-XSRF-TOKEN': feCsrf() }, body: formData });
+                if (!res.ok) throw new Error(await res.text().catch(() => res.statusText));
+                const uploaded = await res.json();
+                if (uploaded.length > 0) feFileGroupId = uploaded[0].fileGroupId;
+                feAttachedFiles = feAttachedFiles.concat(uploaded);
+                renderFeFileList();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        function onFeFileInputChange(e) {
+            const files = Array.from(e.target.files);
+            e.target.value = '';
+            feUploadFiles(files);
+        }
+
+        function onFeFileDragOver(e) {
+            e.preventDefault();
+            document.getElementById('fe-file-dropzone').classList.add('border-sage', 'bg-cream-subtle');
+        }
+
+        function onFeFileDragLeave() {
+            document.getElementById('fe-file-dropzone').classList.remove('border-sage', 'bg-cream-subtle');
+        }
+
+        function onFeFileDrop(e) {
+            e.preventDefault();
+            document.getElementById('fe-file-dropzone').classList.remove('border-sage', 'bg-cream-subtle');
+            feUploadFiles(Array.from(e.dataTransfer.files));
+        }
+
+        async function removeFeFile(fileId) {
+            try {
+                await feApi(`/files/${feFileGroupId}/${fileId}`, { method: 'DELETE' });
+                feAttachedFiles = feAttachedFiles.filter(f => f.fileId !== fileId);
+                renderFeFileList();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        function openFixedExpenseModal() {
+            feEditingId = null;
+            feFileGroupId = '';
+            feAttachedFiles = [];
+            document.getElementById('fe-modal-title').textContent = '고정지출 추가';
+            document.getElementById('btn-submit-fixed-expense').textContent = '추가하기';
+            Dropdown.reset('fe-payment-dd');
+            Dropdown.reset('fe-cycle-dd');
+            Dropdown.reset('fe-category-dd');
+            CalendarPicker.reset('fe-anchor-dt');
+            document.getElementById('fe-amount').value = '';
+            document.getElementById('fe-content').value = '';
+            document.getElementById('fe-memo').value = '';
+            renderFeFileList();
+            document.getElementById('fixed-expense-modal').classList.remove('hidden');
+        }
+
+        async function openEditFixedExpenseModal(id) {
+            const fe = feCurrentList.find(x => x.fixedExpenseId === id);
+            if (!fe) return;
+
+            feEditingId = fe.fixedExpenseId;
+            feFileGroupId = fe.fileGroupId || '';
+            feAttachedFiles = [];
+
+            document.getElementById('fe-modal-title').textContent = '고정지출 수정';
+            document.getElementById('btn-submit-fixed-expense').textContent = '저장하기';
+            Dropdown.select('fe-payment-dd', fe.paymentMethodCd || '', fe.paymentMethodNm || '선택');
+            Dropdown.select('fe-cycle-dd', fe.expenseCycleCd || '', fe.expenseCycleNm || '선택');
+            Dropdown.select('fe-category-dd', fe.categoryCd || '', fe.categoryNm || '선택');
+            CalendarPicker.setDate('fe-anchor-dt', fe.anchorDt || '');
+            document.getElementById('fe-amount').value = fe.amount ? Math.round(Number(fe.amount)).toLocaleString('ko-KR') : '';
+            document.getElementById('fe-content').value = fe.content || '';
+            document.getElementById('fe-memo').value = fe.memo || '';
+            renderFeFileList();
+            document.getElementById('fixed-expense-modal').classList.remove('hidden');
+
+            if (feFileGroupId) {
+                try {
+                    feAttachedFiles = await feApi(`/files/${feFileGroupId}`);
+                    renderFeFileList();
+                } catch (err) {
+                    alert(err.message);
+                }
+            }
+        }
+
+        function closeFixedExpenseModal() {
+            document.getElementById('fixed-expense-modal').classList.add('hidden');
+            document.getElementById('fe-payment-dd-dd')?.classList.add('hidden');
+            document.getElementById('fe-cycle-dd-dd')?.classList.add('hidden');
+            document.getElementById('fe-category-dd-dd')?.classList.add('hidden');
+            document.getElementById('fe-anchor-dt-cal')?.classList.add('hidden');
+        }
+
+        function feFormatAmountInput(e) {
+            const digits = e.target.value.replace(/\D/g, '');
+            e.target.value = digits ? Number(digits).toLocaleString('ko-KR') : '';
+        }
+
+        async function submitFixedExpense() {
+            const amountVal = document.getElementById('fe-amount').value.replace(/,/g, '');
+            const content = document.getElementById('fe-content').value.trim();
+            const memo = document.getElementById('fe-memo').value.trim();
+            if (!content || !amountVal) { alert('내용과 금액을 입력해주세요.'); return; }
+
+            const body = JSON.stringify({
+                paymentMethodCd: Dropdown.getValue('fe-payment-dd') || null,
+                expenseCycleCd: Dropdown.getValue('fe-cycle-dd') || null,
+                categoryCd: Dropdown.getValue('fe-category-dd') || null,
+                anchorDt: CalendarPicker.getDate('fe-anchor-dt') || null,
+                fileGroupId: feFileGroupId || null,
+                amount: Number(amountVal),
+                content,
+                memo
+            });
+
+            try {
+                if (feEditingId) {
+                    await feApi(`/fixed-expense/${feEditingId}`, { method: 'PUT', body });
+                } else {
+                    await feApi('/fixed-expense', { method: 'POST', body });
+                }
+                closeFixedExpenseModal();
+                htmx.ajax('GET', '/fixed-expense', '#main-content');
+            } catch (e) {
+                alert(e.message);
+            }
+        }
+
+        renderFixedExpenses(FIXED_EXPENSES);
+        CalendarPicker.init(['fe-anchor-dt'], 'cream');
+
+        document.getElementById('btn-open-fixed-expense-modal').addEventListener('click', openFixedExpenseModal);
+        document.getElementById('btn-close-fixed-expense-modal').addEventListener('click', closeFixedExpenseModal);
+        document.getElementById('btn-cancel-fixed-expense').addEventListener('click', closeFixedExpenseModal);
+        document.getElementById('btn-submit-fixed-expense').addEventListener('click', submitFixedExpense);
+        document.getElementById('btn-fe-search').addEventListener('click', searchFixedExpenses);
+        document.getElementById('btn-fe-search-reset').addEventListener('click', resetFixedExpenseFilter);
+        document.getElementById('fe-keyword').addEventListener('keydown', e => { if (e.key === 'Enter') searchFixedExpenses(); });
+        document.getElementById('fe-amount').addEventListener('input', feFormatAmountInput);
+        document.getElementById('fe-file-input').addEventListener('change', onFeFileInputChange);
+        document.getElementById('fe-file-dropzone').addEventListener('dragover', onFeFileDragOver);
+        document.getElementById('fe-file-dropzone').addEventListener('dragleave', onFeFileDragLeave);
+        document.getElementById('fe-file-dropzone').addEventListener('drop', onFeFileDrop);
+    </script>
 </th:block>
 </body>
 </html>

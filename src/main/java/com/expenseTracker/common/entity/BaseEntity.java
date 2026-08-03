@@ -2,22 +2,26 @@ package com.expenseTracker.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @SuperBuilder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
 public abstract class BaseEntity {
 
-    @Column(name = "RGS_DT")
+    @CreationTimestamp
+    @Column(name = "RGS_DT", updatable = false)
     @Comment("등록일시")
     private LocalDateTime rgsDt;
 
@@ -25,6 +29,7 @@ public abstract class BaseEntity {
     @Comment("등록사용자ID")
     private String rgsUserId;
 
+    @UpdateTimestamp
     @Column(name = "UPD_DT")
     @Comment("수정일시")
     private LocalDateTime updDt;

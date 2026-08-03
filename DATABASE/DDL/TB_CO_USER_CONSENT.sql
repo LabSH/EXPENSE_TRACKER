@@ -1,19 +1,4 @@
 -- ============================================================
--- MariaDB
--- ============================================================
-CREATE TABLE `TB_CO_USER_CONSENT` (
-  `CONSENT_ID`   varchar(36)  NOT NULL    COMMENT '동의이력ID (UUID)',
-  `USER_ID`      varchar(36)  NOT NULL    COMMENT '사용자ID',
-  `CONSENT_TYPE` varchar(20)  NOT NULL    COMMENT '동의유형 (TERMS/PRIVACY/MARKETING)',
-  `AGREED`       varchar(1)   NOT NULL    COMMENT '동의여부 (Y/N)',
-  `AGREED_AT`    datetime     NOT NULL    COMMENT '동의일시',
-  PRIMARY KEY (`CONSENT_ID`),
-  KEY `ix_tb_co_user_consent_user_id` (`USER_ID`),
-  CONSTRAINT `fk_tb_co_user_consent_user` FOREIGN KEY (`USER_ID`) REFERENCES `TB_CO_USER` (`USER_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='사용자 동의이력';
-
-
--- ============================================================
 -- PostgreSQL
 -- ============================================================
 CREATE TABLE TB_CO_USER_CONSENT (

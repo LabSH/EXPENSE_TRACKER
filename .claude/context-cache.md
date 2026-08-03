@@ -1,0 +1,20 @@
+- [23:38] [session:4650aae3-3f27-45d2-96cc-0b38f8dcdda6] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html |         function closeFixedExpenseModal() {
+- [23:38] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\entity\FixedExpense.java |     @Column(name = "EXPENSE_CYCLE_CD", length = 30)
+- [23:38] [session:4650aae3-3f27-45d2-96cc-0b38f8dcdda6] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html |             const body = JSON.stringify({
+- [23:38] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\dto\AddFixedExpenseRequest.java |         @Size(max = 30, message = "지출주기 코드가 �
+- [23:38] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\dto\FixedExpenseResponse.java |         String expenseCycleCd,
+- [23:38] [session:4650aae3-3f27-45d2-96cc-0b38f8dcdda6] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html |         renderFixedExpenses(FIXED_EXPENSES);
+- [23:38] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java |     public static final String PAYMENT_METHOD_GROUP_ID = "PA
+- [23:38] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java |         Map<String, String> expenseCycleNames = codeReposito
+- [23:38] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java |     @Transactional
+- [23:39] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java |     @Transactional
+- [23:39] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\facade\FixedExpenseFacade.java |     /** 지출주기 공통코드 목록 조회 */
+- [23:39] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\facade\FixedExpenseFacade.java |     /** 고정지출 등록 */
+- [23:39] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\controller\FixedExpenseController.java |         model.addAttribute("expenseCycles", fixedExpenseFaca
+- [23:39] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html |                 <div>
+- [23:39] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html |             Dropdown.reset('fe-payment-dd');
+- [23:39] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html |             Dropdown.select('fe-payment-dd', fe.paymentMetho
+- [23:40] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html |             document.getElementById('fe-payment-dd-dd')?.cla
+- [23:40] [session:6014289c-db48-4766-9e82-ef044ec76a7c] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html |                 paymentMethodCd: Dropdown.getValue('fe-payme
+- [23:42] [session:4650aae3-3f27-45d2-96cc-0b38f8dcdda6] Write: D:\workspace\expenseTracker\src\main\resources\static\js\common\calendar.js | (function () {
+- [23:42] [session:4650aae3-3f27-45d2-96cc-0b38f8dcdda6] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html |         CalendarPicker.init(['fe-anchor-dt'], 'cream');

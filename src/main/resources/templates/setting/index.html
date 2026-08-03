@@ -28,10 +28,10 @@
                         <p class="text-xs text-ink-muted mt-0.5">전체 가계부 데이터를 CSV 또는 JSON으로 내보냅니다</p>
                     </div>
                     <div class="shrink-0 flex gap-2">
-                        <button class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-cream-subtle text-ink-soft border border-cream-border hover:bg-cream-border">
+                        <button class="btn-setting bg-cream-subtle text-ink-soft border border-cream-border hover:bg-cream-border">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>CSV
                         </button>
-                        <button class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-sage text-white hover:opacity-90">
+                        <button class="btn-setting bg-sage text-white hover:opacity-90">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>JSON
                         </button>
                     </div>
@@ -42,7 +42,7 @@
                         <p class="text-xs text-ink-muted mt-0.5">CSV 파일로 내역을 일괄 등록합니다</p>
                     </div>
                     <div class="shrink-0">
-                        <button class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-cream-subtle text-ink-soft border border-cream-border hover:bg-cream-border">
+                        <button class="btn-setting bg-cream-subtle text-ink-soft border border-cream-border hover:bg-cream-border">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>파일 선택
                         </button>
                     </div>
@@ -62,7 +62,7 @@
                         <p class="text-xs text-ink-muted mt-0.5">모든 가계부 데이터를 삭제합니다. 되돌릴 수 없어요.</p>
                     </div>
                     <div class="shrink-0">
-                        <button class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-blush text-white hover:opacity-90">
+                        <button class="btn-setting bg-blush text-white hover:opacity-90">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>초기화
                         </button>
                     </div>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="shrink-0 flex items-center gap-2">
                         <code id="api-key-display" class="text-xs font-mono bg-cream-subtle px-3 py-1.5 rounded-lg text-ink-soft tracking-wider">••••••••••••••••••••••</code>
-                        <button id="api-key-toggle" onclick="toggleApiKey()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-cream-subtle text-ink-soft border border-cream-border hover:bg-cream-border">
+                        <button id="api-key-toggle" onclick="toggleApiKey()" class="btn-setting bg-cream-subtle text-ink-soft border border-cream-border hover:bg-cream-border">
                             <svg id="api-key-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>보기
                         </button>
                     </div>
@@ -133,75 +133,7 @@
         </div>
     </main>
 
-    <script>
-    let apiKeyVisible = false;
-    const API_KEY = 'sk-gaegaebu-2026-xxxx-xxxx-abcdef123456';
-    let debugOn = false;
-
-    const ROLE_COLOR = {
-        관리자: 'bg-sage-light text-sage',
-        편집자: 'bg-sky-light text-sky',
-        뷰어:   'bg-blush-light text-blush'
-    };
-
-    let users = [
-        { id: 1, name: '김민준', email: 'minjun@example.com',   role: '관리자', active: true  },
-        { id: 2, name: '이서연', email: 'seoyeon@example.com',  role: '편집자', active: true  },
-        { id: 3, name: '박지훈', email: 'jihoon@example.com',   role: '뷰어',   active: false },
-    ];
-
-    function toggleApiKey() {
-        apiKeyVisible = !apiKeyVisible;
-        document.getElementById('api-key-display').textContent = apiKeyVisible ? API_KEY : '••••••••••••••••••••••';
-        const eyeD = apiKeyVisible
-            ? 'M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22'
-            : 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z';
-        document.getElementById('api-key-icon').querySelector('path')?.setAttribute('d', eyeD);
-        document.getElementById('api-key-toggle').lastChild.textContent = apiKeyVisible ? '숨기기' : '보기';
-    }
-
-    function toggleDebug() {
-        debugOn = !debugOn;
-        document.getElementById('debug-toggle').className = `relative w-11 h-6 rounded-full transition-colors duration-200 ${debugOn ? 'bg-sage' : 'bg-cream-border'}`;
-        document.getElementById('debug-knob').className  = `absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all duration-200 ${debugOn ? 'left-6' : 'left-1'}`;
-    }
-
-    function toggleUser(id) {
-        users = users.map(u => u.id === id ? { ...u, active: !u.active } : u);
-        renderUsers();
-    }
-
-    function renderUsers() {
-        document.getElementById('user-list').innerHTML = users.map((u, i) => {
-            const border    = i < users.length - 1 ? 'border-b border-cream-border' : '';
-            const roleClass = ROLE_COLOR[u.role] || 'bg-cream-subtle text-ink-muted';
-            const toggleBg  = u.active ? 'bg-sage' : 'bg-cream-border';
-            const knobPos   = u.active ? 'left-6'  : 'left-1';
-            const statusCls = u.active ? 'text-sage' : 'text-ink-muted';
-            return `
-                <div class="flex items-center gap-4 px-7 py-4 ${border}">
-                    <div class="w-10 h-10 rounded-full shrink-0 bg-sage-light flex items-center justify-center text-sm font-bold text-sage">${u.name[0]}</div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-ink">${u.name}</p>
-                        <p class="text-xs text-ink-muted mt-0.5">${u.email}</p>
-                    </div>
-                    <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${roleClass}">${u.role}</span>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs ${statusCls}">${u.active ? '활성' : '비활성'}</span>
-                        <button onclick="toggleUser(${u.id})" class="relative w-11 h-6 rounded-full transition-colors duration-200 ${toggleBg}">
-                            <span class="absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all duration-200 ${knobPos}"></span>
-                        </button>
-                    </div>
-                </div>`;
-        }).join('');
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', renderUsers);
-    } else {
-        renderUsers();
-    }
-    </script>
+    <script th:src="@{/js/setting/index.js}"></script>
 
 </th:block>
 </body>

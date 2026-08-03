@@ -1,0 +1,79 @@
+{
+  "description" : "해당 설정은 [힌트]일 뿐 메인 세션, 일반 대화에서만 스킬을 분리시켜주는 용도, 서브에이전트 frontmatter에 명시하는 것과 다름.",
+
+  "backend-architect": {
+    "type": "domain",
+    "enforcement": "suggest",
+    "priority": "high",
+    "description": "백엔드 아키텍처/API/JPA 작업: backend-architect 서브에이전트 호출 권장 (URL 컨벤션, PRG 패턴, JPA 엔티티 설계, Facade 레이어 검토)",
+    "promptTriggers": {
+      "keywords": ["controller", "service", "entity", "repository", "facade", "jpa", "api", "엔드포인트", "컨트롤러", "서비스", "엔티티", "레포지토리", "쿼리", "query"]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "src/main/java/com/expenseTracker/**/controller/*.java",
+        "src/main/java/com/expenseTracker/**/facade/*.java",
+        "src/main/java/com/expenseTracker/**/service/*.java",
+        "src/main/java/com/expenseTracker/**/entity/*.java",
+        "src/main/java/com/expenseTracker/**/repository/*.java"
+      ]
+    }
+  },
+  "convention-validator": {
+    "type": "domain",
+    "enforcement": "suggest",
+    "priority": "high",
+    "description": "새 클래스/패키지 생성 또는 백엔드 구조 리팩토링: convention-validator 서브에이전트 반드시 호출 (도메인 중심 패키지 구조, 네이밍, 쿼리 alias, validation 경계 검증)",
+    "promptTriggers": {
+      "keywords": ["새 클래스", "새 파일", "패키지", "리팩토링", "구조", "네이밍", "convention"]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "src/main/java/com/expenseTracker/**/*.java"
+      ]
+    }
+  },
+  "frontend-convention": {
+    "type": "domain",
+    "enforcement": "suggest",
+    "priority": "high",
+    "description": "새 HTML 템플릿/fragment 작성 또는 템플릿 구조 변경: frontend-convention 서브에이전트 반드시 호출 (폴더 구조, 파일 네이밍, Thymeleaf 컨벤션, 공통 드롭다운/모달 규칙 검증)",
+    "promptTriggers": {
+      "keywords": ["템플릿", "thymeleaf", "fragment", "레이아웃", "화면", "페이지"]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "src/main/resources/templates/**/*.html"
+      ]
+    }
+  },
+  "javascript-architect": {
+    "type": "domain",
+    "enforcement": "suggest",
+    "priority": "high",
+    "description": "JavaScript 구현/리팩토링/Ajax 처리: javascript-architect 서브에이전트 호출 권장 (이벤트 바인딩, 공통 함수 분리, Ajax 응답 처리)",
+    "promptTriggers": {
+      "keywords": ["javascript", "ajax", "fetch", "이벤트", "스크립트", "버튼 클릭", "폼 제출"]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "src/main/resources/static/js/**/*.js"
+      ]
+    }
+  },
+  "tailwind-ui-architect": {
+    "type": "domain",
+    "enforcement": "suggest",
+    "priority": "high",
+    "description": "HTML+Tailwind CSS UI 구현/리뷰: tailwind-ui-architect 서브에이전트 호출 권장 (design token, @apply, spacing/sizing hierarchy 검증)",
+    "promptTriggers": {
+      "keywords": ["tailwind", "css", "스타일", "디자인", "버튼 스타일", "카드", "레이아웃"]
+    },
+    "fileTriggers": {
+      "pathPatterns": [
+        "src/main/resources/templates/**/*.html",
+        "src/main/resources/static/css/input.css"
+      ]
+    }
+  }
+}

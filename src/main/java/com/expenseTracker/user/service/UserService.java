@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -24,6 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     /** 로그인ID 중복 여부 확인 */
+    @Transactional(readOnly = true)
     public boolean isLoginIdDuplicate(String loginId) {
         return userRepository.findByLoginIdAndDelAt(loginId, "N").isPresent();
     }
@@ -44,7 +44,6 @@ public class UserService {
                 .roleCd("ROLE_USER")
                 .useAt("Y")
                 .delAt("N")
-                .rgsDt(LocalDateTime.now())
                 .rgsUserId(form.getLoginId())
                 .build();
         userRepository.save(user);
