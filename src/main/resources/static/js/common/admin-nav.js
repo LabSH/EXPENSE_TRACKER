@@ -12,7 +12,7 @@
         pill.style.opacity = '1';
         nav.querySelectorAll('[data-page]').forEach(function (l) {
             var active = l === link;
-            l.classList.toggle('text-violet',   active);
+            l.classList.toggle('text-admin-accent',   active);
             l.classList.toggle('font-semibold', active);
             l.classList.toggle('text-ink-soft', !active);
             l.classList.toggle('font-normal',   !active);
@@ -41,8 +41,8 @@
         btn.addEventListener('click', function () {
             var wrap = document.getElementById('sidebar-wrap');
             var isOpen = wrap.style.width !== '0px';
-            wrap.style.width       = isOpen ? '0px'   : '240px';
-            wrap.style.marginRight = isOpen ? '-240px' : '0';
+            wrap.style.width       = isOpen ? '0px'   : '224px';
+            wrap.style.marginRight = isOpen ? '-224px' : '0';
         });
     }
 

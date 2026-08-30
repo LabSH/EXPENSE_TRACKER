@@ -8,7 +8,7 @@
         <!-- 헤더 -->
         <div class="flex justify-between items-start mb-8">
             <div class="flex items-center gap-3.5">
-                <button id="btn-toggle-sidebar" class="w-9 h-9 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
+                <button id="btn-toggle-sidebar" class="w-8 h-8 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
                 </button>
                 <div>
@@ -24,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            <button id="btn-open-modal" class="flex items-center gap-2 px-5 py-3 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-md shadow-sage/30">
+            <button id="btn-open-modal" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-md shadow-sage/30 border border-transparent">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                 내역 추가
             </button>
@@ -73,8 +73,8 @@
                     </button>
                 </div>
                 <div class="flex gap-2">
-                    <button id="type-expense" class="flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all bg-blush border-blush text-white">지출</button>
-                    <button id="type-income"  class="flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-cream-border bg-transparent text-ink-soft hover:bg-cream-subtle">수입</button>
+                    <button id="type-expense" class="flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all bg-blush border-blush text-white border border-transparent">지출</button>
+                    <button id="type-income"  class="flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all border-cream-border bg-transparent text-ink-soft hover:bg-cream-subtle border border-transparent">수입</button>
                 </div>
             </div>
             <div class="px-7 py-5 flex flex-col gap-4 max-h-[60vh] overflow-y-auto">
@@ -86,7 +86,7 @@
                                 사용일자
                             </span>
                         </label>
-                        <input type="date" id="modal-date" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                        <input type="date" id="modal-date" class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-ink-soft mb-1.5">
@@ -96,7 +96,7 @@
                             </span>
                         </label>
                         <div class="relative" id="payment-dd-wrap">
-                            <button id="payment-dd-btn" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border text-sm flex justify-between items-center bg-cream transition-colors">
+                            <button id="payment-dd-btn" class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border text-sm flex justify-between items-center bg-cream transition-colors">
                                 <span id="payment-dd-label">카드</span>
                                 <svg id="payment-dd-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ink-muted transition-transform duration-200"><path d="M6 9l6 6 6-6"/></svg>
                             </button>
@@ -116,23 +116,23 @@
                         </span>
                     </label>
                     <div class="relative">
-                        <input type="number" id="modal-amount" placeholder="0" class="w-full px-3.5 py-2.5 pr-8 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                        <input type="number" id="modal-amount" placeholder="0" class="w-full px-3.5 py-1.5 pr-8 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
                         <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-ink-muted pointer-events-none">원</span>
                     </div>
                     <p id="amount-preview" class="hidden text-xs text-ink-muted mt-1 pl-1"></p>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-ink-soft mb-1.5">상세내용</label>
-                    <input id="modal-desc" placeholder="예: 마트 장보기" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                    <input id="modal-desc" placeholder="예: 마트 장보기" class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-ink-soft mb-1.5">메모 <span class="font-normal text-ink-muted">(선택)</span></label>
-                    <textarea id="modal-memo" placeholder="추가 메모를 입력하세요" rows="2" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors resize-none leading-relaxed"></textarea>
+                    <textarea id="modal-memo" placeholder="추가 메모를 입력하세요" rows="2" class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors resize-none leading-relaxed"></textarea>
                 </div>
             </div>
             <div class="px-7 pb-6 flex gap-2.5">
-                <button id="btn-modal-cancel" class="flex-1 py-3 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
-                <button id="btn-modal-submit" class="py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 bg-blush" style="flex:2">저장하기</button>
+                <button id="btn-modal-cancel" class="flex-1 py-2.5 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
+                <button id="btn-modal-submit" class="py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 bg-blush border border-transparent" style="flex:2">저장하기</button>
             </div>
         </div>
     </div>

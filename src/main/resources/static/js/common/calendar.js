@@ -15,7 +15,7 @@
     // picker별 상태 (동적으로 키 추가)
     const CAL = { open: null };
 
-    // 페이지별 색상 톤 (기본 admin/violet, 다른 페이지는 init 시 theme 지정)
+    // 페이지별 색상 톤 (기본 admin, 다른 페이지는 init 시 theme 지정)
     const THEMES = {
         admin: {
             surface: 'bg-admin-surface',
@@ -23,13 +23,13 @@
             subtleBg: 'bg-admin-subtle',
             subtleHover: 'hover:bg-admin-subtle',
             borderHoverBg: 'hover:bg-admin-border',
-            accentBg: 'bg-violet',
-            accentText: 'text-violet',
-            accentBorder: 'border-violet',
-            accentLightBg: 'bg-violet-light',
-            accentLightHover: 'hover:bg-violet-light',
-            accentTextHover: 'hover:text-violet',
-            accentBgHover: 'hover:bg-violet',
+            accentBg: 'bg-admin-accent',
+            accentText: 'text-admin-accent',
+            accentBorder: 'border-admin-accent',
+            accentLightBg: 'bg-admin-accent-light',
+            accentLightHover: 'hover:bg-admin-accent-light',
+            accentTextHover: 'hover:text-admin-accent',
+            accentBgHover: 'hover:bg-admin-accent',
         },
         cream: {
             surface: 'bg-cream-surface',
@@ -108,8 +108,8 @@
             ${emptyCells}${dayCells}
         </div>
         <div class="flex gap-2 mt-3 pt-3 border-t ${t.border}">
-            <button onclick="calSelectDate('${id}','${todayStr}')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold ${t.accentLightBg} ${t.accentText} ${t.accentBgHover} hover:text-white transition-colors">오늘</button>
-            <button onclick="calSelectDate('${id}','')"            class="flex-1 py-1.5 rounded-lg text-xs font-semibold ${t.accentLightBg} ${t.accentText} ${t.accentBgHover} hover:text-white transition-colors">초기화</button>
+            <button onclick="calSelectDate('${id}','${todayStr}')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold ${t.accentLightBg} ${t.accentText} ${t.accentBgHover} hover:text-white transition-colors border border-transparent">오늘</button>
+            <button onclick="calSelectDate('${id}','')"            class="flex-1 py-1.5 rounded-lg text-xs font-semibold ${t.accentLightBg} ${t.accentText} ${t.accentBgHover} hover:text-white transition-colors border border-transparent">초기화</button>
         </div>`;
     }
 
@@ -134,7 +134,7 @@
             ${yearBtns}
         </div>
         <div class="mt-3 pt-3 border-t ${t.border}">
-            <button onclick="calSetMode('${id}','day')" class="w-full py-1.5 rounded-lg text-xs font-semibold ${t.subtleBg} text-ink-soft ${t.borderHoverBg} transition-colors">← 돌아가기</button>
+            <button onclick="calSetMode('${id}','day')" class="w-full py-1.5 rounded-lg text-xs font-semibold ${t.subtleBg} text-ink-soft ${t.borderHoverBg} transition-colors border border-transparent">← 돌아가기</button>
         </div>`;
     }
 
@@ -158,7 +158,7 @@
             ${monthBtns}
         </div>
         <div class="mt-3 pt-3 border-t ${t.border}">
-            <button onclick="calSetMode('${id}','day')" class="w-full py-1.5 rounded-lg text-xs font-semibold ${t.subtleBg} text-ink-soft ${t.borderHoverBg} transition-colors">← 돌아가기</button>
+            <button onclick="calSetMode('${id}','day')" class="w-full py-1.5 rounded-lg text-xs font-semibold ${t.subtleBg} text-ink-soft ${t.borderHoverBg} transition-colors border border-transparent">← 돌아가기</button>
         </div>`;
     }
 
@@ -176,7 +176,18 @@
     }
 
     function closePicker(id) {
-        document.getElementById(`${id}-cal`).classList.add('hidden');
+        const cal = document.getElementById(`${id}-cal`);
+        if (cal) {
+            cal.classList.add('hidden');
+            // 열 때 body로 옮겨둔 요소를 원래 wrap 안으로 되돌림 (화면 전환 시 body에 남지 않도록)
+            const wrap = document.getElementById(`${id}-wrap`);
+            if (wrap && cal.parentElement !== wrap) {
+                cal.style.position = '';
+                cal.style.top      = '';
+                cal.style.left     = '';
+                wrap.appendChild(cal);
+            }
+        }
         setBtnStyle(id, false);
         if (CAL.open === id) CAL.open = null;
     }
@@ -283,5 +294,15 @@
         reset(id) {
             window.calSelectDate(id, '');
         },
+
+        /** 열려 있는 달력을 모두 닫음 (모달 닫기 등 외부에서 호출) */
+        closeAll() {
+            _ids.forEach(id => closePicker(id));
+        },
     };
+
+    // 화면 전환(htmx swap)으로 달력의 원래 위치가 사라지기 전에 닫아 정리
+    document.addEventListener('htmx:beforeSwap', () => {
+        _ids.forEach(id => closePicker(id));
+    });
 }());

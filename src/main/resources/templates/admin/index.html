@@ -11,8 +11,8 @@
         .anim-slideDown { animation:slideDown .25s cubic-bezier(.22,1,.36,1) both }
         .anim-up { animation:fadeSlideUp .35s cubic-bezier(.22,1,.36,1) both }
         ::-webkit-scrollbar{width:5px} ::-webkit-scrollbar-track{background:transparent}
-        ::-webkit-scrollbar-thumb{background:#DDD9EE;border-radius:3px}
-        a{text-decoration:none;color:inherit}
+        ::-webkit-scrollbar-thumb{background:#E5E0D8;border-radius:3px}
+        a{text-decoration:none}
     </style>
 </head>
 <body class="bg-admin font-sans text-ink">
@@ -26,12 +26,12 @@
     <div id="admin-main-content" class="flex-1 overflow-hidden">
     <main class="overflow-y-auto h-screen p-9">
         <div class="flex items-start gap-4 mb-10">
-            <button id="sidebar-toggle" class="w-9 h-9 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors shrink-0 mt-1">
+            <button id="sidebar-toggle" class="w-8 h-8 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors shrink-0 mt-1">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
             </button>
             <div>
                 <div class="flex items-center gap-2.5 mb-1.5">
-                    <span class="px-2.5 py-1 rounded-full bg-violet-light text-violet text-xs font-semibold">관리자 모드</span>
+                    <span class="px-2.5 py-1 rounded-full bg-admin-accent-light text-admin-accent text-xs font-semibold">관리자 모드</span>
                 </div>
                 <h1 class="text-3xl font-bold text-ink tracking-tight">관리자 대시보드</h1>
                 <p class="text-sm text-ink-muted mt-1">왼쪽 메뉴에서 관리할 항목을 선택하세요</p>
@@ -39,23 +39,23 @@
         </div>
 
         <div class="grid grid-cols-3 gap-5 anim-up">
-            <a th:href="@{/admin/code}" class="bg-admin-surface border border-admin-border rounded-2xl p-7 hover:border-violet hover:shadow-md transition-all group">
-                <div class="w-11 h-11 rounded-xl bg-violet-light flex items-center justify-center mb-4 group-hover:bg-violet transition-colors">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-violet group-hover:text-white transition-colors"><path d="M12 2c-5.52 0-10 2.24-10 5s4.48 5 10 5 10-2.24 10-5-4.48-5-10-5M2 7v5c0 2.76 4.48 5 10 5s10-2.24 10-5V7M2 12v5c0 2.76 4.48 5 10 5s10-2.24 10-5v-5"/></svg>
+            <a th:href="@{/admin/code}" class="bg-admin-surface border border-admin-border rounded-2xl p-7 hover:border-admin-accent hover:shadow-md transition-all group">
+                <div class="w-11 h-11 rounded-xl bg-admin-accent-light flex items-center justify-center mb-4 group-hover:bg-admin-accent transition-colors">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-admin-accent group-hover:text-white transition-colors"><path d="M12 2c-5.52 0-10 2.24-10 5s4.48 5 10 5 10-2.24 10-5-4.48-5-10-5M2 7v5c0 2.76 4.48 5 10 5s10-2.24 10-5V7M2 12v5c0 2.76 4.48 5 10 5s10-2.24 10-5v-5"/></svg>
                 </div>
                 <p class="text-sm font-bold text-ink mb-1">코드 데이터 관리</p>
                 <p class="text-xs text-ink-muted">시스템에서 사용하는 코드성 데이터를 관리합니다</p>
             </a>
-            <a th:href="@{/admin/users}" class="bg-admin-surface border border-admin-border rounded-2xl p-7 hover:border-violet hover:shadow-md transition-all group">
-                <div class="w-11 h-11 rounded-xl bg-violet-light flex items-center justify-center mb-4 group-hover:bg-violet transition-colors">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-violet group-hover:text-white transition-colors"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8m14 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <a th:href="@{/admin/users}" class="bg-admin-surface border border-admin-border rounded-2xl p-7 hover:border-admin-accent hover:shadow-md transition-all group">
+                <div class="w-11 h-11 rounded-xl bg-admin-accent-light flex items-center justify-center mb-4 group-hover:bg-admin-accent transition-colors">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-admin-accent group-hover:text-white transition-colors"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8m14 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 </div>
                 <p class="text-sm font-bold text-ink mb-1">사용자 관리</p>
                 <p class="text-xs text-ink-muted">계정 추가, 권한 변경, 비밀번호 초기화를 관리합니다</p>
             </a>
-            <a th:href="@{/admin/logs}" class="bg-admin-surface border border-admin-border rounded-2xl p-7 hover:border-violet hover:shadow-md transition-all group">
-                <div class="w-11 h-11 rounded-xl bg-violet-light flex items-center justify-center mb-4 group-hover:bg-violet transition-colors">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-violet group-hover:text-white transition-colors"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8ZM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+            <a th:href="@{/admin/logs}" class="bg-admin-surface border border-admin-border rounded-2xl p-7 hover:border-admin-accent hover:shadow-md transition-all group">
+                <div class="w-11 h-11 rounded-xl bg-admin-accent-light flex items-center justify-center mb-4 group-hover:bg-admin-accent transition-colors">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-admin-accent group-hover:text-white transition-colors"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8ZM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
                 </div>
                 <p class="text-sm font-bold text-ink mb-1">시스템 로그</p>
                 <p class="text-xs text-ink-muted">서비스 이벤트 및 오류 이력을 확인합니다</p>

@@ -18,7 +18,8 @@ public record AddFixedExpenseRequest(
         @Size(max = 30, message = "카테고리 코드가 올바르지 않습니다.")
         String categoryCd,
 
-        // 지출주기 계산 기준일 (매일 주기는 의미 없어 선택값)
+        // 지출주기 계산 기준일(시작일)
+        @NotNull(message = "기준일(시작일)은 필수입니다.")
         LocalDate anchorDt,
 
         String fileGroupId,

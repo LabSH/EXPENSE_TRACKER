@@ -1054,3 +1054,156 @@
 [2026-08-03 23:42:09] [session:4650aae3-3f27-45d2-96cc-0b38f8dcdda6] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
   변경전:         CalendarPicker.init(['fe-anchor-dt']);
   변경후:         CalendarPicker.init(['fe-anchor-dt'], 'cream');
+[2026-08-26 22:33:16] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                            class="pl-8 pr-3.5 pt-[10px] pb-[6px] rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+  변경후:                            class="pl-8 pr-3.5 py-2 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+[2026-08-26 22:36:40] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         <div id="fe-panel" class="bg-cream-surface border border-cream-border rounded-2xl overflow-hidden">
+  변경후:         <div class="grid grid-cols-2 gap-6 items-start">
+[2026-08-26 22:36:45] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             <!-- 목록 -->
+  변경후:             <!-- 목록 -->
+[2026-08-26 22:49:58] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             <div class="grid px-6 py-3 bg-cream-subtle border-b border-cream-border text-xs font-semibold text-ink-muted uppercase tracking-wide" style="grid-template-columns:1fr 140px 120px 130px 1fr 90px">
+  변경후:             <div class="grid px-6 py-3 bg-cream-subtle border-b border-cream-border text-xs font-semibold text-ink-muted uppercase tracking-wide" style="grid-template-columns:1fr 140px 120px 130px 150px">
+[2026-08-26 22:50:14] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <div class="grid items-center px-6 py-4 ${border}" style="grid-template-columns:1fr 140px 120px 130px 1fr 90px">
+  변경후:                     <div class="grid items-center px-6 py-4 ${border}" style="grid-template-columns:1fr 140px 120px 130px 150px">
+[2026-08-26 22:50:18] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <input id="fe-content" placeholder="예: 넷플릭스 구독료"
+  변경후:                     <input id="fe-content"
+[2026-08-26 22:50:32] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:     <!-- 고정지출 추가 모달 -->
+  변경후:     <!-- 고정지출 상세 모달 (정보 확인 전용 — backdrop 클릭 닫기 허용) -->
+[2026-08-26 22:50:42] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         function openFixedExpenseModal() {
+  변경후:         async function openFixedExpenseViewModal(id) {
+[2026-08-26 22:54:03] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\DATABASE\DDL\TB_EX_FIXED_EXPENSE.sql
+  변경전: IS '기준일 (다음 지출 예정일 계산 기준. 매주/격주는 요일, 매월 계열은 일자, 매년은 월일을 이 날짜에서 추출)';
+  변경후: IS '기준일(시작일) (다음 지출 예정일 계산 기준. 매주/격주는 요일, 매월 계열은 일자, 매년은 월일을 이 날짜에서 추출)';
+[2026-08-26 22:54:07] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\entity\FixedExpense.java
+  변경전:     @Comment("기준일 (다음 지출 예정일 계산 기준)")
+  변경후:     @Comment("기준일(시작일) (다음 지출 예정일 계산 기준)")
+[2026-08-26 22:54:13] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <label class="block text-xs font-medium text-ink-soft mb-1.5">기준일 <span class="font-normal text-ink-muted">(주기 계산 기준. 매일 주기는 불필요)</span></label>
+  변경후:                     <label class="block text-xs font-medium text-ink-soft mb-1.5">기준일(시작일) <span class="font-normal text-ink-muted">(주기 계산 기준. 매일 주기는 불필요)</span></label>
+[2026-08-26 22:54:17] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <span class="text-ink-muted">기준일</span>
+  변경후:                     <span class="text-ink-muted">기준일(시작일)</span>
+[2026-08-26 22:54:21] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 <h3 class="text-sm font-bold text-ink">고정지출 상세</h3>
+  변경후:                 <h3 class="text-sm font-bold text-ink">상세내용</h3>
+[2026-08-26 22:56:32] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전:     // EXPENSECYCLE 공통코드 그룹의 코드ID (DATABASE/DML/TB_CO_CODE_EXPENSECYCLE.sql 참조)
+  변경후:     // EXPENSECYCLE 공통코드 그룹의 코드ID (DATABASE/DML/TB_CO_CODE_EXPENSECYCLE.sql 참조)
+[2026-08-26 22:56:37] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전:      * 기준일이 없거나(anchorDt) 매일 주기처럼 기준일 개념이 없는 주기면 null 반환.
+  변경후:      * 기준일이 없거나(anchorDt) 알 수 없는 주기코드면 null 반환.
+[2026-08-26 22:56:39] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전:             case CYCLE_WEEKLY -> resolveByDayInterval(anchorDt, 7, today);
+  변경후:             case CYCLE_DAILY -> resolveByDayInterval(anchorDt, 1, today);
+[2026-08-26 22:57:07] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         <span class="text-sm text-ink-soft">
+  변경후:                         <span class="text-sm text-ink-soft">${feEscapeHtml(fe.expenseCycleNm) || '-'}</span>
+[2026-08-26 22:59:10] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\application-dev.properties
+  변경전: # 개발계 첨부파일 저장 경로
+  변경후: # 개발계 첨부파일 저장 경로
+[2026-08-26 23:10:52] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 <div>
+  변경후:                 <div class="grid grid-cols-2 gap-4">
+[2026-08-26 23:13:35] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 <div class="grid grid-cols-2 gap-4">
+  변경후:                 <div class="grid grid-cols-3 gap-4 items-end">
+[2026-08-26 23:15:35] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         <label class="block text-xs font-medium text-ink-soft mb-1.5">기준일(시작일)</label>
+  변경후:                         <label class="block text-xs font-medium text-ink-soft mb-1.5">기준일(시작일) <span class="text-blush">*</span></label>
+[2026-08-26 23:15:43] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             const amountVal = document.getElementById('fe-amount').value.replace(/,/g, '');
+  변경후:             const amountVal = document.getElementById('fe-amount').value.replace(/,/g, '');
+[2026-08-26 23:15:48] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\dto\AddFixedExpenseRequest.java
+  변경전:         // 지출주기 계산 기준일 (매일 주기는 의미 없어 선택값)
+  변경후:         // 지출주기 계산 기준일(시작일)
+[2026-08-26 23:15:52] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\entity\FixedExpense.java
+  변경전:     @Column(name = "ANCHOR_DT")
+  변경후:     @Column(name = "ANCHOR_DT", nullable = false)
+[2026-08-26 23:15:56] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\DATABASE\DDL\TB_EX_FIXED_EXPENSE.sql
+  변경전:   ANCHOR_DT         DATE,
+  변경후:   ANCHOR_DT         DATE           NOT NULL,
+[2026-08-26 23:21:11] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 <div class="grid grid-cols-3 gap-4 items-end">
+  변경후:                 <div class="grid grid-cols-3 gap-4 items-end [&>div>div>button]:w-full">
+[2026-08-26 23:21:49] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 <h3 class="text-sm font-semibold text-ink">고정지출 내역</h3>
+  변경후:                 <h3 class="text-sm font-semibold text-ink">내역</h3>
+[2026-08-26 23:21:50] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <h2 id="fe-modal-title" class="text-lg font-bold text-ink">고정지출 추가</h2>
+  변경후:                     <h2 id="fe-modal-title" class="text-lg font-bold text-ink">추가</h2>
+[2026-08-26 23:21:51] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             document.getElementById('fe-modal-title').textContent = '고정지출 추가';
+  변경후:             document.getElementById('fe-modal-title').textContent = '추가';
+[2026-08-26 23:21:53] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             document.getElementById('fe-modal-title').textContent = '고정지출 수정';
+  변경후:             document.getElementById('fe-modal-title').textContent = '수정';
+[2026-08-26 23:25:16] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                                     class="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink hover:bg-cream-subtle transition-colors">
+  변경후:                                     class="w-full flex items-center gap-2 px-3.5 py-2 rounded-xl border border-cream-border bg-cream text-sm text-ink hover:bg-cream-subtle transition-colors">
+[2026-08-26 23:31:21] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Write: D:\workspace\expenseTracker\.claude\report\2026-08-26_23-30.md
+  변경전: 
+  변경후: 
+[2026-08-26 23:31:22] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Write: D:\workspace\expenseTracker\.claude\report\2026-08-26_23-30.md
+  변경전: 
+  변경후: 
+[2026-08-30 20:33:59] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Edit: D:\workspace\expenseTracker\CLAUDE.md
+  변경전: - `DATABASE/DCL/` — 권한 관련 (GRANT, REVOKE) 필요 시
+  변경후: - `DATABASE/DCL/` — 권한 관련 (GRANT, REVOKE) 필요 시
+[2026-08-30 20:34:08] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Edit: D:\workspace\expenseTracker\.claude\agents\backend-architect.md
+  변경전: description: "Use this agent when you need to design or review backend architecture, database schemas, API endpoints, JPA entity mappings, or PostgreSQL queries for a Java 25 backend project. This agent should be used proactively when significant backend design decisions are being made or when new server-side features are being planned.\n\n<example>
+  변경후: description: "다음 상황에서는 반드시 이 에이전트를 호출할 것:\n- 새 기능의 API 엔드포인트, DB 스키마, JPA 엔티티 매핑을 설계할 때 (구현 전)\n- 새 테이블·컬럼 추가 등 DB 구조를 변경할 때\n- 새 Controller / Facade / Service / Repository / Entity 를 작성한 직후\n- PostgreSQL 쿼리나 JPA @Query 메서드를 새로 작성하거나 성능을 검토할 때\n- 백엔드 코드 구조·아키텍처 리뷰 요청 시\n\nJava 25 + Spring Boot + JPA/Hibernate + PostgreSQL 백엔드의 아키텍처, DB 스키마, API 엔드포인트, JPA 엔티티 매핑, 쿼리를 설계하거나 리뷰할 때 사용한다. 중요한 백엔드 설계 결정이나 새 서버 기능을 계획할 때 선제적으로 호출할 것.\n\n<example>
+[2026-08-30 20:34:14] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Edit: D:\workspace\expenseTracker\.claude\agents\javascript-architect.md
+  변경전: description: "JavaScript 코드 구현, 리팩토링, 공통 JS 함수 관리, 이벤트 처리, Ajax 통신을 담당하는 전문가 에이전트.\n\n다음 상황에서 사용한다:\n
+  변경후: description: "JavaScript 코드 구현, 리팩토링, 공통 JS 함수 관리, 이벤트 처리, Ajax 통신을 담당하는 전문가 에이전트.\n\n다음 상황에서는 반드시 이 에이전트를 호출할 것:\n
+[2026-08-30 20:34:23] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Edit: D:\workspace\expenseTracker\.claude\agents\tailwind-ui-architect.md
+  변경전: description: "HTML + Tailwind CSS 조합으로 UI를 구현하거나 리뷰할 때 사용하는 에이전트. design token 활용, @apply를 통한 component 클래스 정의, spacing/sizing 기반 visual hierarchy 등 프로젝트의 Tailwind 컨벤션을 적용할 때 호출. 새로운 UI를 작성한 후나 기존 마크업을 리팩토링할 때 Tailwind best practice 준수 여부를 검증하기 위해 사용.\n\n<example>
+  변경후: description: "다음 상황에서는 반드시 이 에이전트를 호출할 것:\n- 새로운 HTML + Tailwind UI 영역(카드, 폼, 목록, 모달 등)을 작성한 직후\n- 기존 마크업의 Tailwind 클래스를 리팩토링한 직후\n- 재사용 버튼·뱃지 등 컴포넌트 스타일(@apply)이나 design token(tailwind.config)을 추가·변경할 때\n- UI 마크업의 Tailwind 컨벤션 준수 여부 리뷰 요청 시\n\nHTML + Tailwind CSS 조합으로 UI를 구현하거나 리뷰할 때 사용하는 에이전트. design token 활용, @apply를 통한 component 클래스 정의, spacing/sizing 기반 visual hierarchy 등 프로젝트의 Tailwind 컨벤션을 적용한다.\n\n<example>
+[2026-08-30 20:35:14] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Write: C:\Users\ajrqh\AppData\Local\Temp\claude\D--workspace-expenseTracker\d7d45e8a-25e2-45a9-a7c4-0f20563f3f51\scratchpad\t-html.json
+  변경전: 
+  변경후: 
+[2026-08-30 20:35:16] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Write: C:\Users\ajrqh\AppData\Local\Temp\claude\D--workspace-expenseTracker\d7d45e8a-25e2-45a9-a7c4-0f20563f3f51\scratchpad\t-java.json
+  변경전: 
+  변경후: 
+[2026-08-30 20:35:17] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Write: C:\Users\ajrqh\AppData\Local\Temp\claude\D--workspace-expenseTracker\d7d45e8a-25e2-45a9-a7c4-0f20563f3f51\scratchpad\t-none.json
+  변경전: 
+  변경후: 
+[2026-08-30 20:37:08] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <span class="px-2 py-0.5 rounded-md bg-blush-light text-blush text-[11px] font-semibold">임시 데이터</span>
+  변경후:                     <span class="px-2 py-0.5 rounded-md bg-blush-light text-blush text-2xs-1 font-semibold">임시 데이터</span>
+[2026-08-30 21:23:50] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Edit: D:\workspace\expenseTracker\.claude\agents\javascript-architect.md
+  변경전: - 공통 함수는 동작이 명확한 이름을 사용한다.
+  변경후: - 공통 함수는 동작이 명확한 이름을 사용한다.
+[2026-08-30 21:23:56] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Edit: D:\workspace\expenseTracker\.claude\agents\javascript-architect.md
+  변경전: - [ ] 요청한 JavaScript 동작만 구현했는가?
+  변경후: - [ ] 요청한 JavaScript 동작만 구현했는가?
+[2026-08-30 21:50:00] [session:0ddefef3-4d5b-4cda-84d8-23bec0e9cba9] Edit: D:\workspace\expenseTracker\.claude\agents\tailwind-ui-architect.md
+  변경전: ## Rule 7: 필터바 컨트롤(드롭다운/인풋/버튼) 크기 통일 + 아이콘-텍스트 광학 중앙정렬
+  변경후: ## Rule 7: 한 필터바/액션바의 컨트롤은 동일 크기 공식 공유
+[2026-08-30 21:50:11] [session:0ddefef3-4d5b-4cda-84d8-23bec0e9cba9] Edit: C:\Users\ajrqh\.claude\projects\D--workspace-expenseTracker\memory\control-size-scale.md
+  변경전: | 등급 | 높이 | 클래스 |
+  변경후: | 등급 | 높이 | 클래스 |
+[2026-08-30 22:04:02] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         function openDeleteFixedExpenseModal(id) {
+  변경후:         /** 삭제할 고정지출 항목명을 표시하고 삭제 확인 모달을 연다 */
+[2026-08-30 22:17:28] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Write: D:\workspace\expenseTracker\src\main\resources\static\js\common\toast.js
+  변경전: 
+  변경후: 
+[2026-08-30 22:27:40] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\common\toast.js
+  변경전:     /**
+  변경후:     /**
+[2026-08-30 22:27:46] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\common\toast.js
+  변경전:     const TYPES = {
+  변경후:     const TYPES = {
+[2026-08-30 22:32:19] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\common\toast.js
+  변경전:         toast.className = `anim-toastIn pointer-events-auto flex items-start gap-3 min-w-60 max-w-sm px-4 py-3.5 rounded-xl border shadow-lg cursor-pointer ${spec.box}`;
+  변경후:         // 배지(28px)와 텍스트 높이가 달라 items-start를 쓰면 한 줄일 때 텍스트가 위로 떠 보인다.
+[2026-08-30 22:36:43] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Write: D:\workspace\expenseTracker\DOCUMENTS\TODO.md
+  변경전: 
+  변경후: 

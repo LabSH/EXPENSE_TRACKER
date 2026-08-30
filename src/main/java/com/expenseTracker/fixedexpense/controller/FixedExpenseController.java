@@ -29,6 +29,7 @@ public class FixedExpenseController {
         model.addAttribute("paymentMethods", fixedExpenseFacade.findPaymentMethods());
         model.addAttribute("expenseCycles", fixedExpenseFacade.findExpenseCycles());
         model.addAttribute("categories", fixedExpenseFacade.findCategories());
+        model.addAttribute("upcoming", fixedExpenseFacade.findUpcoming(auth.getName()));
         return "fixed-expense/index :: content";
     }
 
@@ -45,6 +46,14 @@ public class FixedExpenseController {
     @ResponseBody
     public FixedExpenseResponse update(@PathVariable Long id, @Valid @RequestBody AddFixedExpenseRequest req, Authentication auth) {
         return fixedExpenseFacade.updateFixedExpense(auth.getName(), id, req);
+    }
+
+    /** 고정지출 삭제 */
+    @DeleteMapping("/fixed-expense/{id}")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id, Authentication auth) {
+        fixedExpenseFacade.deleteFixedExpense(auth.getName(), id);
     }
 
     /** 키워드/결제수단/지출주기 조건으로 고정지출 조회 (조건 없으면 전체 목록) */

@@ -43,8 +43,8 @@ public class FixedExpense extends BaseEntity {
     @Comment("카테고리코드")
     private String categoryCd;
 
-    @Column(name = "ANCHOR_DT")
-    @Comment("기준일 (다음 지출 예정일 계산 기준)")
+    @Column(name = "ANCHOR_DT", nullable = false)
+    @Comment("기준일(시작일) (다음 지출 예정일 계산 기준)")
     private LocalDate anchorDt;
 
     @Column(name = "AMOUNT", precision = 15, scale = 2, nullable = false)

@@ -3,9 +3,9 @@
  * templates/admin/users/index.html 에서 사용한다.
  */
 
-var AVATARS = ['#6246ea', '#4579c8', '#d95f3b'];
+var AVATARS = ['#BB4B1F', '#4579c8', '#d95f3b'];
 var ROLE_COLOR = {
-    'ROLE_ADMIN':  'bg-violet-light text-violet',
+    'ROLE_ADMIN':  'bg-admin-accent-light text-admin-accent',
     'ROLE_USER':   'bg-sky-light text-sky',
     'ROLE_VIEWER': 'bg-blush-light text-blush'
 };
@@ -65,7 +65,7 @@ function renderUserList() {
         <div class="px-7 py-5 border-b border-admin-border flex items-center justify-between">
             <h3 class="text-sm font-bold text-ink">사용자 목록</h3>
             <button onclick="openModal('modal-user-add')"
-                    class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+                    class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-admin-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">
                 ${icon(IC.plus, 13)}<span>사용자 추가</span>
             </button>
         </div>`;
@@ -75,11 +75,11 @@ function renderUserList() {
             <div class="relative flex-1">
                 <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                 <input id="user-keyword" type="text" value="${escapeHtml(userKeyword)}" placeholder="이름 검색..."
-                       class="w-full pl-8 pr-3.5 pt-[10px] pb-[6px] rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors"
+                       class="w-full pl-8 pr-3.5 py-1.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-admin-accent transition-colors"
                        onkeydown="if(event.key==='Enter') searchUsers()" />
             </div>
-            <button onclick="searchUsers()" class="flex items-center px-3.5 py-2 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity shrink-0"><span>검색</span></button>
-            <button onclick="resetUserSearch()" class="flex items-center px-3.5 py-2 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors shrink-0"><span>초기화</span></button>
+            <button onclick="searchUsers()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-admin-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity shrink-0 border border-transparent"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>검색</span></button>
+            <button onclick="resetUserSearch()" class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors shrink-0"><span>초기화</span></button>
         </div>`;
 
     if (filtered.length === 0) {
@@ -93,11 +93,11 @@ function renderUserList() {
     const rows = filtered.map((u, i) => {
         const border = i < filtered.length - 1 ? 'border-b border-admin-border' : '';
         const isSelected = u.userId === selectedUserId;
-        const bg = isSelected ? 'bg-violet-light' : 'hover:bg-admin-subtle';
-        const nameColor = isSelected ? 'text-violet' : 'text-ink';
+        const bg = isSelected ? 'bg-admin-accent-light' : 'hover:bg-admin-subtle';
+        const nameColor = isSelected ? 'text-admin-accent' : 'text-ink';
         const roleClass = ROLE_COLOR[u.roleCd] || 'bg-admin-subtle text-ink-muted';
         const active = u.useAt === 'Y';
-        const toggleBg = active ? 'bg-violet' : 'bg-admin-border';
+        const toggleBg = active ? 'bg-admin-accent' : 'bg-admin-border';
         const knobPos = active ? 'left-6' : 'left-1';
         const statusColor = active ? 'text-sage' : 'text-ink-muted';
         const statusText = active ? '활성' : '비활성';
@@ -142,12 +142,12 @@ function renderUserDetail() {
     const active = u.useAt === 'Y';
     const statusColor = active ? 'text-sage' : 'text-ink-muted';
     const statusText = active ? '활성' : '비활성';
-    const toggleBg = active ? 'bg-violet' : 'bg-admin-border';
+    const toggleBg = active ? 'bg-admin-accent' : 'bg-admin-border';
     const knobPos = active ? 'left-6' : 'left-1';
 
     return `
         <div class="anim-up bg-admin-surface border border-admin-border rounded-2xl overflow-hidden">
-            <div class="px-6 py-5 border-b border-admin-border bg-violet-light flex items-start justify-between">
+            <div class="px-6 py-5 border-b border-admin-border bg-admin-accent-light flex items-start justify-between">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-full flex items-center justify-center text-base font-bold text-white shrink-0"
                          style="background:${avatarColor}">${escapeHtml(u.userNm[0])}</div>
@@ -184,13 +184,13 @@ function renderUserDetail() {
                 </div>
             </div>
             <div class="px-6 py-4 flex flex-col gap-2.5">
-                <button onclick="openRoleChange()" class="w-full flex items-center gap-2.5 px-4 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink hover:bg-admin-subtle transition-colors">
+                <button onclick="openRoleChange()" class="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink hover:bg-admin-subtle transition-colors">
                     ${icon(IC.edit, 16, 'text-sky')}<span>역할 변경</span>
                 </button>
-                <button onclick="openPwReset()" class="w-full flex items-center gap-2.5 px-4 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink hover:bg-admin-subtle transition-colors">
-                    ${icon(IC.refresh, 16, 'text-violet')}<span>비밀번호 초기화</span>
+                <button onclick="openPwReset()" class="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink hover:bg-admin-subtle transition-colors">
+                    ${icon(IC.refresh, 16, 'text-admin-accent')}<span>비밀번호 초기화</span>
                 </button>
-                <button onclick="openUserDelete()" class="w-full flex items-center gap-2.5 px-4 py-3 rounded-xl border border-blush/30 text-sm font-medium text-blush hover:bg-blush-light transition-colors">
+                <button onclick="openUserDelete()" class="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-blush/30 text-sm font-medium text-blush hover:bg-blush-light transition-colors">
                     ${icon(IC.trash, 16)}<span>계정 삭제</span>
                 </button>
             </div>
@@ -237,7 +237,7 @@ function setNewUserRole(role) {
     newUserRole = role;
     document.querySelectorAll('.role-btn').forEach(btn => {
         const isActive = btn.dataset.role === role;
-        btn.className = `role-btn flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${isActive ? 'border-violet bg-violet-light text-violet' : 'border-admin-border text-ink-soft hover:bg-admin-subtle'}`;
+        btn.className = `role-btn flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${isActive ? 'border-admin-accent bg-admin-accent-light text-admin-accent' : 'border-admin-border text-ink-soft hover:bg-admin-subtle'}`;
     });
 }
 
@@ -289,7 +289,7 @@ function setChangeRole(roleCd) {
     changingRoleCd = roleCd;
     document.querySelectorAll('.role-change-btn').forEach(btn => {
         const isActive = btn.dataset.role === roleCd;
-        btn.className = `role-change-btn flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${isActive ? 'border-violet bg-violet-light text-violet' : 'border-admin-border text-ink-soft hover:bg-admin-subtle'}`;
+        btn.className = `role-change-btn flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${isActive ? 'border-admin-accent bg-admin-accent-light text-admin-accent' : 'border-admin-border text-ink-soft hover:bg-admin-subtle'}`;
     });
 }
 

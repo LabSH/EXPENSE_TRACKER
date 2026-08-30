@@ -36,15 +36,15 @@ async function reloadGroups() {
         const border = i < groups.length - 1 ? 'border-b border-admin-border' : '';
         const active = codeSelectedGroup === g.groupId;
         return `
-            <div class="group-item relative flex items-center cursor-pointer transition-colors ${border} ${active ? 'bg-violet-light' : 'hover:bg-admin-subtle'}"
+            <div class="group-item relative flex items-center cursor-pointer transition-colors ${border} ${active ? 'bg-admin-accent-light' : 'hover:bg-admin-subtle'}"
                  data-group-id="${g.groupId}" onclick="selectGroup('${g.groupId}')">
                 <div class="flex-1 px-5 py-4 min-w-0">
-                    <p class="text-sm font-medium ${active ? 'text-violet' : 'text-ink'}">${escapeHtml(g.groupNm)}</p>
+                    <p class="text-sm font-medium ${active ? 'text-admin-accent' : 'text-ink'}">${escapeHtml(g.groupNm)}</p>
                     <p class="text-xs text-ink-muted mt-0.5">${g.itemCount}개 항목</p>
                 </div>
                 <div class="group-actions shrink-0 hidden gap-1 pr-3">
                     <button onclick="event.stopPropagation();openEditGroup('${g.groupId}','${escQ(g.groupNm)}')"
-                            class="w-7 h-7 rounded-lg bg-admin-surface border border-admin-border flex items-center justify-center text-ink-soft hover:border-violet hover:text-violet transition-colors">
+                            class="w-7 h-7 rounded-lg bg-admin-surface border border-admin-border flex items-center justify-center text-ink-soft hover:border-sage hover:text-sage transition-colors">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
                     </button>
                     <button onclick="event.stopPropagation();openDeleteGroup('${g.groupId}','${escQ(g.groupNm)}')"
@@ -77,10 +77,10 @@ async function selectGroup(groupId) {
 
     document.querySelectorAll('.group-item').forEach(el => {
         const active = el.dataset.groupId === groupId;
-        el.classList.toggle('bg-violet-light', active);
+        el.classList.toggle('bg-admin-accent-light', active);
         el.classList.toggle('hover:bg-admin-subtle', !active);
         const nm = el.querySelector('p.text-sm.font-medium');
-        if (nm) { nm.classList.toggle('text-violet', active); nm.classList.toggle('text-ink', !active); }
+        if (nm) { nm.classList.toggle('text-admin-accent', active); nm.classList.toggle('text-ink', !active); }
     });
 
     const nm = document.querySelector(`.group-item[data-group-id="${groupId}"] p.text-sm.font-medium`)?.textContent ?? groupId;
@@ -113,12 +113,12 @@ async function reloadItems() {
         </div>` +
         items.map(item => `
             <div class="grid items-center px-7 py-3 border-b border-admin-border last:border-0 hover:bg-admin-subtle transition-colors" style="grid-template-columns:56px 1fr 80px 136px">
-                <span class="w-7 h-7 rounded-lg text-xs font-bold flex items-center justify-center bg-violet-light text-violet">${item.sortSn}</span>
+                <span class="w-7 h-7 rounded-lg text-xs font-bold flex items-center justify-center bg-admin-accent-light text-admin-accent">${item.sortSn}</span>
                 <span class="text-sm text-ink">${escapeHtml(item.codeNm)}</span>
                 <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium w-fit ${item.useAt === 'Y' ? 'bg-sage-light text-sage' : 'bg-admin-subtle text-ink-muted'}">${item.useAt === 'Y' ? '사용' : '미사용'}</span>
                 <div class="flex gap-1.5 justify-end">
                     <button onclick="openEditItem('${item.codeId}','${escQ(item.codeNm)}',${item.sortSn},'${item.useAt}')"
-                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-admin-subtle text-ink-soft border border-admin-border hover:bg-admin-border transition-colors">
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-admin-surface text-ink-soft border border-admin-border hover:border-sage hover:text-sage transition-colors">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg><span>수정</span>
                     </button>
                     <button onclick="openDeleteItem('${item.codeId}','${escQ(item.codeNm)}')"
@@ -198,8 +198,8 @@ function adjustSeq(delta) {
 
 function setItemUse(val) {
     codeItemUseAt = val;
-    document.getElementById('item-use-y').className = `flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${val === 'Y' ? 'border-violet bg-violet-light text-violet' : 'border-admin-border text-ink-soft hover:bg-admin-subtle'}`;
-    document.getElementById('item-use-n').className = `flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${val === 'N' ? 'border-violet bg-violet-light text-violet' : 'border-admin-border text-ink-soft hover:bg-admin-subtle'}`;
+    document.getElementById('item-use-y').className = `flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${val === 'Y' ? 'border-admin-accent bg-admin-accent-light text-admin-accent' : 'border-admin-border text-ink-soft hover:bg-admin-subtle'}`;
+    document.getElementById('item-use-n').className = `flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all ${val === 'N' ? 'border-admin-accent bg-admin-accent-light text-admin-accent' : 'border-admin-border text-ink-soft hover:bg-admin-subtle'}`;
 }
 
 function openAddItem() {

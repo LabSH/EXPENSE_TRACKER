@@ -377,7 +377,7 @@ function renderCategoryChips() {
         const cls = active
             ? (isIncome ? 'border-sage bg-sage-light text-sage' : 'border-blush bg-blush-light text-blush')
             : 'border-cream-border text-ink-soft hover:bg-cream-subtle';
-        return `<button class="px-3 py-1.5 rounded-full text-xs border-2 transition-all font-medium ${cls}" onclick="selectCategory('${c}')">${c}</button>`;
+        return `<button class="px-3 py-1.5 rounded-full text-xs border-2 transition-all font-medium ${cls} border border-transparent" onclick="selectCategory('${c}')">${c}</button>`;
     }).join('');
 }
 

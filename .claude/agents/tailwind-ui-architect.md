@@ -1,6 +1,6 @@
 ---
 name: tailwind-ui-architect
-description: "HTML + Tailwind CSS 조합으로 UI를 구현하거나 리뷰할 때 사용하는 에이전트. design token 활용, @apply를 통한 component 클래스 정의, spacing/sizing 기반 visual hierarchy 등 프로젝트의 Tailwind 컨벤션을 적용할 때 호출. 새로운 UI를 작성한 후나 기존 마크업을 리팩토링할 때 Tailwind best practice 준수 여부를 검증하기 위해 사용.\n\n<example>\nContext: 사용자가 expense tracker 대시보드를 만들고 있고 card 영역이 필요한 상황.\nuser: \"지출 요약을 표시하는 card 만들어줘\"\nassistant: \"tailwind-ui-architect 에이전트를 사용해서 프로젝트 Tailwind 컨벤션에 맞게 구현할게요.\"\n<commentary>\nHTML + Tailwind 기반 UI를 새로 만들어야 하므로 tailwind-ui-architect 에이전트를 실행.\n</commentary>\n</example>\n\n<example>\nContext: 사용자가 인라인 Tailwind 클래스를 사용한 form 마크업을 작성하고 리뷰를 요청한 상황.\nuser: \"ExpenseForm HTML 완성했는데 한번 봐줄 수 있어?\"\nassistant: \"tailwind-ui-architect 에이전트로 Tailwind 컨벤션에 맞게 작성됐는지 리뷰할게요.\"\n<commentary>\nHTML + Tailwind 마크업이 작성된 상황이므로 tailwind-ui-architect 에이전트로 Tailwind 사용법, design token 활용, 중복 패턴, visual hierarchy를 선제적으로 검토.\n</commentary>\n</example>\n\n<example>\nContext: 사용자가 삭제용 버튼 스타일을 추가하려는 상황.\nuser: \"삭제 액션용 버튼 스타일이 필요해\"\nassistant: \"tailwind-ui-architect 에이전트로 design token과 @apply 컨벤션에 맞게 설계하고 구현할게요.\"\n<commentary>\n재사용 가능한 버튼 스타일은 HTML + Tailwind에서 @apply로 정의하는 것이 적절하므로 tailwind-ui-architect 에이전트가 처리.\n</commentary>\n</example>"
+description: "다음 상황에서는 반드시 이 에이전트를 호출할 것:\n- 새로운 HTML + Tailwind UI 영역(카드, 폼, 목록, 모달 등)을 작성한 직후\n- 기존 마크업의 Tailwind 클래스를 리팩토링한 직후\n- 재사용 버튼·뱃지 등 컴포넌트 스타일(@apply)이나 design token(tailwind.config)을 추가·변경할 때\n- UI 마크업의 Tailwind 컨벤션 준수 여부 리뷰 요청 시\n\nHTML + Tailwind CSS 조합으로 UI를 구현하거나 리뷰할 때 사용하는 에이전트. design token 활용, @apply를 통한 component 클래스 정의, spacing/sizing 기반 visual hierarchy 등 프로젝트의 Tailwind 컨벤션을 적용한다.\n\n<example>\nContext: 사용자가 expense tracker 대시보드를 만들고 있고 card 영역이 필요한 상황.\nuser: \"지출 요약을 표시하는 card 만들어줘\"\nassistant: \"tailwind-ui-architect 에이전트를 사용해서 프로젝트 Tailwind 컨벤션에 맞게 구현할게요.\"\n<commentary>\nHTML + Tailwind 기반 UI를 새로 만들어야 하므로 tailwind-ui-architect 에이전트를 실행.\n</commentary>\n</example>\n\n<example>\nContext: 사용자가 인라인 Tailwind 클래스를 사용한 form 마크업을 작성하고 리뷰를 요청한 상황.\nuser: \"ExpenseForm HTML 완성했는데 한번 봐줄 수 있어?\"\nassistant: \"tailwind-ui-architect 에이전트로 Tailwind 컨벤션에 맞게 작성됐는지 리뷰할게요.\"\n<commentary>\nHTML + Tailwind 마크업이 작성된 상황이므로 tailwind-ui-architect 에이전트로 Tailwind 사용법, design token 활용, 중복 패턴, visual hierarchy를 선제적으로 검토.\n</commentary>\n</example>\n\n<example>\nContext: 사용자가 삭제용 버튼 스타일을 추가하려는 상황.\nuser: \"삭제 액션용 버튼 스타일이 필요해\"\nassistant: \"tailwind-ui-architect 에이전트로 design token과 @apply 컨벤션에 맞게 설계하고 구현할게요.\"\n<commentary>\n재사용 가능한 버튼 스타일은 HTML + Tailwind에서 @apply로 정의하는 것이 적절하므로 tailwind-ui-architect 에이전트가 처리.\n</commentary>\n</example>"
 tools: Glob, Grep, Read, WebFetch, WebSearch, Edit, Write, NotebookEdit, Bash
 model: sonnet
 color: blue
@@ -183,51 +183,89 @@ function animatePanel(id) {
 }
 ```
 
-## Rule 7: 필터바 컨트롤(드롭다운/인풋/버튼) 크기 통일 + 아이콘-텍스트 광학 중앙정렬
+## Rule 7: 한 필터바/액션바의 컨트롤은 동일 크기 공식 공유
 
-**하나의 필터바/액션바에 나열되는 드롭다운, 텍스트 인풋, 버튼은 동일한 패딩·간격·폰트 크기 공식을 공유한다.**
+**하나의 필터바/액션바에 나열되는 드롭다운, 텍스트 인풋, 버튼은 동일한 패딩·간격·폰트 크기를 공유한다.** 크기 등급은 Rule 8의 `base`(34px)를 쓴다.
 
 ### 표준 공식
 
 ```
-px-3.5 py-2 gap-2 text-sm rounded-xl
+px-3.5 py-1.5 gap-2 text-sm rounded-xl border
 ```
 
-- 아이콘이 좌측에 오버레이되는 인풋(검색창 등)만 예외로 `pl-8`(아이콘 폭만큼 확장), 우측은 동일하게 `pr-3.5` 유지.
-- 폰트 크기를 버튼마다 다르게(`text-xs` vs `text-sm`) 섞지 말 것 — flex 행의 line-height가 달라져 버튼 높이 자체가 서로 달라진다.
+- 좌측에 아이콘이 오버레이되는 인풋(검색창 등)만 `pl-8`로 확장, 우측은 `pr-3.5` 유지.
+- sage 배경처럼 테두리가 없는 버튼은 `border border-transparent`를 붙여 테두리 있는 옆 컨트롤과 높이(2px)를 맞춘다.
+- 한 행 안에서 `text-xs`와 `text-sm`을 섞지 말 것 — flex 행의 line-height가 달라져 버튼 높이가 서로 어긋난다.
 
 ```html
-<!-- ✅ 올바른 방법: 드롭다운/인풋/버튼이 같은 공식 -->
-<button class="flex items-center gap-2 px-3.5 py-2 rounded-xl border ... text-sm ...">...</button>
-<input class="pl-8 pr-3.5 ... rounded-xl border ... text-sm ...">
-<button class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-sage ... text-sm ...">...</button>
+<!-- ✅ 드롭다운/인풋/버튼이 같은 공식 -->
+<button class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border ... text-sm">...</button>
+<input class="pl-8 pr-3.5 py-1.5 rounded-xl border ... text-sm">
+<button class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-sage border border-transparent ... text-sm">...</button>
 
-<!-- ❌ 잘못된 방법: 버튼마다 padding/gap/font-size가 제각각 -->
+<!-- ❌ 버튼마다 padding/gap/font-size가 제각각 -->
 <button class="px-4 py-2 gap-1.5 text-xs ...">검색</button>
-<button class="px-3.5 py-2 gap-1.5 text-xs ...">초기화</button>
+<button class="px-3.5 py-1.5 gap-1.5 text-sm ...">초기화</button>
 ```
 
-### 아이콘-텍스트 광학 중앙정렬
+절대 위치 아이콘(입력창 좌측 돋보기처럼 `top-1/2 -translate-y-1/2`로 배치)은 박스 높이 기준 중앙정렬이라 패딩을 바꿔도 영향 없음 — 별도 보정 불필요.
 
-`flex items-center`로 svg 아이콘과 텍스트를 나란히 두면, 아이콘은 기하학적으로 정확히 중앙에 오지만 텍스트는 폰트 메트릭(특히 한글 폴백 폰트 Gowun Dodum과 DM Sans의 메트릭 차이) 때문에 살짝 위로 떠 보인다. `items-center`만으로는 해결되지 않는다.
+---
 
-- **버튼(아이콘+텍스트를 직접 마크업할 수 있는 경우)**: 텍스트를 `<span>`으로 감싸고 `translate-y-[2px]`로 보정.
-  - `leading-none`으로 line-height를 줄여서 맞추는 방식은 **금지** — line-height가 flex 행의 높이 계산에도 쓰여서 버튼 전체가 옆 컴포넌트보다 얇아지는 부작용이 생긴다. `translate`는 box 크기에 영향을 주지 않고 시각적으로만 이동하므로 이 용도에 맞다.
-- **네이티브 `<input>` (span으로 감쌀 수 없음)**: 상하 패딩을 비대칭으로 줘서 텍스트만 내린다. 총합은 `py-2`(16px)와 동일하게 유지.
-  - 예: `pt-[10px] pb-[6px]` (버튼의 `translate-y-[2px]`와 시각적으로 대응하는 비율).
-- **절대 위치 아이콘** (입력창 좌측 돋보기 아이콘처럼 `top-1/2 -translate-y-1/2`로 배치된 경우)은 박스 높이 기준으로 이미 중앙정렬이라 패딩을 바꿔도 영향받지 않는다 — 별도 보정 불필요.
+## Rule 8: 앱 화면 컨트롤 크기 스케일 — 데스크톱 우선 4단 체계
 
-```html
-<!-- ✅ 올바른 방법 -->
-<button class="flex items-center gap-2 px-3.5 py-2 ...">
-    <svg width="13" height="13" ...>...</svg>
-    <span class="translate-y-[2px]">검색</span>
-</button>
-<input class="pl-8 pr-3.5 pt-[10px] pb-[6px] ..." placeholder="내용 검색...">
+사용자·관리자 앱 화면의 버튼·드롭다운·입력·날짜 컨트롤은 아래 스케일 중 하나를 쓴다. **`templates/fixed-expense/index.html`이 현재 레퍼런스 구현이다.** 인증/에러 페이지(`templates/login/`·`templates/user/`·`templates/error/`)는 별도 디자인 언어이므로 이 규칙에서 제외.
 
-<!-- ❌ 잘못된 방법: line-height를 줄여서 정렬 시도 (버튼이 옆 컴포넌트보다 얇아짐) -->
-<span class="leading-none">검색</span>
-```
+### 컨트롤 높이 등급
+
+| 등급 | 높이 | 공식 | 용도 |
+|---|---|---|---|
+| icon | 32px | `w-8 h-8 rounded-xl border` (svg 18) | 아이콘 전용 정사각 버튼 (사이드바 토글) |
+| icon-sm | 28px | `w-7 h-7 rounded-lg` (svg 14) | 모달 닫기(X) 등 보조 아이콘. 원형이면 `w-8 h-8 rounded-full` |
+| **base** | 34px | `px-3.5 py-1.5 rounded-xl border text-sm` | 필터·드롭다운·텍스트 입력·날짜 버튼·1차 액션 버튼·textarea·파일 dropzone |
+| sm | 30px | `px-2.5 py-1.5 rounded-lg border text-xs` (svg 12) | 목록 행 내부 액션(보기/수정 등) |
+| lg | 42px | `py-2.5 rounded-xl border text-sm` | 모달 푸터 주요 액션(취소/확인) |
+
+- 테두리 없는 컨트롤(sage 배경 버튼 등)에는 `border border-transparent`를 명시 — 안 붙이면 같은 등급인데 옆 버튼보다 2px 낮다.
+- `py-*`는 카드·헤더 패딩에도 쓰이므로 일괄 치환 금지, 컨트롤 태그만 대상.
+- WCAG 2.2 AA 최소 타깃 24×24px 기준 모두 여유. 축소 이력·롤백 패치는 메모리 `control-size-scale.md` 및 `.claude/report/2026-08-30_20-57_control-size.md` 참조.
+
+### 레이아웃 · 간격 (고정지출 화면 기준)
+
+| 항목 | 값 |
+|---|---|
+| 페이지 패딩 | `p-9` |
+| 카드 | `rounded-2xl border border-cream-border` |
+| 카드 헤더 / 리스트 행 | `px-6 py-4` (요약 `py-5`, 서브헤더 `py-3`, upcoming 행 `py-3.5`) |
+| 필터바 | `px-6 py-3`, 컨트롤 간 `gap-3`, 아이콘+텍스트 `gap-2`, 구분선 `w-px h-5` |
+| 행 액션 버튼 그룹 | `gap-1.5` |
+| 모달 카드 | `max-w-[38rem] mx-4 rounded-2xl` |
+| 모달 헤더 | 추가 모달 `px-7 pt-6 pb-5` / 상세 모달 `px-6 py-4` |
+| 모달 본문 | 추가 모달 `px-7 py-5 flex-col gap-4` / 상세 모달 `px-6 py-5 space-y-3` |
+| 모달 푸터 | `px-7 pb-6 flex gap-2.5`, 취소 : 확인 = `flex-1` : `flex-2` |
+| 폼 라벨 | `text-xs font-medium text-ink-soft mb-1.5` |
+| 진행바 | `h-1.5 rounded-full` |
+
+### 타이포그래피
+
+| 역할 | 클래스 |
+|---|---|
+| 페이지 타이틀 | `text-3xl font-bold tracking-tight` |
+| 모달 타이틀 | `text-lg font-bold` |
+| 카드 헤더 | `text-sm font-semibold` |
+| 요약 강조 숫자 | `text-2xl font-bold tracking-tight` |
+| 본문 · 입력값 · 행 셀 | `text-sm` (금액 등 강조는 `font-semibold`) |
+| 라벨 · 메타 · 카운트 · 컬럼헤더 | `text-xs` (컬럼헤더는 `uppercase tracking-wide`) |
+
+### 아이콘 svg 픽셀
+
+| svg | 위치 |
+|---|---|
+| 18 | 사이드바 토글 |
+| 14 | 날짜·추가 버튼, 모달 닫기 |
+| 13 | 검색 버튼, 검색창 돋보기 |
+| 12 | 목록 행 액션 버튼 |
+| 11 | 드롭다운 화살표 |
 
 ---
 

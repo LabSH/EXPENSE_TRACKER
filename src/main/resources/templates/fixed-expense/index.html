@@ -4,115 +4,227 @@
 <th:block th:fragment="content">
     <main class="flex-1 overflow-y-auto h-screen p-9">
         <div class="flex items-center gap-3.5 mb-8">
-            <button onclick="toggleSidebar()" class="w-9 h-9 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
+            <button onclick="toggleSidebar()" class="w-8 h-8 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
             </button>
             <h1 class="font-bold text-ink tracking-tight text-3xl">고정지출</h1>
         </div>
 
+        <div class="grid grid-cols-2 gap-6 items-start">
         <div id="fe-panel" class="bg-cream-surface border border-cream-border rounded-2xl overflow-hidden">
             <!-- 카드 헤더 -->
             <div class="px-6 py-4 border-b border-cream-border flex items-center justify-between">
-                <h3 class="text-sm font-semibold text-ink">고정지출 내역</h3>
+                <h3 class="text-sm font-semibold text-ink">내역</h3>
                 <span id="fe-count" class="text-xs text-ink-muted">총 0건</span>
             </div>
 
             <!-- 필터 바 -->
             <div class="px-6 py-3 border-b border-cream-border flex items-center gap-3 flex-wrap">
-                <div th:replace="~{fragments/dropdown :: dropdown('fe-payment-filter', '결제수단', ${paymentMethods})}"></div>
-                <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-filter', '주기', ${expenseCycles})}"></div>
+                <div th:replace="~{fragments/dropdown :: dropdown('fe-payment-filter', '결제수단', ${paymentMethods}, 'cream')}"></div>
+                <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-filter', '주기', ${expenseCycles}, 'cream')}"></div>
 
                 <div class="relative">
                     <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                     <input id="fe-keyword" type="text" placeholder="내용 검색..."
-                           class="pl-8 pr-3.5 pt-[10px] pb-[6px] rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                           class="pl-8 pr-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
                 </div>
 
                 <div class="w-px h-5 bg-cream-border"></div>
                 <button id="btn-fe-search"
-                        class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity">
+                        class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                     <span>검색</span>
                 </button>
                 <button id="btn-fe-search-reset"
-                        class="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">
+                        class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">
                     <span>초기화</span>
                 </button>
 
                 <button id="btn-open-fixed-expense-modal"
-                        class="ml-auto flex items-center gap-2 px-3.5 py-2 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-md shadow-sage/30">
+                        class="ml-auto flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-md shadow-sage/30 border border-transparent">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                     <span>추가</span>
                 </button>
             </div>
 
             <!-- 컬럼 헤더 -->
-            <div class="grid px-6 py-3 bg-cream-subtle border-b border-cream-border text-xs font-semibold text-ink-muted uppercase tracking-wide" style="grid-template-columns:1fr 140px 120px 130px 1fr 90px">
-                <span>내용</span><span>결제수단</span><span>지출주기</span><span>금액</span><span>메모</span><span class="text-right">관리</span>
+            <div class="grid px-6 py-3 bg-cream-subtle border-b border-cream-border text-xs font-semibold text-ink-muted uppercase tracking-wide" style="grid-template-columns:1fr 140px 120px 130px 70px">
+                <span>내용</span><span>결제수단</span><span>지출주기</span><span>금액</span><span class="text-right">관리</span>
             </div>
 
             <!-- 목록 -->
             <div id="fe-list"></div>
         </div>
+
+            <!-- 우측 영역 — 지출 예정 -->
+            <div id="fe-side-panel" class="bg-cream-surface border border-cream-border rounded-2xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-cream-border flex items-center justify-between">
+                    <h3 class="text-sm font-semibold text-ink">지출 예정</h3>
+                </div>
+
+                <!-- 이번 달 요약 -->
+                <div class="px-6 py-5 border-b border-cream-border">
+                    <p class="text-xs text-ink-muted mb-1">이번 달 준비 금액</p>
+                    <p id="fe-required-total" class="text-2xl font-bold text-ink tracking-tight">-</p>
+                    <p class="mt-1 text-xs text-ink-soft">
+                        결제 예정 <span id="fe-monthly-total" class="font-semibold text-ink">-</span>
+                        <span class="mx-1 text-ink-muted">·</span>
+                        적립 <span id="fe-summary-reserve" class="font-semibold text-ink">-</span>
+                    </p>
+
+                    <!-- 결제 진행률 — 남은 지출은 '결제 예정'의 부분집합이라 붙여서 표현 -->
+                    <div class="mt-4 flex items-center gap-2.5">
+                        <div class="flex-1 h-1.5 rounded-full bg-cream-subtle overflow-hidden">
+                            <div id="fe-progress-bar" class="h-full rounded-full bg-sage transition-all" style="width:0%"></div>
+                        </div>
+                        <span id="fe-progress-label" class="shrink-0 text-xs text-ink-muted">-</span>
+                    </div>
+                    <div class="mt-2 flex items-baseline justify-between">
+                        <span class="text-xs text-ink-soft">남은 지출</span>
+                        <span id="fe-summary-remaining" class="text-sm font-semibold text-ink">-</span>
+                    </div>
+                </div>
+
+                <!-- 다가오는 지출 -->
+                <div class="px-6 py-3 bg-cream-subtle border-b border-cream-border">
+                    <span class="text-xs font-semibold text-ink-muted uppercase tracking-wide">다가오는 지출</span>
+                </div>
+                <div id="fe-upcoming-list"></div>
+            </div>
+        </div>
     </main>
+
+    <!-- 고정지출 상세 모달 (정보 확인 전용 — backdrop 클릭 닫기 허용) -->
+    <div id="fixed-expense-view-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+        <div class="absolute inset-0 bg-ink/40 backdrop-blur-md" onclick="closeFixedExpenseViewModal()"></div>
+        <div class="relative w-full max-w-[38rem] mx-4 bg-cream-surface border border-cream-border rounded-2xl shadow-xl anim-slideUp">
+
+            <!-- 헤더 -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-cream-border">
+                <h3 class="text-sm font-bold text-ink">상세내용</h3>
+                <button onclick="closeFixedExpenseViewModal()"
+                        class="w-7 h-7 rounded-lg flex items-center justify-center text-ink-muted hover:bg-cream-subtle hover:text-ink transition-colors">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- 본문 -->
+            <div class="px-6 py-5 space-y-3">
+                <div class="grid grid-cols-[100px_1fr] gap-x-4 gap-y-3 text-sm">
+                    <span class="text-ink-muted">내용</span>
+                    <span id="fe-view-content" class="text-ink break-all"></span>
+
+                    <span class="text-ink-muted">결제수단</span>
+                    <span id="fe-view-payment" class="text-ink"></span>
+
+                    <span class="text-ink-muted">지출주기</span>
+                    <span id="fe-view-cycle" class="text-ink"></span>
+
+                    <span class="text-ink-muted">카테고리</span>
+                    <span id="fe-view-category" class="text-ink"></span>
+
+                    <span class="text-ink-muted">기준일(시작일)</span>
+                    <span id="fe-view-anchor" class="text-ink"></span>
+
+                    <span class="text-ink-muted">다음 지출일</span>
+                    <span id="fe-view-next" class="text-ink"></span>
+
+                    <span class="text-ink-muted">금액</span>
+                    <span id="fe-view-amount" class="font-semibold text-ink"></span>
+                </div>
+
+                <!-- 메모 (있을 때만) -->
+                <div id="fe-view-memo-wrap" class="hidden pt-2 border-t border-cream-border">
+                    <p class="text-xs text-ink-muted mb-1.5">메모</p>
+                    <p id="fe-view-memo" class="text-sm text-ink bg-cream border border-cream-border rounded-xl p-3.5 whitespace-pre-wrap break-all leading-relaxed max-h-40 overflow-y-auto"></p>
+                </div>
+
+                <!-- 첨부파일 (있을 때만) -->
+                <div id="fe-view-file-wrap" class="hidden pt-2 border-t border-cream-border">
+                    <p class="text-xs text-ink-muted mb-1.5">첨부파일</p>
+                    <div id="fe-view-file-list" class="flex flex-col gap-1.5"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 고정지출 삭제 확인 모달 -->
+    <div id="fixed-expense-delete-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-md">
+        <div class="anim-slideUp bg-cream-surface rounded-2xl w-full max-w-sm mx-4 shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-cream-border">
+                <h2 class="text-base font-bold text-ink">고정지출 삭제</h2>
+            </div>
+            <div class="px-6 py-5">
+                <p class="text-sm text-ink mb-1.5"><span id="fe-delete-name" class="font-semibold text-blush"></span> 고정지출을 삭제하시겠어요?</p>
+                <p class="text-xs text-ink-muted">첨부파일도 함께 삭제돼요. 복구할 수 없어요.</p>
+            </div>
+            <div class="flex gap-2 px-6 pb-6">
+                <button id="btn-cancel-delete-fixed-expense" class="flex-1 py-2.5 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
+                <button id="btn-confirm-delete-fixed-expense" class="flex-[2] py-2.5 rounded-xl bg-blush text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">삭제하기</button>
+            </div>
+        </div>
+    </div>
 
     <!-- 고정지출 추가 모달 -->
     <div id="fixed-expense-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-md">
         <div class="anim-slideUp bg-cream-surface rounded-2xl w-full max-w-[38rem] mx-4 shadow-2xl overflow-hidden">
             <div class="px-7 pt-6 pb-5 border-b border-cream-border bg-sage-light">
                 <div class="flex justify-between items-center">
-                    <h2 id="fe-modal-title" class="text-lg font-bold text-ink">고정지출 추가</h2>
+                    <h2 id="fe-modal-title" class="text-lg font-bold text-ink">추가</h2>
                     <button id="btn-close-fixed-expense-modal" class="w-8 h-8 rounded-full bg-cream-border flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
                     </button>
                 </div>
             </div>
             <div class="px-7 py-5 flex flex-col gap-4">
-                <div>
-                    <label class="block text-xs font-medium text-ink-soft mb-1.5">결제수단</label>
-                    <div th:replace="~{fragments/dropdown :: dropdown('fe-payment-dd', '선택', ${paymentMethods})}"></div>
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-ink-soft mb-1.5">지출주기</label>
-                    <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-dd', '선택', ${expenseCycles})}"></div>
+                <div class="grid grid-cols-3 gap-4 items-end [&>div>div>button]:w-full">
+                    <div>
+                        <label class="block text-xs font-medium text-ink-soft mb-1.5">결제수단</label>
+                        <div th:replace="~{fragments/dropdown :: dropdown('fe-payment-dd', '선택', ${paymentMethods}, 'cream')}"></div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-ink-soft mb-1.5">지출주기</label>
+                        <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-dd', '선택', ${expenseCycles}, 'cream')}"></div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-ink-soft mb-1.5">기준일(시작일) <span class="text-blush">*</span></label>
+                        <div class="relative" id="fe-anchor-dt-wrap">
+                            <button type="button" id="fe-anchor-dt-btn" onclick="togglePicker('fe-anchor-dt')"
+                                    class="w-full flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink hover:bg-cream-subtle transition-colors">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+                                <span id="fe-anchor-dt-label">날짜 선택</span>
+                            </button>
+                            <div id="fe-anchor-dt-cal" class="hidden z-50 anim-slideDown"></div>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-ink-soft mb-1.5">카테고리</label>
-                    <div th:replace="~{fragments/dropdown :: dropdown('fe-category-dd', '선택', ${categories})}"></div>
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-ink-soft mb-1.5">기준일 <span class="font-normal text-ink-muted">(주기 계산 기준. 매일 주기는 불필요)</span></label>
-                    <div class="relative" id="fe-anchor-dt-wrap">
-                        <button type="button" id="fe-anchor-dt-btn" onclick="togglePicker('fe-anchor-dt')"
-                                class="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink hover:bg-cream-subtle transition-colors">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
-                            <span id="fe-anchor-dt-label">날짜 선택</span>
-                        </button>
-                        <div id="fe-anchor-dt-cal" class="hidden z-50 anim-slideDown"></div>
-                    </div>
+                    <div th:replace="~{fragments/dropdown :: dropdown('fe-category-dd', '선택', ${categories}, 'cream')}"></div>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-ink-soft mb-1.5">금액</label>
                     <div class="relative">
                         <input type="text" inputmode="numeric" id="fe-amount" placeholder="0"
-                               class="w-full px-3.5 py-2.5 pr-8 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                               class="w-full px-3.5 py-1.5 pr-8 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
                         <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-ink-muted pointer-events-none">원</span>
                     </div>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-ink-soft mb-1.5">내용</label>
-                    <input id="fe-content" placeholder="예: 넷플릭스 구독료"
-                           class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                    <input id="fe-content"
+                           class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-ink-soft mb-1.5">메모 <span class="font-normal text-ink-muted">(선택)</span></label>
                     <textarea id="fe-memo" placeholder="추가 메모를 입력하세요" rows="2"
-                              class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors resize-none leading-relaxed"></textarea>
+                              class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors resize-none leading-relaxed"></textarea>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-ink-soft mb-1.5">첨부파일 <span class="font-normal text-ink-muted">(선택)</span></label>
                     <label for="fe-file-input" id="fe-file-dropzone"
-                           class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl border border-dashed border-cream-border text-sm text-ink-soft cursor-pointer hover:bg-cream-subtle transition-colors">
+                           class="flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-xl border border-dashed border-cream-border text-sm text-ink-soft cursor-pointer hover:bg-cream-subtle transition-colors">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                         파일 선택 또는 드래그해서 놓기
                     </label>
@@ -121,19 +233,21 @@
                 </div>
             </div>
             <div class="px-7 pb-6 flex gap-2.5">
-                <button id="btn-cancel-fixed-expense" class="flex-1 py-3 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
-                <button id="btn-submit-fixed-expense" class="py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 bg-sage" style="flex:2">추가하기</button>
+                <button id="btn-cancel-fixed-expense" class="flex-1 py-2.5 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
+                <button id="btn-submit-fixed-expense" class="py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 bg-sage border border-transparent" style="flex:2">추가하기</button>
             </div>
         </div>
     </div>
 
     <script th:inline="javascript">
         var FIXED_EXPENSES = /*[[${fixedExpenses}]]*/ [];
+        var UPCOMING = /*[[${upcoming}]]*/ { summary: {}, upcoming: [] };
     </script>
     <script>
         var feFileGroupId = '';
         var feAttachedFiles = [];
         var feEditingId = null;
+        var feDeletingId = null;
         var feCurrentList = FIXED_EXPENSES;
 
         function feEscapeHtml(s) {
@@ -153,21 +267,84 @@
             box.innerHTML = list.map((fe, i) => {
                 const border = i < list.length - 1 ? 'border-b border-cream-border' : '';
                 return `
-                    <div class="grid items-center px-6 py-4 ${border}" style="grid-template-columns:1fr 140px 120px 130px 1fr 90px">
+                    <div class="group grid items-center px-6 py-4 cursor-pointer hover:bg-cream-subtle transition-colors ${border}" style="grid-template-columns:1fr 140px 120px 130px 70px"
+                         onclick="openFixedExpenseViewModal(${fe.fixedExpenseId})">
                         <span class="text-sm text-ink">${feEscapeHtml(fe.content)}</span>
                         <span class="text-sm text-ink-soft">${feEscapeHtml(fe.paymentMethodNm) || '-'}</span>
-                        <span class="text-sm text-ink-soft">
-                            ${feEscapeHtml(fe.expenseCycleNm) || '-'}
-                            ${fe.nextDueDt ? `<br><span class="text-xs text-ink-muted">다음 ${feEscapeHtml(fe.nextDueDt)}</span>` : ''}
-                        </span>
+                        <span class="text-sm text-ink-soft">${feEscapeHtml(fe.expenseCycleNm) || '-'}</span>
                         <span class="text-sm font-semibold text-ink">${Math.round(Number(fe.amount)).toLocaleString('ko-KR')}원</span>
-                        <span class="text-sm text-ink-muted">${feEscapeHtml(fe.memo)}</span>
-                        <span class="text-right">
-                            <button type="button" onclick="openEditFixedExpenseModal(${fe.fixedExpenseId})"
-                                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-cream-subtle text-ink-soft border border-cream-border hover:bg-cream-border transition-colors">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg><span>수정</span>
+                        <span class="flex justify-end gap-1.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+                            <button type="button" title="수정" onclick="event.stopPropagation();openEditFixedExpenseModal(${fe.fixedExpenseId})"
+                                    class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-cream-surface text-ink-soft border border-cream-border hover:border-sage hover:text-sage transition-colors">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+                            </button>
+                            <button type="button" title="삭제" onclick="event.stopPropagation();openDeleteFixedExpenseModal(${fe.fixedExpenseId})"
+                                    class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-cream-surface text-ink-soft border border-cream-border hover:border-blush hover:text-blush transition-colors">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             </button>
                         </span>
+                    </div>`;
+            }).join('');
+        }
+
+        function feFormatWon(amount) {
+            return `${Math.round(Number(amount)).toLocaleString('ko-KR')}원`;
+        }
+
+        /**
+         * 다음 지출일까지 남은 일수를 라벨과 강조 색상으로 변환.
+         *
+         * 색상은 "지금 대응이 필요한가"를 기준으로 3단계로 나눈다.
+         *   남은 일수 0 이하 → '오늘'  · text-blush     (주황) 오늘 빠져나감. 잔액 확인 필요
+         *   남은 일수 1      → '내일'  · text-blush     (주황) 임박. 오늘과 같은 등급으로 취급
+         *   남은 일수 2~7    → 'D-N'   · text-sage      (초록) 이번 주 안에 나감. 인지만 하면 됨
+         *   남은 일수 8 이상 → 'D-N'   · text-ink-muted (회색) 여유. 시선을 뺏지 않도록 낮춤
+         *
+         * 0 이하를 모두 '오늘'로 묶는 이유: 목록에는 오늘 이후 예정 건만 내려오므로 음수가 나올 수 없다.
+         * 연체(지난 날짜) 항목을 목록에 포함하게 되면 '지남' 같은 별도 라벨을 추가해야 한다.
+         */
+        function feDday(dateStr) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const days = Math.round((new Date(`${dateStr}T00:00:00`) - today) / 86400000);
+            if (days <= 0) return { label: '오늘', cls: 'text-blush' };
+            if (days === 1) return { label: '내일', cls: 'text-blush' };
+            return { label: `D-${days}`, cls: days <= 7 ? 'text-sage' : 'text-ink-muted' };
+        }
+
+        function renderFeSummary(summary) {
+            // 준비 금액 = 이번 달 실제 결제분 + 목돈 대비 적립분 (파생값이라 서버가 따로 안 내려줘도 됨)
+            const required = summary.monthlyTotal + summary.monthlyReserve;
+            const paid = summary.monthlyTotal - summary.remaining;
+            const paidRate = summary.monthlyTotal > 0 ? Math.round((paid / summary.monthlyTotal) * 100) : 0;
+
+            document.getElementById('fe-required-total').textContent = feFormatWon(required);
+            document.getElementById('fe-monthly-total').textContent = feFormatWon(summary.monthlyTotal);
+            document.getElementById('fe-summary-reserve').textContent = feFormatWon(summary.monthlyReserve);
+            document.getElementById('fe-progress-bar').style.width = `${paidRate}%`;
+            document.getElementById('fe-progress-label').textContent = `${paidRate}% 결제됨`;
+            document.getElementById('fe-summary-remaining').textContent = feFormatWon(summary.remaining);
+        }
+
+        function renderFeUpcoming(list) {
+            const box = document.getElementById('fe-upcoming-list');
+            if (list.length === 0) {
+                box.innerHTML = `<p class="py-16 text-center text-sm text-ink-muted">예정된 지출이 없어요</p>`;
+                return;
+            }
+
+            box.innerHTML = list.map((fe, i) => {
+                const border = i < list.length - 1 ? 'border-b border-cream-border' : '';
+                const dday = feDday(fe.nextDueDt);
+                const [, mm, dd] = fe.nextDueDt.split('-');
+                return `
+                    <div class="flex items-center gap-3 px-6 py-3.5 ${border}">
+                        <span class="w-11 shrink-0 text-xs font-bold ${dday.cls}">${dday.label}</span>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-sm text-ink truncate">${feEscapeHtml(fe.content)}</p>
+                            <p class="text-xs text-ink-muted">${Number(mm)}/${Number(dd)} · ${feEscapeHtml(fe.expenseCycleNm)}</p>
+                        </div>
+                        <span class="shrink-0 text-sm font-semibold text-ink">${feFormatWon(fe.amount)}</span>
                     </div>`;
             }).join('');
         }
@@ -236,7 +413,7 @@
                 feAttachedFiles = feAttachedFiles.concat(uploaded);
                 renderFeFileList();
             } catch (err) {
-                alert(err.message);
+                Toast.error('에러가 발생하였습니다.', err.message);
             }
         }
 
@@ -267,15 +444,56 @@
                 feAttachedFiles = feAttachedFiles.filter(f => f.fileId !== fileId);
                 renderFeFileList();
             } catch (err) {
-                alert(err.message);
+                Toast.error('에러가 발생하였습니다.', err.message);
             }
+        }
+
+        async function openFixedExpenseViewModal(id) {
+            const fe = feCurrentList.find(x => x.fixedExpenseId === id);
+            if (!fe) return;
+
+            document.getElementById('fe-view-content').textContent = fe.content || '-';
+            document.getElementById('fe-view-payment').textContent = fe.paymentMethodNm || '-';
+            document.getElementById('fe-view-cycle').textContent = fe.expenseCycleNm || '-';
+            document.getElementById('fe-view-category').textContent = fe.categoryNm || '-';
+            document.getElementById('fe-view-anchor').textContent = fe.anchorDt || '-';
+            document.getElementById('fe-view-next').textContent = fe.nextDueDt || '-';
+            document.getElementById('fe-view-amount').textContent =
+                `${Math.round(Number(fe.amount)).toLocaleString('ko-KR')}원`;
+
+            document.getElementById('fe-view-memo').textContent = fe.memo || '';
+            document.getElementById('fe-view-memo-wrap').classList.toggle('hidden', !fe.memo);
+
+            document.getElementById('fe-view-file-list').innerHTML = '';
+            document.getElementById('fe-view-file-wrap').classList.add('hidden');
+            document.getElementById('fixed-expense-view-modal').classList.remove('hidden');
+
+            if (fe.fileGroupId) {
+                try {
+                    const files = await feApi(`/files/${fe.fileGroupId}`);
+                    if (files.length > 0) {
+                        document.getElementById('fe-view-file-list').innerHTML = files.map(f => `
+                            <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-cream border border-cream-border text-xs">
+                                <span class="truncate text-ink" title="${feEscapeHtml(f.orgFileNm)}">${feEscapeHtml(f.orgFileNm)}</span>
+                                <span class="text-ink-muted shrink-0 ml-2">${feFormatFileSize(f.fileSize)}</span>
+                            </div>`).join('');
+                        document.getElementById('fe-view-file-wrap').classList.remove('hidden');
+                    }
+                } catch (err) {
+                    Toast.error('에러가 발생하였습니다.', err.message);
+                }
+            }
+        }
+
+        function closeFixedExpenseViewModal() {
+            document.getElementById('fixed-expense-view-modal').classList.add('hidden');
         }
 
         function openFixedExpenseModal() {
             feEditingId = null;
             feFileGroupId = '';
             feAttachedFiles = [];
-            document.getElementById('fe-modal-title').textContent = '고정지출 추가';
+            document.getElementById('fe-modal-title').textContent = '추가';
             document.getElementById('btn-submit-fixed-expense').textContent = '추가하기';
             Dropdown.reset('fe-payment-dd');
             Dropdown.reset('fe-cycle-dd');
@@ -296,7 +514,7 @@
             feFileGroupId = fe.fileGroupId || '';
             feAttachedFiles = [];
 
-            document.getElementById('fe-modal-title').textContent = '고정지출 수정';
+            document.getElementById('fe-modal-title').textContent = '수정';
             document.getElementById('btn-submit-fixed-expense').textContent = '저장하기';
             Dropdown.select('fe-payment-dd', fe.paymentMethodCd || '', fe.paymentMethodNm || '선택');
             Dropdown.select('fe-cycle-dd', fe.expenseCycleCd || '', fe.expenseCycleNm || '선택');
@@ -313,7 +531,7 @@
                     feAttachedFiles = await feApi(`/files/${feFileGroupId}`);
                     renderFeFileList();
                 } catch (err) {
-                    alert(err.message);
+                    Toast.error('에러가 발생하였습니다.', err.message);
                 }
             }
         }
@@ -323,7 +541,37 @@
             document.getElementById('fe-payment-dd-dd')?.classList.add('hidden');
             document.getElementById('fe-cycle-dd-dd')?.classList.add('hidden');
             document.getElementById('fe-category-dd-dd')?.classList.add('hidden');
-            document.getElementById('fe-anchor-dt-cal')?.classList.add('hidden');
+            CalendarPicker.closeAll();
+        }
+
+        /** 삭제할 고정지출 항목명을 표시하고 삭제 확인 모달을 연다 */
+        function openDeleteFixedExpenseModal(id) {
+            const fe = feCurrentList.find(x => x.fixedExpenseId === id);
+            if (!fe) return;
+
+            feDeletingId = fe.fixedExpenseId;
+            document.getElementById('fe-delete-name').textContent = fe.content || '';
+            document.getElementById('fixed-expense-delete-modal').classList.remove('hidden');
+        }
+
+        /** 삭제 확인 모달을 닫고 삭제 대상 상태를 초기화한다 */
+        function closeDeleteFixedExpenseModal() {
+            feDeletingId = null;
+            document.getElementById('fixed-expense-delete-modal').classList.add('hidden');
+        }
+
+        /** 삭제 확인 버튼 클릭 시 고정지출을 삭제하고 목록/요약을 갱신한다 */
+        async function deleteFixedExpense() {
+            if (!feDeletingId) return;
+
+            try {
+                await feApi(`/fixed-expense/${feDeletingId}`, { method: 'DELETE' });
+                closeDeleteFixedExpenseModal();
+                Toast.success('삭제되었습니다.');
+                htmx.ajax('GET', '/fixed-expense', '#main-content');
+            } catch (e) {
+                Toast.error('에러가 발생하였습니다.', e.message);
+            }
         }
 
         function feFormatAmountInput(e) {
@@ -335,13 +583,14 @@
             const amountVal = document.getElementById('fe-amount').value.replace(/,/g, '');
             const content = document.getElementById('fe-content').value.trim();
             const memo = document.getElementById('fe-memo').value.trim();
-            if (!content || !amountVal) { alert('내용과 금액을 입력해주세요.'); return; }
+            const anchorDt = CalendarPicker.getDate('fe-anchor-dt');
+            if (!anchorDt || !content || !amountVal) { Toast.error('기준일(시작일), 내용, 금액을 입력해주세요.'); return; }
 
             const body = JSON.stringify({
                 paymentMethodCd: Dropdown.getValue('fe-payment-dd') || null,
                 expenseCycleCd: Dropdown.getValue('fe-cycle-dd') || null,
                 categoryCd: Dropdown.getValue('fe-category-dd') || null,
-                anchorDt: CalendarPicker.getDate('fe-anchor-dt') || null,
+                anchorDt,
                 fileGroupId: feFileGroupId || null,
                 amount: Number(amountVal),
                 content,
@@ -354,20 +603,26 @@
                 } else {
                     await feApi('/fixed-expense', { method: 'POST', body });
                 }
+                // htmx가 #main-content를 갈아끼워도 토스트 컨테이너는 body 직속이라 살아남는다
+                Toast.success(feEditingId ? '수정되었습니다.' : '추가되었습니다.');
                 closeFixedExpenseModal();
                 htmx.ajax('GET', '/fixed-expense', '#main-content');
             } catch (e) {
-                alert(e.message);
+                Toast.error('에러가 발생하였습니다.', e.message);
             }
         }
 
         renderFixedExpenses(FIXED_EXPENSES);
+        renderFeSummary(UPCOMING.summary);
+        renderFeUpcoming(UPCOMING.upcoming);
         CalendarPicker.init(['fe-anchor-dt'], 'cream');
 
         document.getElementById('btn-open-fixed-expense-modal').addEventListener('click', openFixedExpenseModal);
         document.getElementById('btn-close-fixed-expense-modal').addEventListener('click', closeFixedExpenseModal);
         document.getElementById('btn-cancel-fixed-expense').addEventListener('click', closeFixedExpenseModal);
         document.getElementById('btn-submit-fixed-expense').addEventListener('click', submitFixedExpense);
+        document.getElementById('btn-cancel-delete-fixed-expense').addEventListener('click', closeDeleteFixedExpenseModal);
+        document.getElementById('btn-confirm-delete-fixed-expense').addEventListener('click', deleteFixedExpense);
         document.getElementById('btn-fe-search').addEventListener('click', searchFixedExpenses);
         document.getElementById('btn-fe-search-reset').addEventListener('click', resetFixedExpenseFilter);
         document.getElementById('fe-keyword').addEventListener('keydown', e => { if (e.key === 'Enter') searchFixedExpenses(); });

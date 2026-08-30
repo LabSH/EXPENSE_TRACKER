@@ -8,17 +8,26 @@
       dropId      — HTML id prefix (예: 'level' → level-wrap, level-btn, level-dd)
       placeholder — 전체 선택 시 표시될 기본 레이블
       items       — List<CodeResponse> (codeId, codeNm 접근 가능한 객체)
+      theme       — 색상 톤. 'cream'(사용자 화면) | 그 외는 admin(기본).
+                    calendar.js의 THEMES와 동일한 규칙.
+                    이 fragment는 양쪽 화면에서 모두 렌더되므로 색을 하드코딩하지 말 것.
 -->
-<div th:fragment="dropdown(dropId, placeholder, items)"
+<div th:fragment="dropdown(dropId, placeholder, items, theme)"
      th:id="${dropId + '-wrap'}"
      th:attr="data-value=''"
+     th:with="cream=${theme == 'cream'},
+              ctrlBorder=${theme == 'cream' ? 'border-cream-border' : 'border-admin-border'},
+              ctrlHover=${theme == 'cream' ? 'hover:bg-cream-subtle' : 'hover:bg-admin-subtle'},
+              panelBg=${theme == 'cream' ? 'bg-cream-surface' : 'bg-admin-surface'},
+              optHover=${theme == 'cream' ? 'hover:bg-sage-light hover:text-sage' : 'hover:bg-admin-accent-light hover:text-admin-accent'}"
      class="relative">
 
     <button type="button"
             th:id="${dropId + '-btn'}"
             th:attr="data-drop-id=${dropId}"
+            th:classappend="${ctrlBorder + ' ' + ctrlHover}"
             onclick="Dropdown.toggle(this.dataset.dropId)"
-            class="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-admin-border text-sm text-ink hover:bg-admin-subtle transition-colors">
+            class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-sm text-ink transition-colors">
         <span th:id="${dropId + '-label'}" th:text="${placeholder}">선택</span>
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="ml-auto shrink-0">
@@ -28,13 +37,15 @@
 
     <div th:id="${dropId + '-dd'}"
          class="hidden z-50 anim-slideDown">
-        <div class="bg-admin-surface border border-admin-border rounded-2xl shadow-xl p-1.5 min-w-[8rem]">
+        <div th:classappend="${panelBg + ' ' + ctrlBorder}"
+             class="border rounded-2xl shadow-xl p-1.5 min-w-[8rem]">
 
             <button type="button"
                     th:attr="data-drop-id=${dropId}, data-name=${placeholder}"
                     data-code=""
+                    th:classappend="${optHover}"
                     onclick="Dropdown.select(this.dataset.dropId, this.dataset.code, this.dataset.name)"
-                    class="w-full text-left px-3 py-2 rounded-xl text-xs text-ink-soft font-medium hover:bg-admin-subtle transition-colors">
+                    class="w-full text-left px-3 py-1.5 rounded-xl text-xs text-ink-soft font-medium transition-colors border border-transparent">
                 전체
             </button>
 
@@ -44,8 +55,9 @@
                     th:data-code="${item.codeId}"
                     th:data-name="${item.codeNm}"
                     th:text="${item.codeNm}"
+                    th:classappend="${optHover}"
                     onclick="Dropdown.select(this.dataset.dropId, this.dataset.code, this.dataset.name)"
-                    class="w-full text-left px-3 py-2 rounded-xl text-xs text-ink-soft font-medium hover:bg-admin-subtle transition-colors">
+                    class="w-full text-left px-3 py-1.5 rounded-xl text-xs text-ink-soft font-medium transition-colors border border-transparent">
             </button>
 
         </div>

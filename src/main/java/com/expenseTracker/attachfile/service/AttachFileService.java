@@ -118,6 +118,14 @@ public class AttachFileService {
         getFile(fileGroupId, fileId).setDelAt("Y");
     }
 
+    /** 파일그룹에 속한 첨부파일을 모두 논리 삭제 */
+    @Transactional
+    public void deleteByGroup(String fileGroupId) {
+        attachFileRepository.findByIdFileGroupIdOrderBySortSn(fileGroupId).stream()
+                .filter(f -> "N".equals(f.getDelAt()))
+                .forEach(f -> f.setDelAt("Y"));
+    }
+
     /** 삭제되지 않은 첨부파일을 그룹ID·파일ID로 조회, 없으면 예외 발생 */
     private AttachFile getFile(String fileGroupId, String fileId) {
         AttachFileId id = AttachFileId.builder()

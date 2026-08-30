@@ -1,0 +1,734 @@
+--- a/src/main/resources/templates/admin/code/index.html
++++ b/src/main/resources/templates/admin/code/index.html
+@@ -31,7 +31,7 @@
+     <div id="admin-main-content" class="flex-1 overflow-hidden">
+     <main class="overflow-y-auto h-screen p-9">
+         <div class="flex items-start gap-4 mb-8">
+-            <button id="sidebar-toggle" class="w-9 h-9 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors shrink-0 mt-1">
++            <button id="sidebar-toggle" class="w-8 h-8 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors shrink-0 mt-1">
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+             </button>
+             <div>
+@@ -51,7 +51,7 @@
+                 <div class="px-7 py-5 border-b border-admin-border flex items-center justify-between">
+                     <h3 class="text-sm font-bold text-ink">코드 그룹</h3>
+                     <button onclick="openAddGroup()"
+-                            class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">
++                            class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">
+                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                         <span>분류 추가</span>
+                     </button>
+@@ -65,9 +65,9 @@
+                                onkeydown="if(event.key==='Enter') reloadGroups()" />
+                     </div>
+                     <button onclick="reloadGroups()"
+-                            class="flex items-center px-3.5 py-2 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity shrink-0"><span>검색</span></button>
++                            class="flex items-center px-3.5 py-1.5 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity shrink-0 border border-transparent"><span>검색</span></button>
+                     <button onclick="resetGroupSearch()"
+-                            class="flex items-center px-3.5 py-2 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors shrink-0"><span>초기화</span></button>
++                            class="flex items-center px-3.5 py-1.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors shrink-0"><span>초기화</span></button>
+                 </div>
+ 
+                 <div id="group-list" class="overflow-y-auto max-h-[490px]">
+@@ -106,7 +106,7 @@
+                 <div class="px-7 py-5 border-b border-admin-border flex items-center justify-between">
+                     <h3 class="text-sm font-bold text-ink" id="item-panel-title">그룹을 선택하세요</h3>
+                     <button id="add-item-btn" onclick="openAddItem()"
+-                            class="hidden items-center gap-2 px-3.5 py-2 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">
++                            class="hidden items-center gap-2 px-3.5 py-1.5 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">
+                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                         <span>항목 추가</span>
+                     </button>
+@@ -137,18 +137,18 @@
+             <div>
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">그룹 ID <span class="text-blush">*</span></label>
+                 <input id="add-group-id" type="text" placeholder="예: CATEGORY, PAYMENT..."
+-                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
++                       class="w-full px-3.5 py-1.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
+                 <p class="text-xs text-ink-muted mt-1">영문 대문자 + 언더스코어 권장 (자동 변환)</p>
+             </div>
+             <div>
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">그룹명 <span class="text-blush">*</span></label>
+                 <input id="add-group-nm" type="text" placeholder="예: 카테고리, 결제수단..."
+-                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
++                       class="w-full px-3.5 py-1.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
+             </div>
+         </div>
+         <div class="px-7 pb-6 flex gap-2.5">
+-            <button onclick="closeModal('modal-add-group')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+-            <button onclick="confirmAddGroup()" class="flex-[2] py-3 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">추가하기</button>
++            <button onclick="closeModal('modal-add-group')" class="flex-1 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
++            <button onclick="confirmAddGroup()" class="flex-[2] py-2.5 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">추가하기</button>
+         </div>
+     </div>
+ </div>
+@@ -166,17 +166,17 @@
+             <div>
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">그룹 ID</label>
+                 <input id="edit-group-id" type="text" readonly
+-                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin-subtle text-sm text-ink-soft font-mono outline-none" />
++                       class="w-full px-3.5 py-1.5 rounded-xl border border-admin-border bg-admin-subtle text-sm text-ink-soft font-mono outline-none" />
+             </div>
+             <div>
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">그룹명 <span class="text-blush">*</span></label>
+                 <input id="edit-group-nm" type="text"
+-                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
++                       class="w-full px-3.5 py-1.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
+             </div>
+         </div>
+         <div class="px-7 pb-6 flex gap-2.5">
+-            <button onclick="closeModal('modal-edit-group')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+-            <button onclick="confirmEditGroup()" class="flex-[2] py-3 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">저장하기</button>
++            <button onclick="closeModal('modal-edit-group')" class="flex-1 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
++            <button onclick="confirmEditGroup()" class="flex-[2] py-2.5 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">저장하기</button>
+         </div>
+     </div>
+ </div>
+@@ -195,8 +195,8 @@
+             <p class="text-xs text-ink-muted">해당 분류의 모든 항목도 함께 삭제돼요. 복구할 수 없어요.</p>
+         </div>
+         <div class="px-7 pb-6 flex gap-2.5">
+-            <button onclick="closeModal('modal-delete-group')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+-            <button id="confirm-delete-group-btn" class="flex-[2] py-3 rounded-xl bg-blush text-white text-sm font-semibold hover:opacity-90 transition-opacity">삭제하기</button>
++            <button onclick="closeModal('modal-delete-group')" class="flex-1 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
++            <button id="confirm-delete-group-btn" class="flex-[2] py-2.5 rounded-xl bg-blush text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">삭제하기</button>
+         </div>
+     </div>
+ </div>
+@@ -214,24 +214,24 @@
+             <div>
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">항목명 <span class="text-blush">*</span></label>
+                 <input id="item-nm" type="text" placeholder="항목명 입력..."
+-                       class="w-full px-3.5 py-2.5 rounded-xl border border-violet bg-admin text-sm text-ink outline-none" />
++                       class="w-full px-3.5 py-1.5 rounded-xl border border-violet bg-admin text-sm text-ink outline-none" />
+             </div>
+             <div id="item-code-id-wrap" class="hidden">
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">코드 ID</label>
+                 <input id="item-code-id" type="text" readonly
+-                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin-subtle text-sm text-ink-soft font-mono outline-none" />
++                       class="w-full px-3.5 py-1.5 rounded-xl border border-admin-border bg-admin-subtle text-sm text-ink-soft font-mono outline-none" />
+             </div>
+             <div>
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">정렬 순번</label>
+                 <div class="flex items-center gap-2">
+                     <button type="button" onclick="adjustSeq(-1)"
+-                            class="w-9 h-9 shrink-0 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:border-violet hover:text-violet hover:bg-violet-light transition-colors">
++                            class="w-8 h-8 shrink-0 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:border-violet hover:text-violet hover:bg-violet-light transition-colors">
+                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>
+                     </button>
+                     <input id="item-seq" type="number" min="1" value="1"
+-                           class="flex-1 py-2.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors text-center" />
++                           class="flex-1 py-1.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors text-center" />
+                     <button type="button" onclick="adjustSeq(1)"
+-                            class="w-9 h-9 shrink-0 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:border-violet hover:text-violet hover:bg-violet-light transition-colors">
++                            class="w-8 h-8 shrink-0 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:border-violet hover:text-violet hover:bg-violet-light transition-colors">
+                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                     </button>
+                 </div>
+@@ -240,15 +240,15 @@
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">사용 여부</label>
+                 <div class="flex gap-2">
+                     <button id="item-use-y" onclick="setItemUse('Y')"
+-                            class="flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-violet bg-violet-light text-violet">사용</button>
++                            class="flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all border-violet bg-violet-light text-violet border border-transparent">사용</button>
+                     <button id="item-use-n" onclick="setItemUse('N')"
+-                            class="flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle">미사용</button>
++                            class="flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle border border-transparent">미사용</button>
+                 </div>
+             </div>
+         </div>
+         <div class="px-7 pb-6 flex gap-2.5">
+-            <button onclick="closeModal('modal-item')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+-            <button id="modal-item-confirm" class="flex-[2] py-3 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">추가하기</button>
++            <button onclick="closeModal('modal-item')" class="flex-1 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
++            <button id="modal-item-confirm" class="flex-[2] py-2.5 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">추가하기</button>
+         </div>
+     </div>
+ </div>
+@@ -267,8 +267,8 @@
+             <p class="text-xs text-ink-muted">삭제한 데이터는 복구할 수 없어요.</p>
+         </div>
+         <div class="px-7 pb-6 flex gap-2.5">
+-            <button onclick="closeModal('modal-delete-item')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+-            <button id="confirm-delete-item-btn" class="flex-[2] py-3 rounded-xl bg-blush text-white text-sm font-semibold hover:opacity-90 transition-opacity">삭제하기</button>
++            <button onclick="closeModal('modal-delete-item')" class="flex-1 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
++            <button id="confirm-delete-item-btn" class="flex-[2] py-2.5 rounded-xl bg-blush text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">삭제하기</button>
+         </div>
+     </div>
+ </div>
+--- a/src/main/resources/templates/admin/index.html
++++ b/src/main/resources/templates/admin/index.html
+@@ -26,7 +26,7 @@
+     <div id="admin-main-content" class="flex-1 overflow-hidden">
+     <main class="overflow-y-auto h-screen p-9">
+         <div class="flex items-start gap-4 mb-10">
+-            <button id="sidebar-toggle" class="w-9 h-9 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors shrink-0 mt-1">
++            <button id="sidebar-toggle" class="w-8 h-8 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors shrink-0 mt-1">
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+             </button>
+             <div>
+--- a/src/main/resources/templates/admin/logs/index.html
++++ b/src/main/resources/templates/admin/logs/index.html
+@@ -30,7 +30,7 @@
+     <div id="admin-main-content" class="flex-1 overflow-hidden">
+     <main class="overflow-y-auto h-screen p-9">
+         <div class="flex items-start gap-4 mb-8">
+-            <button id="sidebar-toggle" class="w-9 h-9 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors shrink-0 mt-1">
++            <button id="sidebar-toggle" class="w-8 h-8 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors shrink-0 mt-1">
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+             </button>
+             <div>
+@@ -57,7 +57,7 @@
+                 <!-- From 날짜 피커 -->
+                 <div class="relative" id="from-wrap">
+                     <button id="from-btn" onclick="togglePicker('from')"
+-                            class="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-admin-border text-sm text-ink hover:bg-admin-subtle transition-colors">
++                            class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-admin-border text-sm text-ink hover:bg-admin-subtle transition-colors">
+                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+                         <span id="from-label">날짜 선택</span>
+                     </button>
+@@ -69,7 +69,7 @@
+                 <!-- To 날짜 피커 -->
+                 <div class="relative" id="to-wrap">
+                     <button id="to-btn" onclick="togglePicker('to')"
+-                            class="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-admin-border text-sm text-ink hover:bg-admin-subtle transition-colors">
++                            class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-admin-border text-sm text-ink hover:bg-admin-subtle transition-colors">
+                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+                         <span id="to-label">날짜 선택</span>
+                     </button>
+@@ -81,12 +81,12 @@
+ 
+                 <div class="w-px h-5 bg-admin-border"></div>
+                 <button onclick="searchLogs()"
+-                        class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">
++                        class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">
+                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                     <span>검색</span>
+                 </button>
+                 <button onclick="resetFilter()"
+-                        class="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">
++                        class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">
+                     <span>초기화</span>
+                 </button>
+             </div>
+--- a/src/main/resources/templates/admin/users/index.html
++++ b/src/main/resources/templates/admin/users/index.html
+@@ -29,7 +29,7 @@
+     <main class="overflow-y-auto h-screen p-9">
+         <div class="flex items-start justify-between gap-4 mb-8">
+             <div class="flex items-start gap-4 flex-1">
+-                <button id="sidebar-toggle" class="w-9 h-9 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors shrink-0 mt-1">
++                <button id="sidebar-toggle" class="w-8 h-8 rounded-xl border border-admin-border bg-admin-surface flex items-center justify-center text-ink-soft hover:bg-admin-subtle transition-colors shrink-0 mt-1">
+                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+                 </button>
+                 <div>
+@@ -72,18 +72,18 @@
+             <div>
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">이름</label>
+                 <input id="new-user-name" type="text" placeholder="홍길동"
+-                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
++                       class="w-full px-3.5 py-1.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
+             </div>
+             <div>
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">ID</label>
+                 <input id="new-user-id" type="text" placeholder="로그인에 사용할 ID"
+-                       class="w-full px-3.5 py-2.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
++                       class="w-full px-3.5 py-1.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
+             </div>
+             <div>
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">PW</label>
+                 <div class="relative">
+                     <input id="new-user-pw" type="password" placeholder="비밀번호 입력"
+-                           class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
++                           class="w-full px-3.5 py-1.5 pr-10 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors" />
+                     <button onclick="togglePwVisibility()" id="pw-eye-btn" class="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink transition-colors">
+                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+                     </button>
+@@ -92,15 +92,15 @@
+             <div>
+                 <label class="block text-xs font-medium text-ink-soft mb-1.5">역할</label>
+                 <div class="flex gap-2" id="role-selector">
+-                    <button onclick="setNewUserRole('관리자')" data-role="관리자" class="role-btn flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle">관리자</button>
+-                    <button onclick="setNewUserRole('사용자')" data-role="사용자" class="role-btn flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-violet bg-violet-light text-violet">사용자</button>
+-                    <button onclick="setNewUserRole('뷰어')" data-role="뷰어" class="role-btn flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle">뷰어</button>
++                    <button onclick="setNewUserRole('관리자')" data-role="관리자" class="role-btn flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle border border-transparent">관리자</button>
++                    <button onclick="setNewUserRole('사용자')" data-role="사용자" class="role-btn flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all border-violet bg-violet-light text-violet border border-transparent">사용자</button>
++                    <button onclick="setNewUserRole('뷰어')" data-role="뷰어" class="role-btn flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle border border-transparent">뷰어</button>
+                 </div>
+             </div>
+         </div>
+         <div class="px-7 pb-6 flex gap-2.5">
+-            <button onclick="closeModal('modal-user-add')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+-            <button onclick="confirmAddUser()" class="flex-[2] py-3 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">추가하기</button>
++            <button onclick="closeModal('modal-user-add')" class="flex-1 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
++            <button onclick="confirmAddUser()" class="flex-[2] py-2.5 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">추가하기</button>
+         </div>
+     </div>
+ </div>
+@@ -120,8 +120,8 @@
+             <p class="text-xs text-ink-muted mt-1.5">초기화 후 아이디와 동일한 비밀번호로 변경돼요.</p>
+         </div>
+         <div class="px-7 pb-6 flex gap-2.5">
+-            <button onclick="closeModal('modal-pw-reset')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+-            <button id="confirm-pw-reset-btn" class="flex-[2] py-3 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">초기화하기</button>
++            <button onclick="closeModal('modal-pw-reset')" class="flex-1 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
++            <button id="confirm-pw-reset-btn" class="flex-[2] py-2.5 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">초기화하기</button>
+         </div>
+     </div>
+ </div>
+@@ -141,8 +141,8 @@
+             <p class="text-xs text-ink-muted mt-1.5">삭제한 계정은 복구할 수 없어요.</p>
+         </div>
+         <div class="px-7 pb-6 flex gap-2.5">
+-            <button onclick="closeModal('modal-user-delete')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+-            <button id="confirm-user-delete" class="flex-[2] py-3 rounded-xl bg-blush text-white text-sm font-semibold hover:opacity-90 transition-opacity">삭제하기</button>
++            <button onclick="closeModal('modal-user-delete')" class="flex-1 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
++            <button id="confirm-user-delete" class="flex-[2] py-2.5 rounded-xl bg-blush text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">삭제하기</button>
+         </div>
+     </div>
+ </div>
+@@ -162,17 +162,17 @@
+                 <label class="block text-xs font-medium text-ink-soft mb-2">새 역할 선택</label>
+                 <div class="flex gap-2">
+                     <button onclick="setChangeRole('ROLE_ADMIN')" data-role="ROLE_ADMIN"
+-                            class="role-change-btn flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle">관리자</button>
++                            class="role-change-btn flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle border border-transparent">관리자</button>
+                     <button onclick="setChangeRole('ROLE_USER')" data-role="ROLE_USER"
+-                            class="role-change-btn flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle">사용자</button>
++                            class="role-change-btn flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle border border-transparent">사용자</button>
+                     <button onclick="setChangeRole('ROLE_VIEWER')" data-role="ROLE_VIEWER"
+-                            class="role-change-btn flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle">뷰어</button>
++                            class="role-change-btn flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all border-admin-border text-ink-soft hover:bg-admin-subtle border border-transparent">뷰어</button>
+                 </div>
+             </div>
+         </div>
+         <div class="px-7 pb-6 flex gap-2.5">
+-            <button onclick="closeModal('modal-role-change')" class="flex-1 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
+-            <button id="confirm-role-change-btn" class="flex-[2] py-3 rounded-xl bg-sky text-white text-sm font-semibold hover:opacity-90 transition-opacity">변경하기</button>
++            <button onclick="closeModal('modal-role-change')" class="flex-1 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors">취소</button>
++            <button id="confirm-role-change-btn" class="flex-[2] py-2.5 rounded-xl bg-sky text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">변경하기</button>
+         </div>
+     </div>
+ </div>
+--- a/src/main/resources/templates/budget/index.html
++++ b/src/main/resources/templates/budget/index.html
+@@ -4,7 +4,7 @@
+ <th:block th:fragment="content">
+     <main class="flex-1 overflow-y-auto h-screen p-9">
+         <div class="flex items-center gap-3.5 mb-8">
+-            <button onclick="toggleSidebar()" class="w-9 h-9 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
++            <button onclick="toggleSidebar()" class="w-8 h-8 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+             </button>
+             <h1 class="font-bold text-ink tracking-tight text-3xl">예산</h1>
+--- a/src/main/resources/templates/dashboard/index.html
++++ b/src/main/resources/templates/dashboard/index.html
+@@ -8,7 +8,7 @@
+         <!-- 헤더 -->
+         <div class="flex justify-between items-start mb-8">
+             <div class="flex items-center gap-3.5">
+-                <button id="btn-toggle-sidebar" class="w-9 h-9 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
++                <button id="btn-toggle-sidebar" class="w-8 h-8 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
+                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+                 </button>
+                 <div>
+@@ -24,7 +24,7 @@
+                     </div>
+                 </div>
+             </div>
+-            <button id="btn-open-modal" class="flex items-center gap-2 px-5 py-3 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-md shadow-sage/30">
++            <button id="btn-open-modal" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-md shadow-sage/30 border border-transparent">
+                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                 내역 추가
+             </button>
+@@ -73,8 +73,8 @@
+                     </button>
+                 </div>
+                 <div class="flex gap-2">
+-                    <button id="type-expense" class="flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all bg-blush border-blush text-white">지출</button>
+-                    <button id="type-income"  class="flex-1 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all border-cream-border bg-transparent text-ink-soft hover:bg-cream-subtle">수입</button>
++                    <button id="type-expense" class="flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all bg-blush border-blush text-white border border-transparent">지출</button>
++                    <button id="type-income"  class="flex-1 py-1.5 rounded-xl border-2 text-sm font-semibold transition-all border-cream-border bg-transparent text-ink-soft hover:bg-cream-subtle border border-transparent">수입</button>
+                 </div>
+             </div>
+             <div class="px-7 py-5 flex flex-col gap-4 max-h-[60vh] overflow-y-auto">
+@@ -86,7 +86,7 @@
+                                 사용일자
+                             </span>
+                         </label>
+-                        <input type="date" id="modal-date" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
++                        <input type="date" id="modal-date" class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                     </div>
+                     <div>
+                         <label class="block text-xs font-medium text-ink-soft mb-1.5">
+@@ -96,7 +96,7 @@
+                             </span>
+                         </label>
+                         <div class="relative" id="payment-dd-wrap">
+-                            <button id="payment-dd-btn" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border text-sm flex justify-between items-center bg-cream transition-colors">
++                            <button id="payment-dd-btn" class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border text-sm flex justify-between items-center bg-cream transition-colors">
+                                 <span id="payment-dd-label">카드</span>
+                                 <svg id="payment-dd-chevron" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-ink-muted transition-transform duration-200"><path d="M6 9l6 6 6-6"/></svg>
+                             </button>
+@@ -116,23 +116,23 @@
+                         </span>
+                     </label>
+                     <div class="relative">
+-                        <input type="number" id="modal-amount" placeholder="0" class="w-full px-3.5 py-2.5 pr-8 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
++                        <input type="number" id="modal-amount" placeholder="0" class="w-full px-3.5 py-1.5 pr-8 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                         <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-ink-muted pointer-events-none">원</span>
+                     </div>
+                     <p id="amount-preview" class="hidden text-xs text-ink-muted mt-1 pl-1"></p>
+                 </div>
+                 <div>
+                     <label class="block text-xs font-medium text-ink-soft mb-1.5">상세내용</label>
+-                    <input id="modal-desc" placeholder="예: 마트 장보기" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
++                    <input id="modal-desc" placeholder="예: 마트 장보기" class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                 </div>
+                 <div>
+                     <label class="block text-xs font-medium text-ink-soft mb-1.5">메모 <span class="font-normal text-ink-muted">(선택)</span></label>
+-                    <textarea id="modal-memo" placeholder="추가 메모를 입력하세요" rows="2" class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors resize-none leading-relaxed"></textarea>
++                    <textarea id="modal-memo" placeholder="추가 메모를 입력하세요" rows="2" class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors resize-none leading-relaxed"></textarea>
+                 </div>
+             </div>
+             <div class="px-7 pb-6 flex gap-2.5">
+-                <button id="btn-modal-cancel" class="flex-1 py-3 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
+-                <button id="btn-modal-submit" class="py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 bg-blush" style="flex:2">저장하기</button>
++                <button id="btn-modal-cancel" class="flex-1 py-2.5 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
++                <button id="btn-modal-submit" class="py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 bg-blush border border-transparent" style="flex:2">저장하기</button>
+             </div>
+         </div>
+     </div>
+--- a/src/main/resources/templates/expense/index.html
++++ b/src/main/resources/templates/expense/index.html
+@@ -4,7 +4,7 @@
+ <th:block th:fragment="content">
+     <main class="flex-1 overflow-y-auto h-screen p-9">
+         <div class="flex items-center gap-3.5 mb-8">
+-            <button onclick="toggleSidebar()" class="w-9 h-9 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
++            <button onclick="toggleSidebar()" class="w-8 h-8 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+             </button>
+             <h1 class="font-bold text-ink tracking-tight text-3xl">지출</h1>
+--- a/src/main/resources/templates/fixed-expense/index.html
++++ b/src/main/resources/templates/fixed-expense/index.html
+@@ -4,7 +4,7 @@
+ <th:block th:fragment="content">
+     <main class="flex-1 overflow-y-auto h-screen p-9">
+         <div class="flex items-center gap-3.5 mb-8">
+-            <button onclick="toggleSidebar()" class="w-9 h-9 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
++            <button onclick="toggleSidebar()" class="w-8 h-8 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+             </button>
+             <h1 class="font-bold text-ink tracking-tight text-3xl">고정지출</h1>
+@@ -26,22 +26,22 @@
+                 <div class="relative">
+                     <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                     <input id="fe-keyword" type="text" placeholder="내용 검색..."
+-                           class="pl-8 pr-3.5 py-2 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
++                           class="pl-8 pr-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                 </div>
+ 
+                 <div class="w-px h-5 bg-cream-border"></div>
+                 <button id="btn-fe-search"
+-                        class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity">
++                        class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">
+                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                     <span>검색</span>
+                 </button>
+                 <button id="btn-fe-search-reset"
+-                        class="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">
++                        class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">
+                     <span>초기화</span>
+                 </button>
+ 
+                 <button id="btn-open-fixed-expense-modal"
+-                        class="ml-auto flex items-center gap-2 px-3.5 py-2 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-md shadow-sage/30">
++                        class="ml-auto flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-md shadow-sage/30 border border-transparent">
+                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                     <span>추가</span>
+                 </button>
+@@ -179,7 +179,7 @@
+                         <label class="block text-xs font-medium text-ink-soft mb-1.5">기준일(시작일) <span class="text-blush">*</span></label>
+                         <div class="relative" id="fe-anchor-dt-wrap">
+                             <button type="button" id="fe-anchor-dt-btn" onclick="togglePicker('fe-anchor-dt')"
+-                                    class="w-full flex items-center gap-2 px-3.5 py-2 rounded-xl border border-cream-border bg-cream text-sm text-ink hover:bg-cream-subtle transition-colors">
++                                    class="w-full flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink hover:bg-cream-subtle transition-colors">
+                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+                                 <span id="fe-anchor-dt-label">날짜 선택</span>
+                             </button>
+@@ -195,24 +195,24 @@
+                     <label class="block text-xs font-medium text-ink-soft mb-1.5">금액</label>
+                     <div class="relative">
+                         <input type="text" inputmode="numeric" id="fe-amount" placeholder="0"
+-                               class="w-full px-3.5 py-2.5 pr-8 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
++                               class="w-full px-3.5 py-1.5 pr-8 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                         <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-ink-muted pointer-events-none">원</span>
+                     </div>
+                 </div>
+                 <div>
+                     <label class="block text-xs font-medium text-ink-soft mb-1.5">내용</label>
+                     <input id="fe-content"
+-                           class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
++                           class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                 </div>
+                 <div>
+                     <label class="block text-xs font-medium text-ink-soft mb-1.5">메모 <span class="font-normal text-ink-muted">(선택)</span></label>
+                     <textarea id="fe-memo" placeholder="추가 메모를 입력하세요" rows="2"
+-                              class="w-full px-3.5 py-2.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors resize-none leading-relaxed"></textarea>
++                              class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors resize-none leading-relaxed"></textarea>
+                 </div>
+                 <div>
+                     <label class="block text-xs font-medium text-ink-soft mb-1.5">첨부파일 <span class="font-normal text-ink-muted">(선택)</span></label>
+                     <label for="fe-file-input" id="fe-file-dropzone"
+-                           class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl border border-dashed border-cream-border text-sm text-ink-soft cursor-pointer hover:bg-cream-subtle transition-colors">
++                           class="flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-xl border border-dashed border-cream-border text-sm text-ink-soft cursor-pointer hover:bg-cream-subtle transition-colors">
+                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                         파일 선택 또는 드래그해서 놓기
+                     </label>
+@@ -221,8 +221,8 @@
+                 </div>
+             </div>
+             <div class="px-7 pb-6 flex gap-2.5">
+-                <button id="btn-cancel-fixed-expense" class="flex-1 py-3 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
+-                <button id="btn-submit-fixed-expense" class="py-3 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 bg-sage" style="flex:2">추가하기</button>
++                <button id="btn-cancel-fixed-expense" class="flex-1 py-2.5 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
++                <button id="btn-submit-fixed-expense" class="py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 bg-sage border border-transparent" style="flex:2">추가하기</button>
+             </div>
+         </div>
+     </div>
+--- a/src/main/resources/templates/fragments/dropdown.html
++++ b/src/main/resources/templates/fragments/dropdown.html
+@@ -21,7 +21,7 @@
+             th:id="${dropId + '-btn'}"
+             th:attr="data-drop-id=${dropId}"
+             onclick="Dropdown.toggle(this.dataset.dropId)"
+-            class="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-admin-border text-sm text-ink hover:bg-admin-subtle transition-colors">
++            class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-admin-border text-sm text-ink hover:bg-admin-subtle transition-colors">
+         <span th:id="${dropId + '-label'}" th:text="${placeholder}">선택</span>
+         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="ml-auto shrink-0">
+@@ -38,7 +38,7 @@
+                     data-code=""
+                     th:classappend="${optHover}"
+                     onclick="Dropdown.select(this.dataset.dropId, this.dataset.code, this.dataset.name)"
+-                    class="w-full text-left px-3 py-2 rounded-xl text-xs text-ink-soft font-medium transition-colors">
++                    class="w-full text-left px-3 py-1.5 rounded-xl text-xs text-ink-soft font-medium transition-colors border border-transparent">
+                 전체
+             </button>
+ 
+@@ -50,7 +50,7 @@
+                     th:text="${item.codeNm}"
+                     th:classappend="${optHover}"
+                     onclick="Dropdown.select(this.dataset.dropId, this.dataset.code, this.dataset.name)"
+-                    class="w-full text-left px-3 py-2 rounded-xl text-xs text-ink-soft font-medium transition-colors">
++                    class="w-full text-left px-3 py-1.5 rounded-xl text-xs text-ink-soft font-medium transition-colors border border-transparent">
+             </button>
+ 
+         </div>
+--- a/src/main/resources/templates/fragments/sidebar.html
++++ b/src/main/resources/templates/fragments/sidebar.html
+@@ -19,7 +19,7 @@
+                  style="top:0;height:40px;opacity:0"></div>
+ 
+             <button hx-get="/dashboard" hx-target="#main-content" hx-push-url="true"
+-                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-sage font-semibold"
++                    class="relative z-[1] flex items-center gap-3 px-3.5 py-1.5 rounded-xl text-sm transition-colors w-full text-left text-sage font-semibold border border-transparent"
+                     data-nav="dashboard" onclick="setActiveNav('dashboard')">
+                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M3 3h7v7H3V3m11 0h7v7h-7V3M3 14h7v7H3v-7m11 0h7v7h-7v-7"/>
+@@ -28,7 +28,7 @@
+             </button>
+ 
+             <button hx-get="/income" hx-target="#main-content" hx-push-url="true"
+-                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
++                    class="relative z-[1] flex items-center gap-3 px-3.5 py-1.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal border border-transparent"
+                     data-nav="income" onclick="setActiveNav('income')">
+                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M12 19V5m-7 7 7-7 7 7"/>
+@@ -37,7 +37,7 @@
+             </button>
+ 
+             <button hx-get="/expense" hx-target="#main-content" hx-push-url="true"
+-                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
++                    class="relative z-[1] flex items-center gap-3 px-3.5 py-1.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal border border-transparent"
+                     data-nav="expense" onclick="setActiveNav('expense')">
+                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M12 5v14m7-7-7 7-7-7"/>
+@@ -46,7 +46,7 @@
+             </button>
+ 
+             <button hx-get="/fixed-expense" hx-target="#main-content" hx-push-url="true"
+-                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
++                    class="relative z-[1] flex items-center gap-3 px-3.5 py-1.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal border border-transparent"
+                     data-nav="fixed-expense" onclick="setActiveNav('fixed-expense')">
+                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M17 2l4 4-4 4M3 13v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4m14 2v1a4 4 0 0 1-4 4H3"/>
+@@ -55,7 +55,7 @@
+             </button>
+ 
+             <button hx-get="/budget" hx-target="#main-content" hx-push-url="true"
+-                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
++                    class="relative z-[1] flex items-center gap-3 px-3.5 py-1.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal border border-transparent"
+                     data-nav="budget" onclick="setActiveNav('budget')">
+                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10M12 8v4l3 3"/>
+@@ -64,7 +64,7 @@
+             </button>
+ 
+             <button hx-get="/report" hx-target="#main-content" hx-push-url="true"
+-                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
++                    class="relative z-[1] flex items-center gap-3 px-3.5 py-1.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal border border-transparent"
+                     data-nav="report" onclick="setActiveNav('report')">
+                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M3 3v18h18M7 16V8m5 8v-5m5 5V4"/>
+@@ -73,7 +73,7 @@
+             </button>
+ 
+             <button hx-get="/setting" hx-target="#main-content" hx-push-url="true"
+-                    class="relative z-[1] flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal"
++                    class="relative z-[1] flex items-center gap-3 px-3.5 py-1.5 rounded-xl text-sm transition-colors w-full text-left text-ink-soft font-normal border border-transparent"
+                     data-nav="settings" onclick="setActiveNav('settings')">
+                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6m6.2-1.5q.07-.49.07-1t-.07-1l2.16-1.68a.5.5 0 0 0 .12-.63l-2.05-3.54a.5.5 0 0 0-.6-.22L16 6.46A7.4 7.4 0 0 0 14.28 5.5l-.37-2.72A.49.49 0 0 0 13.43 2h-2.86a.49.49 0 0 0-.48.42L9.72 5.14A7.4 7.4 0 0 0 8 6.12l-2.56-1.03a.5.5 0 0 0-.6.22L2.79 8.85a.5.5 0 0 0 .12.63L5.07 11.2Q5 11.6 5 12t.07.8L2.91 14.48a.5.5 0 0 0-.12.63l2.05 3.54c.12.22.37.3.6.22L8 17.54a7.4 7.4 0 0 0 1.72 1l.37 2.72c.07.27.3.47.58.47h2.86c.28 0 .51-.2.57-.47l.38-2.72a7.4 7.4 0 0 0 1.72-1l2.56 1.03c.24.09.49 0 .6-.22l2.05-3.54a.5.5 0 0 0-.12-.63z"/>
+@@ -100,7 +100,7 @@
+         </th:block>
+         <form th:action="@{/logout}" method="post" style="margin:0;margin-top:8px">
+             <button type="submit"
+-                    class="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border border-cream-border text-xs font-medium text-ink-muted hover:border-blush hover:bg-blush-light hover:text-blush transition-all">
++                    class="w-full flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border border-cream-border text-xs font-medium text-ink-muted hover:border-blush hover:bg-blush-light hover:text-blush transition-all">
+                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                 로그아웃
+             </button>
+--- a/src/main/resources/templates/income/index.html
++++ b/src/main/resources/templates/income/index.html
+@@ -4,7 +4,7 @@
+ <th:block th:fragment="content">
+     <main class="flex-1 overflow-y-auto h-screen p-9">
+         <div class="flex items-center gap-3.5 mb-8">
+-            <button onclick="toggleSidebar()" class="w-9 h-9 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
++            <button onclick="toggleSidebar()" class="w-8 h-8 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+             </button>
+             <h1 class="font-bold text-ink tracking-tight text-3xl">수입</h1>
+--- a/src/main/resources/templates/report/index.html
++++ b/src/main/resources/templates/report/index.html
+@@ -4,7 +4,7 @@
+ <th:block th:fragment="content">
+     <main class="flex-1 overflow-y-auto h-screen p-9">
+         <div class="flex items-center gap-3.5 mb-8">
+-            <button onclick="toggleSidebar()" class="w-9 h-9 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
++            <button onclick="toggleSidebar()" class="w-8 h-8 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+             </button>
+             <h1 class="font-bold text-ink tracking-tight text-3xl">리포트</h1>
+--- a/src/main/resources/templates/setting/index.html
++++ b/src/main/resources/templates/setting/index.html
+@@ -6,7 +6,7 @@
+     <main class="flex-1 overflow-y-auto h-screen p-9">
+         <!-- 헤더 -->
+         <div class="flex items-center gap-3.5 mb-8">
+-            <button onclick="toggleSidebar()" class="w-9 h-9 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
++            <button onclick="toggleSidebar()" class="w-8 h-8 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
+                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+             </button>
+             <div>
+@@ -92,7 +92,7 @@
+                         <p class="text-xs text-ink-muted mt-0.5">내역 추가 시 외부 URL로 이벤트를 전송합니다</p>
+                     </div>
+                     <div class="shrink-0">
+-                        <input type="text" placeholder="https://..." class="w-52 px-3 py-2 rounded-lg border border-cream-border bg-cream text-xs text-ink outline-none focus:border-sage transition-colors" />
++                        <input type="text" placeholder="https://..." class="w-52 px-3 py-1.5 rounded-lg border border-cream-border bg-cream text-xs text-ink outline-none focus:border-sage transition-colors" />
+                     </div>
+                 </div>
+                 <div class="flex items-center justify-between px-7 py-4 border-b border-cream-border">
+@@ -124,7 +124,7 @@
+                 </div>
+                 <div id="user-list"></div>
+                 <div class="px-7 py-4">
+-                    <button class="w-full py-2.5 rounded-xl border-2 border-dashed border-cream-border text-xs font-medium text-ink-muted hover:border-sage hover:text-sage transition-all">
++                    <button class="w-full py-1.5 rounded-xl border-2 border-dashed border-cream-border text-xs font-medium text-ink-muted hover:border-sage hover:text-sage transition-all border border-transparent">
+                         + 사용자 초대
+                     </button>
+                 </div>
+--- a/src/main/resources/static/js/admin/users.js
++++ b/src/main/resources/static/js/admin/users.js
+@@ -65,7 +65,7 @@
+         <div class="px-7 py-5 border-b border-admin-border flex items-center justify-between">
+             <h3 class="text-sm font-bold text-ink">사용자 목록</h3>
+             <button onclick="openModal('modal-user-add')"
+-                    class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity">
++                    class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">
+                 ${icon(IC.plus, 13)}<span>사용자 추가</span>
+             </button>
+         </div>`;
+@@ -78,8 +78,8 @@
+                        class="w-full pl-8 pr-3.5 pt-[10px] pb-[6px] rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-violet transition-colors"
+                        onkeydown="if(event.key==='Enter') searchUsers()" />
+             </div>
+-            <button onclick="searchUsers()" class="flex items-center px-3.5 py-2 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity shrink-0"><span>검색</span></button>
+-            <button onclick="resetUserSearch()" class="flex items-center px-3.5 py-2 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors shrink-0"><span>초기화</span></button>
++            <button onclick="searchUsers()" class="flex items-center px-3.5 py-1.5 rounded-xl bg-violet text-white text-sm font-semibold hover:opacity-90 transition-opacity shrink-0 border border-transparent"><span>검색</span></button>
++            <button onclick="resetUserSearch()" class="flex items-center px-3.5 py-1.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors shrink-0"><span>초기화</span></button>
+         </div>`;
+ 
+     if (filtered.length === 0) {
+@@ -184,13 +184,13 @@
+                 </div>
+             </div>
+             <div class="px-6 py-4 flex flex-col gap-2.5">
+-                <button onclick="openRoleChange()" class="w-full flex items-center gap-2.5 px-4 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink hover:bg-admin-subtle transition-colors">
++                <button onclick="openRoleChange()" class="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink hover:bg-admin-subtle transition-colors">
+                     ${icon(IC.edit, 16, 'text-sky')}<span>역할 변경</span>
+                 </button>
+-                <button onclick="openPwReset()" class="w-full flex items-center gap-2.5 px-4 py-3 rounded-xl border border-admin-border text-sm font-medium text-ink hover:bg-admin-subtle transition-colors">
++                <button onclick="openPwReset()" class="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-admin-border text-sm font-medium text-ink hover:bg-admin-subtle transition-colors">
+                     ${icon(IC.refresh, 16, 'text-violet')}<span>비밀번호 초기화</span>
+                 </button>
+-                <button onclick="openUserDelete()" class="w-full flex items-center gap-2.5 px-4 py-3 rounded-xl border border-blush/30 text-sm font-medium text-blush hover:bg-blush-light transition-colors">
++                <button onclick="openUserDelete()" class="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-blush/30 text-sm font-medium text-blush hover:bg-blush-light transition-colors">
+                     ${icon(IC.trash, 16)}<span>계정 삭제</span>
+                 </button>
+             </div>
+--- a/src/main/resources/static/js/common/calendar.js
++++ b/src/main/resources/static/js/common/calendar.js
+@@ -108,8 +108,8 @@
+             ${emptyCells}${dayCells}
+         </div>
+         <div class="flex gap-2 mt-3 pt-3 border-t ${t.border}">
+-            <button onclick="calSelectDate('${id}','${todayStr}')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold ${t.accentLightBg} ${t.accentText} ${t.accentBgHover} hover:text-white transition-colors">오늘</button>
+-            <button onclick="calSelectDate('${id}','')"            class="flex-1 py-1.5 rounded-lg text-xs font-semibold ${t.accentLightBg} ${t.accentText} ${t.accentBgHover} hover:text-white transition-colors">초기화</button>
++            <button onclick="calSelectDate('${id}','${todayStr}')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold ${t.accentLightBg} ${t.accentText} ${t.accentBgHover} hover:text-white transition-colors border border-transparent">오늘</button>
++            <button onclick="calSelectDate('${id}','')"            class="flex-1 py-1.5 rounded-lg text-xs font-semibold ${t.accentLightBg} ${t.accentText} ${t.accentBgHover} hover:text-white transition-colors border border-transparent">초기화</button>
+         </div>`;
+     }
+ 
+@@ -134,7 +134,7 @@
+             ${yearBtns}
+         </div>
+         <div class="mt-3 pt-3 border-t ${t.border}">
+-            <button onclick="calSetMode('${id}','day')" class="w-full py-1.5 rounded-lg text-xs font-semibold ${t.subtleBg} text-ink-soft ${t.borderHoverBg} transition-colors">← 돌아가기</button>
++            <button onclick="calSetMode('${id}','day')" class="w-full py-1.5 rounded-lg text-xs font-semibold ${t.subtleBg} text-ink-soft ${t.borderHoverBg} transition-colors border border-transparent">← 돌아가기</button>
+         </div>`;
+     }
+ 
+@@ -158,7 +158,7 @@
+             ${monthBtns}
+         </div>
+         <div class="mt-3 pt-3 border-t ${t.border}">
+-            <button onclick="calSetMode('${id}','day')" class="w-full py-1.5 rounded-lg text-xs font-semibold ${t.subtleBg} text-ink-soft ${t.borderHoverBg} transition-colors">← 돌아가기</button>
++            <button onclick="calSetMode('${id}','day')" class="w-full py-1.5 rounded-lg text-xs font-semibold ${t.subtleBg} text-ink-soft ${t.borderHoverBg} transition-colors border border-transparent">← 돌아가기</button>
+         </div>`;
+     }
+ 
+--- a/src/main/resources/static/js/dashboard/index.js
++++ b/src/main/resources/static/js/dashboard/index.js
+@@ -377,7 +377,7 @@
+         const cls = active
+             ? (isIncome ? 'border-sage bg-sage-light text-sage' : 'border-blush bg-blush-light text-blush')
+             : 'border-cream-border text-ink-soft hover:bg-cream-subtle';
+-        return `<button class="px-3 py-1.5 rounded-full text-xs border-2 transition-all font-medium ${cls}" onclick="selectCategory('${c}')">${c}</button>`;
++        return `<button class="px-3 py-1.5 rounded-full text-xs border-2 transition-all font-medium ${cls} border border-transparent" onclick="selectCategory('${c}')">${c}</button>`;
+     }).join('');
+ }
+ 
