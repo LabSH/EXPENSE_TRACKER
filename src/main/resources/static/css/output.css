@@ -85,10 +85,13 @@
     --color-sage-mid: #8ec4a8;
     --color-green: oklch(0.58 0.1 152);
     --color-green-light: oklch(0.94 0.04 152);
+    --color-green-mid: oklch(0.78 0.07 152);
     --color-coral: oklch(0.62 0.12 22);
     --color-coral-light: oklch(0.95 0.04 22);
+    --color-coral-mid: oklch(0.85 0.07 22);
     --color-blue: oklch(0.60 0.09 240);
     --color-blue-light: oklch(0.94 0.04 240);
+    --color-blue-mid: oklch(0.85 0.06 240);
     --color-gold: rgb(220, 163, 47);
     --color-kakao: #FEE500;
     --color-kakao-ink: #3C1E1E;
@@ -687,6 +690,9 @@
   .w-80 {
     width: calc(var(--spacing) * 80);
   }
+  .w-85 {
+    width: calc(var(--spacing) * 85);
+  }
   .w-96 {
     width: calc(var(--spacing) * 96);
   }
@@ -983,6 +989,9 @@
   .border-admin-border {
     border-color: var(--color-admin-border);
   }
+  .border-blue-mid {
+    border-color: var(--color-blue-mid);
+  }
   .border-blush {
     border-color: var(--color-blush);
   }
@@ -995,8 +1004,14 @@
   .border-border {
     border-color: var(--color-border);
   }
+  .border-coral-mid {
+    border-color: var(--color-coral-mid);
+  }
   .border-cream-border {
     border-color: var(--color-cream-border);
+  }
+  .border-green-mid {
+    border-color: var(--color-green-mid);
   }
   .border-sage {
     border-color: var(--color-sage);
@@ -1553,6 +1568,10 @@
     --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
+  .shadow-soft-md {
+    --tw-shadow: 0 8px 24px var(--tw-shadow-color, rgba(0,0,0,0.10));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
   .shadow-soft-sm {
     --tw-shadow: 0 2px 8px var(--tw-shadow-color, rgba(0,0,0,0.06));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -2005,25 +2024,25 @@
 @keyframes toastIn {
   0% {
     opacity: 0;
-    transform: translateX(calc(100% + 1.5rem));
+    transform: translateX(calc(100% + 1.5rem)) scale(.96);
   }
   100% {
     opacity: 1;
-    transform: none;
+    transform: translateX(0) scale(1);
   }
 }
 @keyframes toastOut {
   0% {
     opacity: 1;
-    transform: none;
+    transform: translateX(0) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translateX(calc(100% + 1.5rem));
+    transform: translateX(calc(100% + 1.5rem)) scale(.97);
   }
 }
 .anim-toastIn {
-  animation: toastIn .32s cubic-bezier(.22, 1, .36, 1) both;
+  animation: toastIn .38s cubic-bezier(.22, 1, .36, 1) both;
 }
 .anim-toastOut {
   animation: toastOut .24s ease-in both;

@@ -62,9 +62,9 @@
                         <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                         <input id="group-keyword" type="text" placeholder="그룹명 검색..."
                                class="w-full pl-8 pr-3.5 py-1.5 rounded-xl border border-admin-border bg-admin text-sm text-ink outline-none focus:border-admin-accent transition-colors"
-                               onkeydown="if(event.key==='Enter') reloadGroups()" />
+                               onkeydown="if(event.key==='Enter') searchGroups()" />
                     </div>
-                    <button onclick="reloadGroups()"
+                    <button onclick="searchGroups()"
                             class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-admin-accent text-white text-sm font-semibold hover:opacity-90 transition-opacity shrink-0 border border-transparent"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>검색</span></button>
                     <button onclick="resetGroupSearch()"
                             class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-admin-border text-sm font-medium text-ink-soft hover:bg-admin-subtle transition-colors shrink-0"><span>초기화</span></button>

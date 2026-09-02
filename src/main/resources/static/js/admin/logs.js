@@ -24,7 +24,11 @@ var LEVEL_CFG = {
 };
 
 // ── 로그 검색 / 렌더 ──────────────────────────────────────────
-async function searchLogs() {
+/**
+ * 로그를 조회해 목록을 갱신한다. 필터 초기화(resetFilter)도 이 함수를 재사용하므로
+ * 두 진입점의 토스트 문구가 겹치지 않도록 isReset 플래그로 구분한다.
+ */
+async function searchLogs(isReset) {
     const from  = CalendarPicker.getDate('from');
     const to    = CalendarPicker.getDate('to');
     const level = Dropdown.getValue('level');
@@ -35,18 +39,20 @@ async function searchLogs() {
     try {
         const data = await requestJson(`/admin/logs/data?${params}`);
         renderLogs(data);
+        Toast.info(isReset ? '초기화되었습니다.' : '조회되었습니다.', `총 ${data.length}건`);
     } catch (e) {
-        alert(e.message);
+        Toast.error('에러가 발생하였습니다.', e.message);
     }
 }
 
+/** 날짜·레벨 필터를 오늘/전체로 되돌리고 다시 조회한다 */
 function resetFilter() {
     const now   = new Date();
     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     CalendarPicker.setDate('from', today);
     CalendarPicker.setDate('to',   today);
     Dropdown.reset('level');
-    searchLogs();
+    searchLogs(true);
 }
 
 var currentLogs = [];

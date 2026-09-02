@@ -1,5 +1,3 @@
-- [23:31] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Write: D:\workspace\expenseTracker\.claude\report\2026-08-26_23-30.md | # 세션 작업 요약
-- [23:31] [session:a2b81b8a-9553-4e51-9543-a432c7c22389] Write: D:\workspace\expenseTracker\.claude\report\2026-08-26_23-30.md | # 세션 작업 요약
 - [20:34] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Edit: D:\workspace\expenseTracker\.claude\agents\backend-architect.md | description: "다음 상황에서는 반드시 이 에이전
 - [20:34] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Edit: D:\workspace\expenseTracker\.claude\agents\javascript-architect.md | description: "JavaScript 코드 구현, 리팩토링, 공통
 - [20:34] [session:d7d45e8a-25e2-45a9-a7c4-0f20563f3f51] Edit: D:\workspace\expenseTracker\.claude\agents\tailwind-ui-architect.md | description: "다음 상황에서는 반드시 이 에이전
@@ -18,3 +16,5 @@ Binary file .claude/context-cache.md matches
 - [22:27] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\common\toast.js |     const TYPES = {
 - [22:32] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\common\toast.js |         // 배지(28px)와 텍스트 높이가 달라 items-
 - [22:36] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Write: D:\workspace\expenseTracker\DOCUMENTS\TODO.md | # 다음 예정 작업
+- [00:07] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Write: D:\workspace\expenseTracker\src\main\resources\static\js\common\toast.js | /**
+- [00:24] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\admin\logs.js | // ── 로그 검색 / 렌더 ─────────

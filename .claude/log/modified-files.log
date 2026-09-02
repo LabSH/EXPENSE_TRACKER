@@ -1207,3 +1207,9 @@
 [2026-08-30 22:36:43] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Write: D:\workspace\expenseTracker\DOCUMENTS\TODO.md
   변경전: 
   변경후: 
+[2026-09-03 00:07:13] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Write: D:\workspace\expenseTracker\src\main\resources\static\js\common\toast.js
+  변경전: 
+  변경후: 
+[2026-09-03 00:24:24] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\admin\logs.js
+  변경전: // ── 로그 검색 / 렌더 ──────────────────────────────────────────
+  변경후: // ── 로그 검색 / 렌더 ──────────────────────────────────────────

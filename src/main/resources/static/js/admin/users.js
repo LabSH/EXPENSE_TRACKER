@@ -213,14 +213,20 @@ function deselectUser()       { selectedUserId = null;   renderUsersPanel(); }
 
 async function searchUsers() {
     userKeyword = document.getElementById('user-keyword')?.value.trim() ?? '';
-    users = await requestJson(`/admin/users/data?keyword=${encodeURIComponent(userKeyword)}`);
-    renderUsersPanel();
+    try {
+        users = await requestJson(`/admin/users/data?keyword=${encodeURIComponent(userKeyword)}`);
+        renderUsersPanel();
+        Toast.info('조회되었습니다.', `총 ${users.length}건`);
+    } catch(e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 async function resetUserSearch() {
     userKeyword = '';
-    users = await requestJson('/admin/users/data');
-    renderUsersPanel();
+    try {
+        users = await requestJson('/admin/users/data');
+        renderUsersPanel();
+        Toast.info('초기화되었습니다.', `총 ${users.length}건`);
+    } catch(e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 async function toggleUser(userId) {
@@ -229,7 +235,8 @@ async function toggleUser(userId) {
         users = users.map(u => u.userId === userId ? updated : u);
         renderUsersPanel();
         refreshStats();
-    } catch(e) { alert(e.message); }
+        Toast.success('상태가 변경되었습니다.');
+    } catch(e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 // ── 역할 선택 ─────────────────────────────────────────────────────
@@ -269,7 +276,8 @@ async function confirmAddUser() {
         closeModal('modal-user-add');
         renderUsersPanel();
         refreshStats();
-    } catch(e) { alert(e.message); }
+        Toast.success('추가되었습니다.');
+    } catch(e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 function openRoleChange() {
@@ -303,7 +311,8 @@ async function confirmRoleChange() {
         users = users.map(u => u.userId === selectedUserId ? updated : u);
         closeModal('modal-role-change');
         renderUsersPanel();
-    } catch(e) { alert(e.message); }
+        Toast.success('수정되었습니다.');
+    } catch(e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 function openPwReset() {
@@ -322,7 +331,8 @@ async function confirmPwReset() {
     try {
         await requestJson(`/admin/users/${selectedUserId}/password-reset`, { method: 'POST' });
         closeModal('modal-pw-reset');
-    } catch(e) { alert(e.message); }
+        Toast.success('비밀번호가 초기화되었습니다.');
+    } catch(e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 function openUserDelete() {
@@ -347,7 +357,8 @@ async function confirmDeleteUser() {
         closeModal('modal-user-delete');
         renderUsersPanel();
         refreshStats();
-    } catch(e) { alert(e.message); }
+        Toast.delete('삭제되었습니다.');
+    } catch(e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 // ── 초기화 ───────────────────────────────────────────────────────

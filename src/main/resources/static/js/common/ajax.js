@@ -29,9 +29,21 @@ async function requestJson(url, opts = {}) {
     if (method !== 'GET') headers['X-XSRF-TOKEN'] = getCsrfToken();
 
     const res = await fetch(url, { ...opts, headers });
-    if (!res.ok) {
-        const msg = await res.text().catch(() => res.statusText);
-        throw new Error(msg || res.statusText);
-    }
+    if (!res.ok) throw new Error(await errorMessage(res));
     return res.status === 204 ? null : res.json();
+}
+
+/**
+ * 오류 응답에서 사용자에게 보여줄 메시지만 뽑는다.
+ * 서버는 { success, data, message } 형태로 내려주므로 본문을 그대로 쓰면 JSON이 노출된다.
+ * @param {Response} res
+ * @returns {Promise<string>}
+ */
+async function errorMessage(res) {
+    const body = await res.text().catch(() => '');
+    try {
+        return JSON.parse(body).message || res.statusText;
+    } catch {
+        return body || res.statusText;
+    }
 }

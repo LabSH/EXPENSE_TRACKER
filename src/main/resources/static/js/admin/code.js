@@ -30,7 +30,7 @@ async function reloadGroups() {
     const list = document.getElementById('group-list');
     if (groups.length === 0) {
         list.innerHTML = '<p class="py-8 text-center text-sm text-ink-muted">그룹이 없어요</p>';
-        return;
+        return 0;
     }
     list.innerHTML = groups.map((g, i) => {
         const border = i < groups.length - 1 ? 'border-b border-admin-border' : '';
@@ -55,6 +55,18 @@ async function reloadGroups() {
             </div>`;
     }).join('');
     bindGroupHover();
+    return groups.length;
+}
+
+/**
+ * 그룹명 검색 (검색 버튼·Enter 전용).
+ * 등록·수정·삭제 후 목록 갱신은 토스트가 겹치지 않도록 reloadGroups()를 직접 호출한다.
+ */
+async function searchGroups() {
+    try {
+        const count = await reloadGroups();
+        Toast.info('조회되었습니다.', `총 ${count}건`);
+    } catch (e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 function bindGroupHover() {
@@ -64,9 +76,12 @@ function bindGroupHover() {
     });
 }
 
-function resetGroupSearch() {
+async function resetGroupSearch() {
     document.getElementById('group-keyword').value = '';
-    reloadGroups();
+    try {
+        const count = await reloadGroups();
+        Toast.info('초기화되었습니다.', `총 ${count}건`);
+    } catch (e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 function escQ(s) { return String(s).replace(/'/g, "\\'"); }
@@ -145,7 +160,8 @@ async function confirmAddGroup() {
         await requestJson('/admin/code/groups', { method: 'POST', body: JSON.stringify({ groupId, groupNm }) });
         closeModal('modal-add-group');
         await reloadGroups();
-    } catch (e) { alert(e.message); }
+        Toast.success('추가되었습니다.');
+    } catch (e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 function openEditGroup(groupId, groupNm) {
@@ -164,7 +180,8 @@ async function confirmEditGroup() {
         closeModal('modal-edit-group');
         if (codeSelectedGroup === groupId) document.getElementById('item-panel-title').textContent = groupNm;
         await reloadGroups();
-    } catch (e) { alert(e.message); }
+        Toast.success('수정되었습니다.');
+    } catch (e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 function openDeleteGroup(groupId, groupNm) {
@@ -187,7 +204,8 @@ async function confirmDeleteGroup(groupId) {
                 '<p class="py-8 text-center text-sm text-ink-muted">그룹이 삭제됐어요</p>';
         }
         await reloadGroups();
-    } catch (e) { alert(e.message); }
+        Toast.delete('삭제되었습니다.');
+    } catch (e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 // ── item CRUD ────────────────────────────────────────────────────
@@ -246,7 +264,8 @@ async function confirmAddItem() {
         closeModal('modal-item');
         await reloadItems();
         await reloadGroups();
-    } catch (e) { alert(e.message); }
+        Toast.success('추가되었습니다.');
+    } catch (e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 async function confirmEditItem() {
@@ -260,7 +279,8 @@ async function confirmEditItem() {
         });
         closeModal('modal-item');
         await reloadItems();
-    } catch (e) { alert(e.message); }
+        Toast.success('수정되었습니다.');
+    } catch (e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 function openDeleteItem(codeId, codeNm) {
@@ -275,7 +295,8 @@ async function confirmDeleteItem(codeId) {
         closeModal('modal-delete-item');
         await reloadItems();
         await reloadGroups();
-    } catch (e) { alert(e.message); }
+        Toast.delete('삭제되었습니다.');
+    } catch (e) { Toast.error('에러가 발생하였습니다.', e.message); }
 }
 
 // ── init ─────────────────────────────────────────────────────────
