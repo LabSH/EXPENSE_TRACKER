@@ -2,6 +2,7 @@ package com.expenseTracker.fixedexpense.controller;
 
 import com.expenseTracker.fixedexpense.dto.AddFixedExpenseRequest;
 import com.expenseTracker.fixedexpense.dto.FixedExpenseResponse;
+import com.expenseTracker.fixedexpense.dto.FixedExpenseUpcomingResponse;
 import com.expenseTracker.fixedexpense.facade.FixedExpenseFacade;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -26,7 +27,7 @@ public class FixedExpenseController {
         if (!isHtmxRequest(request)) return "redirect:/";
 
         model.addAttribute("fixedExpenses", fixedExpenseFacade.findMyFixedExpenses(auth.getName()));
-        model.addAttribute("paymentMethods", fixedExpenseFacade.findPaymentMethods());
+        model.addAttribute("accountOptions", fixedExpenseFacade.findAccountOptions(auth.getName()));
         model.addAttribute("expenseCycles", fixedExpenseFacade.findExpenseCycles());
         model.addAttribute("categories", fixedExpenseFacade.findCategories());
         model.addAttribute("upcoming", fixedExpenseFacade.findUpcoming(auth.getName()));
@@ -56,14 +57,24 @@ public class FixedExpenseController {
         fixedExpenseFacade.deleteFixedExpense(auth.getName(), id);
     }
 
-    /** 키워드/결제수단/지출주기 조건으로 고정지출 조회 (조건 없으면 전체 목록) */
+    /** 고정지출 우측 패널 데이터(이번 달 요약 + 다가오는 지출 목록) 조회 — 목록과 동일한 검색 조건 적용 */
+    @GetMapping("/fixed-expense/upcoming")
+    @ResponseBody
+    public FixedExpenseUpcomingResponse upcoming(@RequestParam(defaultValue = "") String keyword,
+                                                 @RequestParam(required = false) Long accountId,
+                                                 @RequestParam(defaultValue = "") String expenseCycleCd,
+                                                 Authentication auth) {
+        return fixedExpenseFacade.findUpcoming(auth.getName(), keyword, accountId, expenseCycleCd);
+    }
+
+    /** 키워드/계좌/지출주기 조건으로 고정지출 조회 (조건 없으면 전체 목록) */
     @GetMapping("/fixed-expense/data")
     @ResponseBody
     public List<FixedExpenseResponse> search(@RequestParam(defaultValue = "") String keyword,
-                                             @RequestParam(defaultValue = "") String paymentMethodCd,
+                                             @RequestParam(required = false) Long accountId,
                                              @RequestParam(defaultValue = "") String expenseCycleCd,
                                              Authentication auth) {
-        return fixedExpenseFacade.searchFixedExpenses(auth.getName(), keyword, paymentMethodCd, expenseCycleCd);
+        return fixedExpenseFacade.searchFixedExpenses(auth.getName(), keyword, accountId, expenseCycleCd);
     }
 
     /** HTMX 요청 여부 판별 */

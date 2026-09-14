@@ -349,12 +349,11 @@ function openModal() {
     document.getElementById('amount-preview').classList.add('hidden');
     document.getElementById('modal-date').value = new Date().toISOString().slice(0, 10);
     setModalType('expense');
-    document.getElementById('add-modal').classList.remove('hidden');
-    document.getElementById('add-modal').classList.add('anim-fadeIn');
+    Modal.open('add-modal');
 }
 
 function closeModal() {
-    document.getElementById('add-modal').classList.add('hidden');
+    Modal.close('add-modal');
 }
 
 function setModalType(type) {

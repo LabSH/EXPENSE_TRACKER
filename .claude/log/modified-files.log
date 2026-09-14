@@ -1213,3 +1213,534 @@
 [2026-09-03 00:24:24] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\admin\logs.js
   변경전: // ── 로그 검색 / 렌더 ──────────────────────────────────────────
   변경후: // ── 로그 검색 / 렌더 ──────────────────────────────────────────
+[2026-09-06 21:11:34] [session:8bf2eba5-b1bd-40f0-b70b-2cf506d4e125] Write: D:\workspace\expenseTracker\src\main\resources\static\js\common\loading.js
+  변경전: 
+  변경후: 
+[2026-09-06 23:45:17] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\controller\FixedExpenseController.java
+  변경전: import com.expenseTracker.fixedexpense.dto.AddFixedExpenseRequest;
+  변경후: import com.expenseTracker.fixedexpense.dto.AddFixedExpenseRequest;
+[2026-09-06 23:45:23] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\controller\FixedExpenseController.java
+  변경전:     /** 키워드/결제수단/지출주기 조건으로 고정지출 조회 (조건 없으면 전체 목록) */
+  변경후:     /** 고정지출 우측 패널 데이터(이번 달 요약 + 다가오는 지출 목록) 조회 */
+[2026-09-06 23:45:35] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         async function resetFixedExpenseFilter() {
+  변경후:         async function resetFixedExpenseFilter() {
+[2026-09-06 23:45:40] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 await feApi(`/fixed-expense/${feDeletingId}`, { method: 'DELETE' });
+  변경후:                 await feApi(`/fixed-expense/${feDeletingId}`, { method: 'DELETE' });
+[2026-09-06 23:45:46] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 // htmx가 #main-content를 갈아끼워도 토스트 컨테이너는 body 직속이라 살아남는다
+  변경후:                 Toast.success(feEditingId ? '수정되었습니다.' : '추가되었습니다.');
+[2026-09-06 23:53:56] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:     <script>
+  변경후:     <script>
+[2026-09-06 23:54:04] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         document.getElementById('fe-file-input').addEventListener('change', onFeFileInputChange);
+  변경후:         document.getElementById('fe-file-input').addEventListener('change', onFeFileInputChange);
+[2026-09-07 00:18:15] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\DATABASE\DDL\TB_CO_ACCOUNT.sql
+  변경전: 
+  변경후: 
+[2026-09-07 00:18:23] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\DATABASE\DDL\TB_EX_FIXED_EXPENSE.sql
+  변경전:   FIXED_EXPENSE_ID  BIGSERIAL      NOT NULL,
+  변경후:   FIXED_EXPENSE_ID  BIGSERIAL      NOT NULL,
+[2026-09-07 00:18:30] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\DATABASE\DDL\TB_EX_FIXED_EXPENSE.sql
+  변경전: COMMENT ON COLUMN TB_EX_FIXED_EXPENSE.USER_ID           IS '사용자ID';
+  변경후: COMMENT ON COLUMN TB_EX_FIXED_EXPENSE.USER_ID           IS '사용자ID';
+[2026-09-07 00:18:43] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\DATABASE\DDL\TB_EX_FIXED_EXPENSE.sql
+  변경전: -- ALTER TABLE TB_EX_FIXED_EXPENSE ADD COLUMN IF NOT EXISTS END_DT DATE;
+  변경후: -- ALTER TABLE TB_EX_FIXED_EXPENSE ADD COLUMN IF NOT EXISTS END_DT DATE;
+[2026-09-07 00:18:51] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\DATABASE\DML\TB_CO_CODE_ACCOUNTTYPE.sql
+  변경전: 
+  변경후: 
+[2026-09-07 00:19:17] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\DATABASE\DML\TB_CO_ACCOUNT_MIGRATION.sql
+  변경전: 
+  변경후: 
+[2026-09-07 00:19:24] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\DATABASE\DML\TB_CO_CODE_PAYMENTMETHOD_REMOVE.sql
+  변경전: 
+  변경후: 
+[2026-09-07 00:19:54] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\entity\Account.java
+  변경전: 
+  변경후: 
+[2026-09-07 00:19:59] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\repository\AccountRepository.java
+  변경전: 
+  변경후: 
+[2026-09-07 00:20:06] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\dto\AddAccountRequest.java
+  변경전: 
+  변경후: 
+[2026-09-07 00:20:11] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\dto\AccountResponse.java
+  변경전: 
+  변경후: 
+[2026-09-07 00:20:29] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\service\AccountService.java
+  변경전: 
+  변경후: 
+[2026-09-07 00:20:45] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\facade\AccountFacade.java
+  변경전: 
+  변경후: 
+[2026-09-07 00:20:55] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\controller\AccountController.java
+  변경전: 
+  변경후: 
+[2026-09-07 00:21:12] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\entity\FixedExpense.java
+  변경전:     @Column(name = "PAYMENT_METHOD_CD", length = 30)
+  변경후:     @Column(name = "ACCOUNT_ID")
+[2026-09-07 00:21:20] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\dto\AddFixedExpenseRequest.java
+  변경전: import jakarta.validation.constraints.NotBlank;
+  변경후: import jakarta.validation.constraints.NotBlank;
+[2026-09-07 00:21:24] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\dto\FixedExpenseResponse.java
+  변경전:         Long fixedExpenseId,
+  변경후:         Long fixedExpenseId,
+[2026-09-07 00:21:29] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\dto\FixedExpenseUpcomingItemResponse.java
+  변경전:         LocalDate nextDueDt,
+  변경후:         LocalDate nextDueDt,
+[2026-09-07 00:21:39] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\repository\FixedExpenseRepository.java
+  변경전: 
+  변경후: 
+[2026-09-07 00:21:51] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전: import com.expenseTracker.code.entity.Code;
+  변경후: import com.expenseTracker.account.entity.Account;
+[2026-09-07 00:21:55] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전:     public static final String PAYMENT_METHOD_GROUP_ID = "PAYMENTMETHOD";
+  변경후:     public static final String EXPENSE_CYCLE_GROUP_ID = "EXPENSECYCLE";
+[2026-09-07 00:22:00] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전:     private final FixedExpenseRepository fixedExpenseRepository;
+  변경후:     private final FixedExpenseRepository fixedExpenseRepository;
+[2026-09-07 00:22:07] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전:     /** 키워드/결제수단/지출주기 조건으로 검색 (빈 값인 조건은 무시) */
+  변경후:     /** 키워드/계좌/지출주기 조건으로 검색 (빈 값인 조건은 무시) */
+[2026-09-07 00:22:25] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전:     /** FixedExpense 엔티티 목록을 결제수단·지출주기명을 채운 응답 DTO 목록으로 변환 */
+  변경후:     /** FixedExpense 엔티티 목록을 계좌·지출주기명을 채운 응답 DTO 목록으로 변환 */
+[2026-09-07 00:22:36] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전:                         fe.getMemo(),
+  변경후:                         fe.getMemo(),
+[2026-09-07 00:22:46] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전:                     return new FixedExpenseUpcomingItemResponse(
+  변경후:                     return new FixedExpenseUpcomingItemResponse(
+[2026-09-07 00:23:12] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전:     /** 종료일은 기준일(시작일)보다 빠를 수 없다 */
+  변경후:     /** 종료일은 기준일(시작일)보다 빠를 수 없다 */
+[2026-09-07 00:23:20] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\facade\FixedExpenseFacade.java
+  변경전: import com.expenseTracker.attachfile.service.AttachFileService;
+  변경후: import com.expenseTracker.account.dto.AccountResponse;
+[2026-09-07 00:23:25] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\facade\FixedExpenseFacade.java
+  변경전:     private final FixedExpenseService fixedExpenseService;
+  변경후:     private final FixedExpenseService fixedExpenseService;
+[2026-09-07 00:23:30] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\facade\FixedExpenseFacade.java
+  변경전:     /** 결제수단 공통코드 목록 조회 */
+  변경후:     /** 로그인한 사용자의 계좌·카드 목록 조회 (고정지출 계좌 드롭다운용) */
+[2026-09-07 00:23:42] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\facade\FixedExpenseFacade.java
+  변경전:     /** 키워드/결제수단/지출주기 조건으로 고정지출 검색 */
+  변경후:     /** 키워드/계좌/지출주기 조건으로 고정지출 검색 */
+[2026-09-07 00:23:49] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\controller\FixedExpenseController.java
+  변경전:         model.addAttribute("fixedExpenses", fixedExpenseFacade.findMyFixedExpenses(auth.getName()));
+  변경후:         model.addAttribute("fixedExpenses", fixedExpenseFacade.findMyFixedExpenses(auth.getName()));
+[2026-09-07 00:23:57] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\controller\FixedExpenseController.java
+  변경전:     /** 키워드/결제수단/지출주기 조건으로 고정지출 조회 (조건 없으면 전체 목록) */
+  변경후:     /** 키워드/계좌/지출주기 조건으로 고정지출 조회 (조건 없으면 전체 목록) */
+[2026-09-07 00:25:01] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\setting\index.html
+  변경전:         <div class="flex flex-col gap-5 max-w-3xl">
+  변경후:         <div class="flex flex-col gap-5 max-w-3xl">
+[2026-09-07 00:25:21] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\setting\index.html
+  변경전:     </main>
+  변경후:     </main>
+[2026-09-07 00:26:43] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전: 
+  변경후: 
+[2026-09-07 00:27:24] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             <!-- 필터 바 -->
+  변경후:             <!-- 필터 바 -->
+[2026-09-07 00:27:31] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             <div class="grid px-6 py-3 bg-cream-subtle border-b border-cream-border text-xs font-semibold text-ink-muted uppercase tracking-wide" style="grid-template-columns:1fr 140px 120px 130px 70px">
+  변경후:             <div class="grid px-6 py-3 bg-cream-subtle border-b border-cream-border text-xs font-semibold text-ink-muted uppercase tracking-wide" style="grid-template-columns:1fr 140px 120px 130px 70px">
+[2026-09-07 00:27:45] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         <span class="text-sm text-ink-soft">${feEscapeHtml(fe.paymentMethodNm) || '-'}</span>
+  변경후:                         <span class="flex items-center gap-1.5 min-w-0">
+[2026-09-07 00:27:59] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <span class="text-ink-muted">결제수단</span>
+  변경후:                     <span class="text-ink-muted">계좌·카드</span>
+[2026-09-07 00:28:33] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             <div class="px-7 py-5 flex flex-col gap-4">
+  변경후:             <div class="px-7 py-5 flex flex-col gap-4">
+[2026-09-07 00:28:56] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         async function searchFixedExpenses() {
+  변경후:         /**
+[2026-09-07 00:29:05] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         async function refreshFixedExpenses() {
+  변경후:         async function refreshFixedExpenses() {
+[2026-09-07 00:29:32] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             box.innerHTML = list.map((fe, i) => {
+  변경후:             box.innerHTML = list.map((fe, i) => {
+[2026-09-07 00:29:45] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             document.getElementById('fe-view-content').textContent = fe.content || '-';
+  변경후:             document.getElementById('fe-view-content').textContent = fe.content || '-';
+[2026-09-07 00:29:50] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             document.getElementById('btn-submit-fixed-expense').textContent = '추가하기';
+  변경후:             document.getElementById('btn-submit-fixed-expense').textContent = '추가하기';
+[2026-09-07 00:29:56] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             document.getElementById('btn-submit-fixed-expense').textContent = '저장하기';
+  변경후:             document.getElementById('btn-submit-fixed-expense').textContent = '저장하기';
+[2026-09-07 00:30:04] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             document.getElementById('fixed-expense-modal').classList.add('hidden');
+  변경후:             document.getElementById('fixed-expense-modal').classList.add('hidden');
+[2026-09-07 00:30:13] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             const body = JSON.stringify({
+  변경후:             const body = JSON.stringify({
+[2026-09-07 00:34:49] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\controller\AccountController.java
+  변경전: import jakarta.validation.Valid;
+  변경후: import jakarta.validation.Valid;
+[2026-09-07 00:34:57] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\service\AccountService.java
+  변경전:     public static final String ACCOUNT_TYPE_GROUP_ID = "ACCOUNTTYPE";
+  변경후:     private static final String ACCOUNT_TYPE_GROUP_ID = "ACCOUNTTYPE";
+[2026-09-07 00:36:52] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:     let accounts = [];
+  변경후:     let accounts = [];
+[2026-09-07 00:36:57] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:             const style = TYPE_STYLE[a.accountTypeCd] || DEFAULT_STYLE;
+  변경후:             const style = TYPE_STYLE[a.accountTypeCd] || DEFAULT_STYLE;
+[2026-09-07 00:37:05] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:     function openAddModal() {
+  변경후:     /** 추가 모달을 초기 상태로 열고 편집 대상을 비운다 */
+[2026-09-07 00:37:10] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:     function openEditModal(id) {
+  변경후:     /** id에 해당하는 계좌 값을 채워 수정 모달을 연다 */
+[2026-09-07 00:37:16] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:     function closeModal() {
+  변경후:     /** 계좌 모달과 유형 드롭다운 패널을 닫는다 */
+[2026-09-07 00:37:21] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:     function confirmDelete(id) {
+  변경후:     /** 삭제할 계좌명을 표시하고 삭제 확인 모달을 연다 */
+[2026-09-07 00:37:26] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:     function closeDeleteModal() {
+  변경후:     /** 삭제 확인 모달을 닫고 삭제 대상을 비운다 */
+[2026-09-07 00:40:00] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\service\AccountService.java
+  변경전: import com.expenseTracker.account.dto.AccountResponse;
+  변경후: import com.expenseTracker.account.dto.AccountResponse;
+[2026-09-07 00:40:10] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\service\AccountService.java
+  변경전:     /** 로그인한 사용자의 계좌·카드 목록 조회 */
+  변경후:     /** 로그인한 사용자의 계좌·카드 목록 조회 */
+[2026-09-07 00:40:16] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\facade\FixedExpenseFacade.java
+  변경전:     /** 로그인한 사용자의 계좌·카드 목록 조회 (고정지출 계좌 드롭다운용) */
+  변경후:     /** 고정지출 계좌 드롭다운 옵션 조회 (라벨이 조립된 CodeResponse 형태) */
+[2026-09-07 00:40:24] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\facade\FixedExpenseFacade.java
+  변경전: import com.expenseTracker.account.dto.AccountResponse;
+  변경후: import com.expenseTracker.account.service.AccountService;
+[2026-09-07 00:40:29] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\controller\FixedExpenseController.java
+  변경전:         model.addAttribute("fixedExpenses", fixedExpenseFacade.findMyFixedExpenses(auth.getName()));
+  변경후:         model.addAttribute("fixedExpenses", fixedExpenseFacade.findMyFixedExpenses(auth.getName()));
+[2026-09-07 00:40:48] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             <!-- 필터 바 -->
+  변경후:             <!-- 필터 바 -->
+[2026-09-07 00:41:07] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 <div class="grid grid-cols-[1fr_auto] gap-4 items-end [&>div>div>button]:w-full">
+  변경후:                 <div class="grid grid-cols-[1fr_auto] gap-4 items-end [&>div>div>button]:w-full">
+[2026-09-07 00:41:22] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             document.getElementById('btn-submit-fixed-expense').textContent = '저장하기';
+  변경후:             document.getElementById('btn-submit-fixed-expense').textContent = '저장하기';
+[2026-09-07 00:41:28] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                                 ${manual ? `<span class="shrink-0 px-1.5 py-0.5 rounded-md bg-gold/30 text-ink-soft text-2xs-1 font-semibold">직접이체</span>` : ''}
+  변경후:                                 ${manual ? `<span class="shrink-0 px-1.5 py-0.5 rounded-md bg-cream-subtle text-ink-soft text-2xs-1 font-semibold">직접이체</span>` : ''}
+[2026-09-07 00:41:55] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\setting\index.html
+  변경전:             <!-- 계좌·카드 -->
+  변경후:             <!-- 계좌·카드 -->
+[2026-09-07 00:42:05] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\setting\index.html
+  변경전:                 <button id="btn-cancel-account" class="flex-1 py-2.5 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
+  변경후:                 <button id="btn-cancel-account" class="flex-1 py-2.5 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
+[2026-09-07 00:42:19] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:     // ACCOUNT_TYPE_CD -> 아이콘·색 자동 배정. 사용자가 색을 고르지 않는 것이 디자인 토큰 정책이다.
+  변경후:     // ACCOUNT_TYPE_CD -> 아이콘·색 자동 배정. 사용자가 색을 고르지 않는 것이 디자인 토큰 정책이다.
+[2026-09-07 00:46:34] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\DOCUMENTS\TODO.md
+  변경전: # 다음 예정 작업
+  변경후: # 다음 예정 작업
+[2026-09-07 00:46:49] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\DOCUMENTS\TODO.md
+  변경전: - **`FixedExpenseService` 분리** — 313줄로 커짐. 주기 계산 로직을 별도 클래스로 뺄 수 있으나, 수입 도메인에도 필요해지는 시점이 적기
+  변경후: - **`FixedExpenseService` 분리** — 313줄로 커짐. 주기 계산 로직을 별도 클래스로 뺄 수 있으나, 수입 도메인에도 필요해지는 시점이 적기
+[2026-09-08 23:37:50] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fragments\dropdown.html
+  변경전: <!--
+  변경후: <!--
+[2026-09-08 23:37:58] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fragments\dropdown.html
+  변경전:             <button type="button"
+  변경후:             <button type="button"
+[2026-09-08 23:38:04] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\common\dropdown.js
+  변경전:     function reset(id) {
+  변경후:     function reset(id) {
+[2026-09-08 23:38:09] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\admin\logs\index.html
+  변경전: <div th:replace="~{fragments/dropdown :: dropdown('level', ${selectedLevelName}, ${codes['LOGLEVEL']}, 'admin')}"></div>
+  변경후: <div th:replace="~{fragments/dropdown :: dropdown('level', ${selectedLevelName}, ${codes['LOGLEVEL']}, 'admin', true)}"></div>
+[2026-09-08 23:38:14] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 <div th:replace="~{fragments/dropdown :: dropdown('fe-account-filter', '계좌', ${accountOptions}, 'cream')}"></div>
+  변경후:                 <div th:replace="~{fragments/dropdown :: dropdown('fe-account-filter', '계좌', ${accountOptions}, 'cream', true)}"></div>
+[2026-09-08 23:38:19] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         <div th:replace="~{fragments/dropdown :: dropdown('fe-account-dd', '선택', ${accountOptions}, 'cream')}"></div>
+  변경후:                         <div th:replace="~{fragments/dropdown :: dropdown('fe-account-dd', '선택', ${accountOptions}, 'cream', false)}"></div>
+[2026-09-08 23:38:23] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-dd', '선택', ${expenseCycles}, 'cream')}"></div>
+  변경후:                         <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-dd', '선택', ${expenseCycles}, 'cream', false)}"></div>
+[2026-09-08 23:38:27] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         <div th:replace="~{fragments/dropdown :: dropdown('fe-category-dd', '선택', ${categories}, 'cream')}"></div>
+  변경후:                         <div th:replace="~{fragments/dropdown :: dropdown('fe-category-dd', '선택', ${categories}, 'cream', false)}"></div>
+[2026-09-08 23:38:32] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\setting\index.html
+  변경전:                     <div th:replace="~{fragments/dropdown :: dropdown('account-type-dd', '선택', ${codes['ACCOUNTTYPE']}, 'cream')}"></div>
+  변경후:                     <div th:replace="~{fragments/dropdown :: dropdown('account-type-dd', '선택', ${codes['ACCOUNTTYPE']}, 'cream', false)}"></div>
+[2026-09-08 23:42:00] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fragments\dropdown.html
+  변경전:         <span th:id="${dropId + '-label'}" th:text="${placeholder}">선택</span>
+  변경후:         <span th:id="${dropId + '-label'}" th:text="${placeholder}">선택</span>
+[2026-09-08 23:42:14] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\src\main\resources\static\js\common\dropdown.js
+  변경전: 
+  변경후: 
+[2026-09-08 23:42:42] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fragments\dropdown.html
+  변경전:       includeAll  — 첫 옵션 '전체'(코드 빈 값) 노출 여부.
+  변경후:       includeAll  — 첫 옵션 '전체'(코드 빈 값) 노출 여부.
+[2026-09-08 23:54:44] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\DATABASE\DDL\TB_CO_ACCOUNT.sql
+  변경전:   ACCOUNT_NM      VARCHAR(50) NOT NULL,
+  변경후:   ACCOUNT_NM      VARCHAR(50) NOT NULL,
+[2026-09-08 23:54:49] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\DATABASE\DDL\TB_CO_ACCOUNT.sql
+  변경전: COMMENT ON COLUMN TB_CO_ACCOUNT.ISSUER_NM       IS '발급기관명 (국민, 신한 등)';
+  변경후: COMMENT ON COLUMN TB_CO_ACCOUNT.ISSUER_NM       IS '발급기관명 (국민, 신한 등)';
+[2026-09-08 23:54:54] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\entity\Account.java
+  변경전:     @Column(name = "ISSUER_NM", length = 50)
+  변경후:     @Column(name = "ISSUER_NM", length = 50)
+[2026-09-08 23:55:03] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\dto\AddAccountRequest.java
+  변경전: import jakarta.validation.constraints.NotBlank;
+  변경후: import jakarta.validation.constraints.NotBlank;
+[2026-09-08 23:55:08] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\dto\AccountResponse.java
+  변경전:         String accountNm,
+  변경후:         String accountNm,
+[2026-09-08 23:55:28] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\service\AccountService.java
+  변경전:     /**
+  변경후:     /**
+[2026-09-08 23:55:33] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\service\AccountService.java
+  변경전:                         a.getAccountNm(),
+  변경후:                         a.getAccountNm(),
+[2026-09-08 23:55:39] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\account\facade\AccountFacade.java
+  변경전: req.accountTypeCd(), req.accountNm(), req.issuerNm(), req.last4());
+  변경후: req.accountTypeCd(), req.accountNm(), req.issuerNm(), req.memo());
+[2026-09-08 23:55:50] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\DATABASE\DML\TB_CO_ACCOUNT_MIGRATION.sql
+  변경전: -- 1) 사용자별 기본 계좌 생성 (사용중인 고정지출이 실제로 쓰던 결제수단 유형에 대해서만)
+  변경후: -- 1) 사용자별 기본 계좌 생성 (사용중인 고정지출이 실제로 쓰던 결제수단 유형에 대해서만)
+[2026-09-08 23:56:04] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\setting\index.html
+  변경전:                 <div class="grid grid-cols-[1fr_120px] gap-3">
+  변경후:                 <div>
+[2026-09-08 23:56:15] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:     let accounts = [];
+  변경후:     let accounts = [];
+[2026-09-08 23:56:20] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:             const style = TYPE_STYLE[a.accountTypeCd] || DEFAULT_STYLE;
+  변경후:             const style = TYPE_STYLE[a.accountTypeCd] || DEFAULT_STYLE;
+[2026-09-08 23:56:25] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:         document.getElementById('account-nm').value = '';
+  변경후:         document.getElementById('account-nm').value = '';
+[2026-09-08 23:56:30] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:         document.getElementById('account-nm').value = account.accountNm || '';
+  변경후:         document.getElementById('account-nm').value = account.accountNm || '';
+[2026-09-08 23:56:37] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:         const accountTypeCd = Dropdown.getValue('account-type-dd');
+  변경후:         const accountTypeCd = Dropdown.getValue('account-type-dd');
+[2026-09-08 23:56:42] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:     document.getElementById('account-last4').addEventListener('input', e => {
+  변경후:     document.getElementById('btn-open-account-modal').addEventListener('click', openAddModal);
+[2026-09-08 23:57:07] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\DOCUMENTS\TODO.md
+  변경전: ### 미검증 (DB 반영 + 구동 후 확인)
+  변경후: ### 개인정보 처리방침 반영
+[2026-09-08 23:58:49] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <label class="flex items-center gap-2 pb-1.5 cursor-pointer select-none">
+  변경후:                     <label class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-cream-border bg-cream cursor-pointer select-none whitespace-nowrap transition-colors hover:bg-cream-subtle has-[:checked]:border-sage has-[:checked]:bg-sage-light">
+[2026-09-09 00:03:08] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <label class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-cream-border bg-cream cursor-pointer select-none whitespace-nowrap transition-colors hover:bg-cream-subtle has-[:checked]:border-sage has-[:checked]:bg-sage-light">
+  변경후:                     <!-- 자동이체: 왼쪽 계좌 드롭다운(base 34px, text-sm)과 높이를 맞춰야 하는데
+[2026-09-09 00:11:16] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <!-- 자동이체: 왼쪽 계좌 드롭다운(base 34px, text-sm)과 높이를 맞춰야 하는데
+  변경후:                     <!-- 자동이체: 숨긴 체크박스 + 커스텀 박스. 계좌 드롭다운 옆이지만 pill 없이 가볍게 둔다 -->
+[2026-09-09 00:13:16] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                             <svg class="w-3 h-3 opacity-0 scale-50 transition-all peer-checked:opacity-100 peer-checked:scale-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  변경후:                             <svg class="w-3 h-3 opacity-0 scale-50 transition-all group-has-[:checked]:opacity-100 group-has-[:checked]:scale-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+[2026-09-09 00:14:59] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <!-- 자동이체: 숨긴 체크박스 + 커스텀 박스. 계좌 드롭다운 옆이지만 pill 없이 가볍게 둔다 -->
+  변경후:                     <!-- 자동이체: 숨긴 체크박스 + 커스텀 박스. pill 없이 가볍게 두되,
+[2026-09-09 00:18:13] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <!-- 자동이체: 숨긴 체크박스 + 커스텀 박스. pill 없이 가볍게 두되,
+  변경후:                     <!-- 자동이체: 체크 시 pill 전체가 sage-light로 틴트(목록의 '자동' 배지와 호응).
+[2026-09-09 00:19:31] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fragments\dropdown.html
+  변경전:         <span th:id="${dropId + '-label'}" th:text="${placeholder}">선택</span>
+  변경후:         <span th:id="${dropId + '-label'}" th:text="${placeholder}" class="truncate min-w-0">선택</span>
+[2026-09-09 00:19:41] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전: <th:block th:fragment="content">
+  변경후: <th:block th:fragment="content">
+[2026-09-09 00:27:55] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 <div class="grid grid-cols-[1fr_auto] gap-4 items-end [&>div>div>button]:w-full">
+  변경후:                 <div>
+[2026-09-09 00:29:52] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 <div>
+  변경후:                 <div class="grid grid-cols-[1fr_auto] gap-4 items-end [&>div>div>button]:w-full">
+[2026-09-09 00:31:34] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         <label class="group flex items-center gap-2 px-3 py-2 rounded-xl border-hairline border-cream-border bg-cream-surface cursor-pointer select-none whitespace-nowrap transition-colors hover:border-sage-mid has-[:checked]:border-sage has-[:checked]:bg-sage-light has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-sage/15">
+  변경후:                         <!-- 패딩·보더·글자크기를 옆 드롭다운 버튼과 동일하게 맞춰 높이(34px)를 일치시킨다 -->
+[2026-09-09 00:33:31] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         <!-- 패딩·보더·글자크기를 옆 드롭다운 버튼과 동일하게 맞춰 높이(34px)를 일치시킨다 -->
+  변경후:                         <!-- 패딩·보더는 옆 드롭다운 버튼과 동일. 글자는 다른 폼 라벨과 같은 text-xs,
+[2026-09-09 00:37:23] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         // Dropdown·CalendarPicker에 변경 콜백이 없어 모달 클릭 이후 다음 틱에 다시 계산한다.
+  변경후:         // Dropdown·CalendarPicker의 팝업은 body로 옮겨져 모달 click 이벤트에 안 잡힌다.
+[2026-09-09 00:44:12] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Write: D:\workspace\expenseTracker\src\main\resources\static\js\common\modal.js
+  변경전: 
+  변경후: 
+[2026-09-09 00:44:21] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\static\css\input.css
+  변경전: .anim-toastIn  { animation: toastIn .38s cubic-bezier(.22, 1, .36, 1) both }
+  변경후: .anim-toastIn  { animation: toastIn .38s cubic-bezier(.22, 1, .36, 1) both }
+[2026-09-09 00:44:25] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\config\config.html
+  변경전:     <script th:src="@{/js/common/toast.js}"></script>
+  변경후:     <script th:src="@{/js/common/toast.js}"></script>
+[2026-09-09 00:44:32] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\admin\code.js
+  변경전: // ── modal util ───────────────────────────────────────────────────
+  변경후: // ── modal util ───────────────────────────────────────────────────
+[2026-09-09 00:44:38] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\admin\users.js
+  변경전: // ── 모달 유틸 ─────────────────────────────────────────────────────
+  변경후: // ── 모달 유틸 ─────────────────────────────────────────────────────
+[2026-09-09 00:44:43] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\admin\logs.js
+  변경전:     document.getElementById('detail-error-wrap').classList.toggle('hidden', !log.errorMsg);
+  변경후:     document.getElementById('detail-error-wrap').classList.toggle('hidden', !log.errorMsg);
+[2026-09-09 00:44:48] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\dashboard\index.js
+  변경전:     setModalType('expense');
+  변경후:     setModalType('expense');
+[2026-09-09 00:44:53] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:         document.getElementById('account-memo').value = '';
+  변경후:         document.getElementById('account-memo').value = '';
+[2026-09-09 00:44:59] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:         document.getElementById('account-memo').value = account.memo || '';
+  변경후:         document.getElementById('account-memo').value = account.memo || '';
+[2026-09-09 00:45:04] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\setting\account.js
+  변경전:         document.getElementById('account-delete-name').textContent = account.accountNm || '';
+  변경후:         document.getElementById('account-delete-name').textContent = account.accountNm || '';
+[2026-09-09 00:45:09] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             document.getElementById('fe-view-file-list').innerHTML = '';
+  변경후:             document.getElementById('fe-view-file-list').innerHTML = '';
+[2026-09-09 00:45:13] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         function closeFixedExpenseViewModal() {
+  변경후:         function closeFixedExpenseViewModal() {
+[2026-09-09 00:45:17] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             renderFeFileList();
+  변경후:             renderFeFileList();
+[2026-09-09 00:45:21] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             renderFeFileList();
+  변경후:             renderFeFileList();
+[2026-09-09 00:45:26] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         function closeFixedExpenseModal() {
+  변경후:         function closeFixedExpenseModal() {
+[2026-09-09 00:45:32] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             feDeletingId = fe.fixedExpenseId;
+  변경후:             feDeletingId = fe.fixedExpenseId;
+[2026-09-09 00:49:17] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Write: D:\workspace\expenseTracker\.claude\report\2026-09-09_00-48.md
+  변경전: 
+  변경후: 
+[2026-09-09 23:31:49] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         function feFormatFileSize(bytes) {
+  변경후:         function feFormatFileSize(bytes) {
+[2026-09-09 23:32:00] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         function renderFeFileList() {
+  변경후:         function renderFeFileList() {
+[2026-09-09 23:32:12] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         document.getElementById('fe-view-file-list').innerHTML = files.map(f => `
+  변경후:                         document.getElementById('fe-view-file-list').innerHTML = files.map(f => `
+[2026-09-09 23:32:23] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         document.getElementById('fe-file-input').addEventListener('change', onFeFileInputChange);
+  변경후:         document.getElementById('fe-file-input').addEventListener('change', onFeFileInputChange);
+[2026-09-09 23:32:47] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             <!-- 본문 -->
+  변경후:             <!-- 본문 — 한 행에 2개씩, 라벨(작게)+값 스택으로 높이를 낮춘다 -->
+[2026-09-09 23:33:27] [session:901d6498-2362-4355-a275-fad48f060461] Write: D:\workspace\expenseTracker\src\main\resources\static\js\common\file.js
+  변경전: 
+  변경후: 
+[2026-09-09 23:33:31] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\config\config.html
+  변경전:     <script th:src="@{/js/common/toast.js}"></script>
+  변경후:     <script th:src="@{/js/common/toast.js}"></script>
+[2026-09-09 23:33:43] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         /** 첨부파일을 blob 으로 받아 내려받는다. 서버가 attachment 로 응답하지만 파일명은 목록의 원본명을 쓴다. */
+  변경후: 
+[2026-09-09 23:33:49] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         // 파일 목록은 innerHTML 로 다시 그려지므로 컨테이너에 위임 바인딩한다
+  변경후:         // 파일 행 클릭 시 다운로드 (공통 AttachFile). 위임이라 목록 재렌더에도 유지된다
+[2026-09-09 23:37:34] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         var feFileGroupId = '';
+  변경후:         var feFileGroupId = '';
+[2026-09-09 23:37:41] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 const uploaded = await res.json();
+  변경후:                 const uploaded = await res.json();
+[2026-09-09 23:37:52] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         async function removeFeFile(fileId) {
+  변경후:         /** 화면에서만 제거하고 삭제를 스테이징한다. 실제 삭제는 저장 시점(commitFeFileChanges). */
+[2026-09-09 23:38:29] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         function openFixedExpenseModal() {
+  변경후:         function openFixedExpenseModal() {
+[2026-09-09 23:38:34] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             feEditingId = fe.fixedExpenseId;
+  변경후:             feEditingId = fe.fixedExpenseId;
+[2026-09-09 23:38:43] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         function closeFixedExpenseModal() {
+  변경후:         function closeFixedExpenseModal() {
+[2026-09-09 23:38:48] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                 Toast.success(feEditingId ? '수정되었습니다.' : '추가되었습니다.');
+  변경후:                 await commitFeFileChanges();
+[2026-09-09 23:39:20] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         /** 화면에서만 제거하고 삭제를 스테이징한다. 실제 삭제는 저장 시점(commitFeFileChanges). */
+  변경후:         /**
+[2026-09-09 23:42:25] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\common\ajax.js
+  변경전: /**
+  변경후: /** 서버 메시지를 못 쓸 때 보여줄 일반 문구 */
+[2026-09-09 23:42:38] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         /**
+  변경후:         /**
+[2026-09-09 23:45:49] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         /** 파일ID 목록을 병렬 삭제 (best-effort). 저장 후 정리, 취소 시 세션 업로드 정리에 쓴다. */
+  변경후:         /** 파일ID 목록을 병렬 삭제 (best-effort). 실패한 건 수를 반환한다. */
+[2026-09-09 23:45:58] [session:901d6498-2362-4355-a275-fad48f060461] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\common\file.js
+  변경전:             document.body.appendChild(a);
+  변경후:             document.body.appendChild(a);
+[2026-09-09 23:46:37] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Write: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\common\exception\BusinessException.java
+  변경전: 
+  변경후: 
+[2026-09-09 23:46:45] [session:8285a0b0-5b49-4a4d-9eef-613696a74fdb] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\common\layout.js
+  변경전: let sidebarOpen = true;
+  변경후: let currentActiveNav = 'dashboard';
+[2026-09-09 23:46:51] [session:8285a0b0-5b49-4a4d-9eef-613696a74fdb] Edit: D:\workspace\expenseTracker\src\main\resources\static\js\common\admin-nav.js
+  변경전:         var btn = document.getElementById('sidebar-toggle');
+  변경후:         var btn = document.getElementById('sidebar-toggle');
+[2026-09-09 23:47:03] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Write: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\common\advice\GlobalExceptionHandler.java
+  변경전: 
+  변경후: 
+[2026-09-09 23:48:22] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Write: D:\workspace\expenseTracker\src\test\java\com\expenseTracker\TempExceptionHandlerTest.java
+  변경전: 
+  변경후: 
+[2026-09-09 23:48:56] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\test\java\com\expenseTracker\common\advice\GlobalExceptionHandlerTest.java
+  변경전: package com.expenseTracker.common.advice;
+  변경후: package com.expenseTracker.common.advice;
+[2026-09-09 23:49:01] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\test\java\com\expenseTracker\common\advice\GlobalExceptionHandlerTest.java
+  변경전: class GlobalExceptionHandlerTest {
+  변경후: /** Ajax 오류 응답에 내부 정보(SQL/JPQL 등)가 섞이지 않는지, 페이지 예외 흐름이 유지되는지 검증 */
+[2026-09-09 23:51:26] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:             const amountVal = document.getElementById('fe-amount').value.replace(/,/g, '');
+  변경후:             const amountVal = document.getElementById('fe-amount').value.replace(/,/g, '');
+[2026-09-09 23:51:36] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         <label class="block text-xs font-medium text-ink-soft mb-1.5">계좌·카드</label>
+  변경후:                         <label class="block text-xs font-medium text-ink-soft mb-1.5">계좌·카드 <span class="text-blush">*</span></label>
+[2026-09-09 23:51:39] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         <label class="block text-xs font-medium text-ink-soft mb-1.5">지출주기</label>
+  변경후:                         <label class="block text-xs font-medium text-ink-soft mb-1.5">지출주기 <span class="text-blush">*</span></label>
+[2026-09-09 23:51:44] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                         <label class="block text-xs font-medium text-ink-soft mb-1.5">카테고리</label>
+  변경후:                         <label class="block text-xs font-medium text-ink-soft mb-1.5">카테고리 <span class="text-blush">*</span></label>
+[2026-09-09 23:51:47] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <label class="block text-xs font-medium text-ink-soft mb-1.5">금액</label>
+  변경후:                     <label class="block text-xs font-medium text-ink-soft mb-1.5">금액 <span class="text-blush">*</span></label>
+[2026-09-09 23:51:51] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:                     <label class="block text-xs font-medium text-ink-soft mb-1.5">내용</label>
+  변경후:                     <label class="block text-xs font-medium text-ink-soft mb-1.5">내용 <span class="text-blush">*</span></label>
+[2026-09-09 23:53:07] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\service\FixedExpenseService.java
+  변경전:     /** 고정지출 화면 우측 패널 데이터(이번 달 요약 + 다가오는 지출 목록) 조회 */
+  변경후:     /**
+[2026-09-09 23:53:14] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\facade\FixedExpenseFacade.java
+  변경전:     /** 고정지출 화면 우측 패널 데이터(이번 달 요약 + 다가오는 지출 목록) 조회 */
+  변경후:     /** 고정지출 화면 우측 패널 데이터(전체 기준) — 최초 페이지 로드용 */
+[2026-09-09 23:53:20] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\java\com\expenseTracker\fixedexpense\controller\FixedExpenseController.java
+  변경전:     /** 고정지출 우측 패널 데이터(이번 달 요약 + 다가오는 지출 목록) 조회 */
+  변경후:     /** 고정지출 우측 패널 데이터(이번 달 요약 + 다가오는 지출 목록) 조회 — 목록과 동일한 검색 조건 적용 */
+[2026-09-09 23:53:40] [session:b7bbd5e3-5742-44b4-a2d6-dcf315d40562] Edit: D:\workspace\expenseTracker\src\main\resources\templates\fixed-expense\index.html
+  변경전:         async function searchFixedExpenses() {
+  변경후:         /**

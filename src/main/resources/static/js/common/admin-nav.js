@@ -37,12 +37,13 @@
     /* 사이드바 토글 — 콘텐츠 교체 후에도 새 버튼에 재바인딩 */
     function initSidebarToggle() {
         var btn = document.getElementById('sidebar-toggle');
-        if (!btn) return;
+        if (!btn || btn.dataset.toggleBound) return;
+        btn.dataset.toggleBound = '1';
         btn.addEventListener('click', function () {
             var wrap = document.getElementById('sidebar-wrap');
+            if (!wrap) return;
             var isOpen = wrap.style.width !== '0px';
-            wrap.style.width       = isOpen ? '0px'   : '224px';
-            wrap.style.marginRight = isOpen ? '-224px' : '0';
+            wrap.style.width = isOpen ? '0px' : '224px';
         });
     }
 

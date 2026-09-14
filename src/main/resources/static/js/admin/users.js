@@ -36,18 +36,10 @@ var showPwVisible = false;
 var userKeyword = '';
 
 // ── 모달 유틸 ─────────────────────────────────────────────────────
-function openModal(id) {
-    const modal = document.getElementById(id);
-    if (!modal) return;
-    modal.classList.remove('hidden');
-    const box = modal.querySelector('.anim-slideUp');
-    if (box) {
-        box.classList.remove('anim-slideUp');
-        void box.offsetWidth;
-        box.classList.add('anim-slideUp');
-    }
-}
-function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
+/** 공통 Modal 헬퍼로 모달을 연다 (안쪽 박스 slideUp 재생) */
+function openModal(id) { Modal.open(id); }
+/** 공통 Modal 헬퍼로 모달을 닫는다 (대칭 닫기 애니메이션) */
+function closeModal(id) { Modal.close(id); }
 
 // ── 렌더링 ───────────────────────────────────────────────────────
 function renderUsersPanel() {

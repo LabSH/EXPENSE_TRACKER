@@ -1,5 +1,6 @@
 package com.expenseTracker.fixedexpense.facade;
 
+import com.expenseTracker.account.service.AccountService;
 import com.expenseTracker.attachfile.service.AttachFileService;
 import com.expenseTracker.code.dto.CodeResponse;
 import com.expenseTracker.code.service.CodeService;
@@ -19,6 +20,7 @@ import java.util.List;
 public class FixedExpenseFacade {
 
     private final FixedExpenseService fixedExpenseService;
+    private final AccountService accountService;
     private final CodeService codeService;
     private final AttachFileService attachFileService;
 
@@ -39,14 +41,19 @@ public class FixedExpenseFacade {
         }
     }
 
-    /** 고정지출 화면 우측 패널 데이터(이번 달 요약 + 다가오는 지출 목록) 조회 */
+    /** 고정지출 화면 우측 패널 데이터(전체 기준) — 최초 페이지 로드용 */
     public FixedExpenseUpcomingResponse findUpcoming(String loginId) {
-        return fixedExpenseService.findUpcoming(loginId);
+        return findUpcoming(loginId, "", null, "");
     }
 
-    /** 결제수단 공통코드 목록 조회 */
-    public List<CodeResponse> findPaymentMethods() {
-        return codeService.findCodesByGroup(FixedExpenseService.PAYMENT_METHOD_GROUP_ID);
+    /** 고정지출 화면 우측 패널 데이터 — 목록과 동일한 검색 조건을 적용해 조회된 항목만 집계 */
+    public FixedExpenseUpcomingResponse findUpcoming(String loginId, String keyword, Long accountId, String expenseCycleCd) {
+        return fixedExpenseService.findUpcoming(loginId, keyword, accountId, expenseCycleCd);
+    }
+
+    /** 고정지출 계좌 드롭다운 옵션 조회 (라벨이 조립된 CodeResponse 형태) */
+    public List<CodeResponse> findAccountOptions(String loginId) {
+        return accountService.findMyAccountOptions(loginId);
     }
 
     /** 지출주기 공통코드 목록 조회 */
@@ -59,21 +66,21 @@ public class FixedExpenseFacade {
         return codeService.findCodesByGroup(FixedExpenseService.CATEGORY_GROUP_ID);
     }
 
-    /** 키워드/결제수단/지출주기 조건으로 고정지출 검색 */
+    /** 키워드/계좌/지출주기 조건으로 고정지출 검색 */
     public List<FixedExpenseResponse> searchFixedExpenses(String loginId, String keyword,
-                                                          String paymentMethodCd, String expenseCycleCd) {
-        return fixedExpenseService.searchFixedExpenses(loginId, keyword, paymentMethodCd, expenseCycleCd);
+                                                          Long accountId, String expenseCycleCd) {
+        return fixedExpenseService.searchFixedExpenses(loginId, keyword, accountId, expenseCycleCd);
     }
 
     /** 고정지출 등록 */
     public FixedExpenseResponse addFixedExpense(String loginId, AddFixedExpenseRequest req) {
-        return fixedExpenseService.addFixedExpense(loginId, req.paymentMethodCd(), req.expenseCycleCd(),
-                req.categoryCd(), req.anchorDt(), req.fileGroupId(), req.amount(), req.content(), req.memo());
+        return fixedExpenseService.addFixedExpense(loginId, req.accountId(), req.autoPayAt(), req.expenseCycleCd(),
+                req.categoryCd(), req.anchorDt(), req.endDt(), req.fileGroupId(), req.amount(), req.content(), req.memo());
     }
 
     /** 고정지출 수정 */
     public FixedExpenseResponse updateFixedExpense(String loginId, Long fixedExpenseId, AddFixedExpenseRequest req) {
-        return fixedExpenseService.updateFixedExpense(loginId, fixedExpenseId, req.paymentMethodCd(),
-                req.expenseCycleCd(), req.categoryCd(), req.anchorDt(), req.fileGroupId(), req.amount(), req.content(), req.memo());
+        return fixedExpenseService.updateFixedExpense(loginId, fixedExpenseId, req.accountId(), req.autoPayAt(),
+                req.expenseCycleCd(), req.categoryCd(), req.anchorDt(), req.endDt(), req.fileGroupId(), req.amount(), req.content(), req.memo());
     }
 }

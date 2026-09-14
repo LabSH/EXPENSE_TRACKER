@@ -1,5 +1,6 @@
 package com.expenseTracker.user.service;
 
+import com.expenseTracker.common.exception.BusinessException;
 import com.expenseTracker.user.dto.UserResponse;
 import com.expenseTracker.user.dto.UserStats;
 import com.expenseTracker.user.entity.User;
@@ -54,7 +55,7 @@ public class UserAdminService {
     @Transactional
     public UserResponse addUser(String loginId, String passwd, String userNm, String email, String roleCd, String adminId) {
         if (userRepository.findByLoginIdAndDelAt(loginId, "N").isPresent()) {
-            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+            throw new BusinessException("이미 사용 중인 아이디입니다.");
         }
         User user = User.builder()
                 .loginId(loginId)
@@ -108,7 +109,7 @@ public class UserAdminService {
     private User findActiveUser(String userId) {
         return userRepository.findById(userId)
                 .filter(u -> "N".equals(u.getDelAt()))
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException("사용자를 찾을 수 없습니다."));
     }
 
     /** User 엔티티를 응답 DTO로 변환 */

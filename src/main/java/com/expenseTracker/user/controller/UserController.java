@@ -1,5 +1,6 @@
 package com.expenseTracker.user.controller;
 
+import com.expenseTracker.common.exception.BusinessException;
 import com.expenseTracker.user.model.UserJoinForm;
 import com.expenseTracker.user.service.UserService;
 import jakarta.validation.Valid;
@@ -33,7 +34,7 @@ public class UserController {
         }
         try {
             userService.join(form);
-        } catch (IllegalArgumentException e) {
+        } catch (BusinessException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "user/join";
         }

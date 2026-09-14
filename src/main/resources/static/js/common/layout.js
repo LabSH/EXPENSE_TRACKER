@@ -4,14 +4,13 @@
  * templates/index.html 레이아웃 안에서 공통으로 사용된다.
  */
 
-let sidebarOpen = true;
 let currentActiveNav = 'dashboard';
 
 function toggleSidebar() {
-    sidebarOpen = !sidebarOpen;
     const wrapper = document.getElementById('sidebar-wrapper');
-    wrapper.style.width = sidebarOpen ? '224px' : '0px';
-    wrapper.style.marginRight = sidebarOpen ? '0' : '-224px';
+    if (!wrapper) return;
+    const isOpen = wrapper.style.width !== '0px';
+    wrapper.style.width = isOpen ? '0px' : '224px';
 }
 
 function movePill(btn) {

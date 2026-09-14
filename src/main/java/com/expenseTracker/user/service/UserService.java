@@ -1,5 +1,6 @@
 package com.expenseTracker.user.service;
 
+import com.expenseTracker.common.exception.BusinessException;
 import com.expenseTracker.user.entity.ConsentType;
 import com.expenseTracker.user.entity.User;
 import com.expenseTracker.user.entity.UserConsent;
@@ -32,7 +33,7 @@ public class UserService {
     @Transactional
     public void join(UserJoinForm form) {
         if (isLoginIdDuplicate(form.getLoginId())) {
-            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+            throw new BusinessException("이미 사용 중인 아이디입니다.");
         }
 
         User user = User.builder()

@@ -77,7 +77,7 @@
                 </div>
 
                 <!-- 레벨 드롭다운 -->
-                <div th:replace="~{fragments/dropdown :: dropdown('level', ${selectedLevelName}, ${codes['LOGLEVEL']}, 'admin')}"></div>
+                <div th:replace="~{fragments/dropdown :: dropdown('level', ${selectedLevelName}, ${codes['LOGLEVEL']}, 'admin', true)}"></div>
 
                 <div class="w-px h-5 bg-admin-border"></div>
                 <button onclick="searchLogs()"

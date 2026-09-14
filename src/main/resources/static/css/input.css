@@ -133,6 +133,19 @@
 .anim-toastIn  { animation: toastIn .38s cubic-bezier(.22, 1, .36, 1) both }
 .anim-toastOut { animation: toastOut .24s ease-in both }
 
+/* 공통 모달(js/common/modal.js) 전용.
+   열기는 페이지 <style>의 slideUp을 그대로 쓰고, 닫기만 여기서 정의해 열기/닫기를 대칭으로 맞춘다.
+   .anim-slideUp가 forwards라 닫을 때 modal.js가 안쪽 박스의 클래스를 slideUp→modalOut으로 교체한다.
+   modalOut = 안쪽 박스가 살짝 내려가며 사라짐, modalFadeOut = 바깥 컨테이너(백드롭 포함) 페이드아웃. */
+@keyframes modalOut {
+    to { opacity: 0; transform: translateY(16px) scale(.98); }
+}
+@keyframes modalFadeOut {
+    to { opacity: 0; }
+}
+.anim-modalOut     { animation: modalOut .18s ease-in forwards }
+.anim-modalFadeOut { animation: modalFadeOut .18s ease-in forwards }
+
 /* 토스트가 화면 밖으로 나간 동안 가로 스크롤이 생기지 않도록 막는다.
    앱 셸이 h-screen + overflow-hidden 구조라 가로 스크롤은 원래 쓰이지 않는다. */
 body { overflow-x: hidden; }

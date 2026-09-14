@@ -28,22 +28,34 @@ async function requestJson(url, opts = {}) {
     const headers = { 'Content-Type': 'application/json', ...opts.headers };
     if (method !== 'GET') headers['X-XSRF-TOKEN'] = getCsrfToken();
 
-    const res = await fetch(url, { ...opts, headers });
-    if (!res.ok) throw new Error(await errorMessage(res));
-    return res.status === 204 ? null : res.json();
+    Loading.begin();
+    try {
+        const res = await fetch(url, { ...opts, headers });
+        if (!res.ok) throw new Error(await errorMessage(res));
+        return res.status === 204 ? null : await res.json();
+    } finally {
+        Loading.end();
+    }
 }
+
+/** 서버 메시지를 못 쓸 때 보여줄 일반 문구 */
+const GENERIC_ERROR_MESSAGE = '요청을 처리하는 중 오류가 발생했습니다.';
 
 /**
  * 오류 응답에서 사용자에게 보여줄 메시지만 뽑는다.
- * 서버는 { success, data, message } 형태로 내려주므로 본문을 그대로 쓰면 JSON이 노출된다.
+ * 공통 AjaxResponse({ success:false, message }) 의 message 만 신뢰한다.
+ * 스프링 기본 /error 응답이나 비 JSON 본문(HTML 오류페이지·스택트레이스·SQL 등)은
+ * 내부 정보가 섞일 수 있으므로 절대 그대로 노출하지 않고 일반 문구로 대체한다.
  * @param {Response} res
  * @returns {Promise<string>}
  */
 async function errorMessage(res) {
     const body = await res.text().catch(() => '');
     try {
-        return JSON.parse(body).message || res.statusText;
-    } catch {
-        return body || res.statusText;
-    }
+        const parsed = JSON.parse(body);
+        if (parsed && parsed.success === false && typeof parsed.message === 'string' && parsed.message.trim()) {
+            return parsed.message;
+        }
+    } catch { /* JSON 아님 — 아래 일반 문구로 */ }
+    return GENERIC_ERROR_MESSAGE;
 }

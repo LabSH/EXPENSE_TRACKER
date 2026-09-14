@@ -6,15 +6,22 @@
     공통 드롭다운 Fragment
     파라미터:
       dropId      — HTML id prefix (예: 'level' → level-wrap, level-btn, level-dd)
-      placeholder — 전체 선택 시 표시될 기본 레이블
+      placeholder — 선택 안 됨 상태에서 표시될 기본 레이블
       items       — List<CodeResponse> (codeId, codeNm 접근 가능한 객체)
       theme       — 색상 톤. 'cream'(사용자 화면) | 그 외는 admin(기본).
                     calendar.js의 THEMES와 동일한 규칙.
                     이 fragment는 양쪽 화면에서 모두 렌더되므로 색을 하드코딩하지 말 것.
+      includeAll  — 첫 옵션 '전체'(코드 빈 값) 노출 여부.
+                    필터에는 true, 값을 반드시 고르는 입력 폼에는 false.
+                    false여도 Dropdown.reset 은 data-placeholder 로 라벨을 되돌린다.
+
+    동작(dropdown.js):
+      - 고를 옵션이 하나도 없으면(전체 옵션 포함 0개) 펼치지 않는다.
+      - 열림/닫힘에 따라 화살표(dropId-chevron)가 180도 회전한다.
 -->
-<div th:fragment="dropdown(dropId, placeholder, items, theme)"
+<div th:fragment="dropdown(dropId, placeholder, items, theme, includeAll)"
      th:id="${dropId + '-wrap'}"
-     th:attr="data-value=''"
+     th:attr="data-value='', data-placeholder=${placeholder}"
      th:with="cream=${theme == 'cream'},
               ctrlBorder=${theme == 'cream' ? 'border-cream-border' : 'border-admin-border'},
               ctrlHover=${theme == 'cream' ? 'hover:bg-cream-subtle' : 'hover:bg-admin-subtle'},
@@ -28,9 +35,9 @@
             th:classappend="${ctrlBorder + ' ' + ctrlHover}"
             onclick="Dropdown.toggle(this.dataset.dropId)"
             class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border text-sm text-ink transition-colors">
-        <span th:id="${dropId + '-label'}" th:text="${placeholder}">선택</span>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="ml-auto shrink-0">
+        <span th:id="${dropId + '-label'}" th:text="${placeholder}" class="truncate min-w-0">선택</span>
+        <svg th:id="${dropId + '-chevron'}" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="ml-auto shrink-0 transition-transform duration-200">
             <path d="M6 9l6 6 6-6"/>
         </svg>
     </button>
@@ -41,6 +48,7 @@
              class="border rounded-2xl shadow-xl p-1.5 min-w-[8rem]">
 
             <button type="button"
+                    th:if="${includeAll}"
                     th:attr="data-drop-id=${dropId}, data-name=${placeholder}"
                     data-code=""
                     th:classappend="${optHover}"

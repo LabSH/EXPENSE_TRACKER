@@ -17,6 +17,21 @@
 
         <div class="flex flex-col gap-5 max-w-3xl">
 
+            <!-- 계좌·카드 -->
+            <div class="bg-cream-surface border border-cream-border rounded-2xl overflow-hidden">
+                <div class="px-7 py-5 border-b border-cream-border">
+                    <h3 class="text-sm font-bold text-ink">계좌·카드</h3>
+                    <p class="text-xs text-ink-muted mt-0.5">고정지출이 어디서 빠져나가는지 고를 수 있게 등록해 두세요</p>
+                </div>
+                <div id="account-list"></div>
+                <div class="px-7 py-4">
+                    <button id="btn-open-account-modal"
+                            class="w-full py-1.5 rounded-xl border-2 border-dashed border-cream-border text-xs font-medium text-ink-muted hover:border-sage hover:text-sage transition-all">
+                        + 계좌·카드 추가
+                    </button>
+                </div>
+            </div>
+
             <!-- 데이터 관리 -->
             <div class="bg-cream-surface border border-cream-border rounded-2xl overflow-hidden">
                 <div class="px-7 py-5 border-b border-cream-border">
@@ -133,7 +148,62 @@
         </div>
     </main>
 
+    <!-- 계좌·카드 추가/수정 모달 -->
+    <div id="account-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-md">
+        <div class="anim-slideUp bg-cream-surface rounded-2xl w-full max-w-md mx-4 shadow-2xl overflow-hidden">
+            <div class="px-7 pt-6 pb-5 border-b border-cream-border bg-sage-light flex justify-between items-center">
+                <h2 id="account-modal-title" class="text-lg font-bold text-ink">계좌·카드 추가</h2>
+                <button id="btn-close-account-modal" class="w-8 h-8 rounded-full bg-cream-border flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="px-7 py-5 flex flex-col gap-4">
+                <div class="[&>div>button]:w-full">
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">유형 <span class="text-blush">*</span></label>
+                    <div th:replace="~{fragments/dropdown :: dropdown('account-type-dd', '선택', ${codes['ACCOUNTTYPE']}, 'cream', false)}"></div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">이름 <span class="text-blush">*</span></label>
+                    <input id="account-nm" maxlength="50" placeholder="생활비 카드"
+                           class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">발급기관 <span class="font-normal text-ink-muted">(선택)</span></label>
+                    <input id="account-issuer" maxlength="50" placeholder="국민, 신한"
+                           class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">메모 <span class="font-normal text-ink-muted">(선택)</span></label>
+                    <textarea id="account-memo" maxlength="200" rows="2" placeholder="참고용 메모 (카드번호·비밀번호 등 민감정보는 입력하지 마세요)"
+                              class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors resize-none leading-relaxed"></textarea>
+                </div>
+            </div>
+            <div class="px-7 pb-6 flex gap-2.5">
+                <button id="btn-cancel-account" class="flex-1 py-2.5 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
+                <button id="btn-submit-account" class="flex-[2] py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90 bg-sage border border-transparent">추가하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 계좌·카드 삭제 확인 모달 -->
+    <div id="account-delete-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-md">
+        <div class="anim-slideUp bg-cream-surface rounded-2xl w-full max-w-sm mx-4 shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-cream-border">
+                <h2 class="text-base font-bold text-ink">계좌·카드 삭제</h2>
+            </div>
+            <div class="px-6 py-5">
+                <p class="text-sm text-ink mb-1.5"><span id="account-delete-name" class="font-semibold text-blush"></span> 을(를) 삭제하시겠어요?</p>
+                <p class="text-xs text-ink-muted">이 계좌를 쓰는 고정지출이 있으면 삭제할 수 없어요.</p>
+            </div>
+            <div class="flex gap-2 px-6 pb-6">
+                <button id="btn-cancel-delete-account" class="flex-1 py-2.5 rounded-xl border border-cream-border text-sm font-medium text-ink-soft hover:bg-cream-subtle transition-colors">취소</button>
+                <button id="btn-confirm-delete-account" class="flex-[2] py-2.5 rounded-xl bg-blush text-white text-sm font-semibold hover:opacity-90 transition-opacity border border-transparent">삭제하기</button>
+            </div>
+        </div>
+    </div>
+
     <script th:src="@{/js/setting/index.js}"></script>
+    <script th:src="@{/js/setting/account.js}"></script>
 
 </th:block>
 </body>

@@ -5,6 +5,7 @@ import com.expenseTracker.attachfile.dto.AttachFileResponse;
 import com.expenseTracker.attachfile.entity.AttachFile;
 import com.expenseTracker.attachfile.entity.AttachFileId;
 import com.expenseTracker.attachfile.repository.AttachFileRepository;
+import com.expenseTracker.common.exception.BusinessException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -135,7 +136,7 @@ public class AttachFileService {
 
         return attachFileRepository.findById(id)
                 .filter(f -> "N".equals(f.getDelAt()))
-                .orElseThrow(() -> new IllegalArgumentException("파일을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException("파일을 찾을 수 없습니다."));
     }
 
     /** 저장경로로부터 다운로드 가능한 Resource를 로드 */
@@ -143,11 +144,11 @@ public class AttachFileService {
         try {
             Resource resource = new UrlResource(Path.of(attachFile.getFilePath()).toUri());
             if (!resource.exists() || !resource.isReadable()) {
-                throw new IllegalArgumentException("파일을 읽을 수 없습니다.");
+                throw new BusinessException("파일을 읽을 수 없습니다.");
             }
             return resource;
         } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("파일 경로가 올바르지 않습니다.");
+            throw new BusinessException("파일 경로가 올바르지 않습니다.");
         }
     }
 
@@ -186,12 +187,12 @@ public class AttachFileService {
     private void validateExtension(String fileExt) {
         if (!allowedExtensions.isEmpty()) {
             if (!allowedExtensions.contains(fileExt)) {
-                throw new IllegalArgumentException("허용되지 않는 파일 형식입니다: " + fileExt);
+                throw new BusinessException("허용되지 않는 파일 형식입니다: " + fileExt);
             }
             return;
         }
         if (blockedExtensions.contains(fileExt)) {
-            throw new IllegalArgumentException("허용되지 않는 파일 형식입니다: " + fileExt);
+            throw new BusinessException("허용되지 않는 파일 형식입니다: " + fileExt);
         }
     }
 
@@ -204,7 +205,7 @@ public class AttachFileService {
         byte[] header = readHeader(file, headerLen);
         boolean matched = signatures.stream().anyMatch(sig -> startsWith(header, sig));
         if (!matched) {
-            throw new IllegalArgumentException("파일 내용이 확장자와 일치하지 않습니다: " + fileExt);
+            throw new BusinessException("파일 내용이 확장자와 일치하지 않습니다: " + fileExt);
         }
     }
 

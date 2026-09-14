@@ -31,9 +31,13 @@ public class FixedExpense extends BaseEntity {
     @Comment("사용자ID")
     private String userId;
 
-    @Column(name = "PAYMENT_METHOD_CD", length = 30)
-    @Comment("결제수단코드")
-    private String paymentMethodCd;
+    @Column(name = "ACCOUNT_ID")
+    @Comment("계좌ID (TB_CO_ACCOUNT 참조)")
+    private Long accountId;
+
+    @Column(name = "AUTO_PAY_AT", length = 1)
+    @Comment("자동이체여부 (Y=자동이체, N=수동이체)")
+    private String autoPayAt;
 
     @Column(name = "EXPENSE_CYCLE_CD", length = 30)
     @Comment("지출주기코드")
@@ -46,6 +50,10 @@ public class FixedExpense extends BaseEntity {
     @Column(name = "ANCHOR_DT", nullable = false)
     @Comment("기준일(시작일) (다음 지출 예정일 계산 기준)")
     private LocalDate anchorDt;
+
+    @Column(name = "END_DT")
+    @Comment("종료일 (NULL이면 무기한. 이 날짜를 넘는 지출 예정일은 발생하지 않음)")
+    private LocalDate endDt;
 
     @Column(name = "AMOUNT", precision = 15, scale = 2, nullable = false)
     @Comment("금액")

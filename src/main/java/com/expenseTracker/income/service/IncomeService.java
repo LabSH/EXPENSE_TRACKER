@@ -2,6 +2,7 @@ package com.expenseTracker.income.service;
 
 import com.expenseTracker.code.entity.Code;
 import com.expenseTracker.code.repository.CodeRepository;
+import com.expenseTracker.common.exception.BusinessException;
 import com.expenseTracker.income.dto.IncomeResponse;
 import com.expenseTracker.income.repository.IncomeRepository;
 import com.expenseTracker.user.entity.User;
@@ -28,7 +29,7 @@ public class IncomeService {
     @Transactional(readOnly = true)
     public List<IncomeResponse> findMyIncomes(String loginId) {
         User user = userRepository.findByLoginIdAndDelAt(loginId, "N")
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException("사용자를 찾을 수 없습니다."));
 
         Map<String, String> incomeTypeNames = codeRepository.findByIdGroupId(INCOME_TYPE_GROUP_ID).stream()
                 .collect(Collectors.toMap(c -> c.getId().getCodeId(), Code::getCodeNm));

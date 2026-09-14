@@ -1,10 +1,20 @@
 # 다음 예정 작업
 
-> 최종 갱신: 2026-08-30
+> 최종 갱신: 2026-09-07
 
 ---
 
-## 1. 토스트 디자인 수정 ← **다음에 할 작업**
+## 0. 계좌·카드 — ACCOUNTTYPE 공통코드 DB 반영 ← **먼저 할 작업**
+
+설정 > 계좌·카드 > 추가 모달의 **유형 드롭다운이 비어 있음**. `ACCOUNTTYPE` 공통코드가 DB에 없어서다.
+(유형 옵션은 `CodeModelAdvice`가 주입하는 `codes['ACCOUNTTYPE']`로 렌더된다.)
+
+- `DATABASE/DML/TB_CO_CODE_ACCOUNTTYPE.sql` 실행 → 카드/입출금/저축/현금 등록
+- 계좌·카드 기능 전체 DB 반영 순서는 아래 "5. 계좌·카드 마이그레이션" 참고
+
+---
+
+## 1. 토스트 디자인 수정
 
 ### 현재 상태
 
@@ -106,3 +116,29 @@
 - **연체 항목 표시** — 현재 "다가오는 지출"에는 오늘 이후만 내려온다. 지난 날짜(미납)도 보여줄 거면 `feDday()`에 `지남` 라벨 추가 필요 (근거는 해당 함수 주석에 기록해 둠)
 - **`feFormatWon` 통합** — `renderFixedExpenses`와 `openFixedExpenseViewModal`이 금액 포맷을 인라인으로 중복 구현 중. 기존 동작 코드라 최소 변경 원칙으로 두었음
 - **`FixedExpenseService` 분리** — 313줄로 커짐. 주기 계산 로직을 별도 클래스로 뺄 수 있으나, 수입 도메인에도 필요해지는 시점이 적기
+
+---
+
+## 5. 계좌·카드 마이그레이션 (DB 스크립트 수동 실행)
+
+`ddl-auto=update`라 앱을 먼저 띄우면 COMMENT·DEFAULT 없는 테이블이 생성됨 → DDL을 앱 기동 전에 실행.
+
+1. `DATABASE/DDL/TB_CO_ACCOUNT.sql` — 테이블 생성
+2. `DATABASE/DML/TB_CO_CODE_ACCOUNTTYPE.sql` — ACCOUNTTYPE 공통코드 (← 항목 0)
+3. `DATABASE/DDL/TB_EX_FIXED_EXPENSE.sql` 하단의 `ADD COLUMN ACCOUNT_ID / AUTO_PAY_AT` 2줄
+4. `DATABASE/DML/TB_CO_ACCOUNT_MIGRATION.sql` — 사용자별 기본 계좌 생성 + 고정지출 4건 매핑. 마지막 검증 쿼리에서 `MAPPED = TOTAL` 확인
+5. 신규 앱 배포 (이 시점부터 앱이 `PAYMENT_METHOD_CD`를 안 읽음)
+6. `ALTER TABLE TB_EX_FIXED_EXPENSE DROP COLUMN PAYMENT_METHOD_CD`
+7. `DATABASE/DML/TB_CO_CODE_PAYMENTMETHOD_REMOVE.sql` — PAYMENTMETHOD 그룹 삭제
+
+### 개인정보 처리방침 반영
+
+- `TB_CO_ACCOUNT` 수집항목: 계좌명(별칭)·발급기관명·메모. 카드/계좌번호 뒤 4자리는 **수집하지 않기로 결정**(민감 식별자 회피).
+- `MEMO`는 자유 입력이라 사용자가 민감정보를 넣을 수 있음 → 입력란에 "민감정보 입력 금지" 안내 문구 배치(완료). 처리방침에도 "메모는 참고용, 민감정보 입력 금지" 고지 필요.
+- 회원 탈퇴 시 `TB_CO_ACCOUNT` 행 파기 대상에 포함(현재 고정지출·수입도 미연동 — 함께 정리 필요).
+
+### 미검증 (DB 반영 + 구동 후 확인)
+
+- 설정 계좌·카드 CRUD, 유형별 아이콘·색, 계좌 사용 중일 때 삭제 차단(400)
+- 고정지출 입력 화면 계좌 드롭다운 렌더·저장, 상세 모달 "이체방식" 표시
+- 우측 "지출 예정" 패널에서 수동이체 건 강조(왼쪽 gold 바 + "직접이체" 칩)

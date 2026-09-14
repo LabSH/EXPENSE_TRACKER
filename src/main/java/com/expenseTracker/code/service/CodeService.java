@@ -7,6 +7,7 @@ import com.expenseTracker.code.entity.CodeGroup;
 import com.expenseTracker.code.entity.CodeId;
 import com.expenseTracker.code.repository.CodeGroupRepository;
 import com.expenseTracker.code.repository.CodeRepository;
+import com.expenseTracker.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,7 +85,7 @@ public class CodeService {
     @Transactional
     public GroupResponse updateGroup(String groupId, String groupNm, String userId) {
         CodeGroup group = codeGroupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("그룹을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException("그룹을 찾을 수 없습니다."));
         group.setGroupNm(groupNm);
         group.setUpdUserId(userId);
         return new GroupResponse(groupId, groupNm, codeRepository.countByIdGroupId(groupId));
@@ -101,7 +102,7 @@ public class CodeService {
     @Transactional
     public CodeResponse addCode(String groupId, String codeNm, int sortSn, String useAt, String userId) {
         CodeGroup codeGroup = codeGroupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("그룹을 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException("그룹을 찾을 수 없습니다."));
 
         String codeId = generateNextCodeId(groupId);
 
@@ -122,7 +123,7 @@ public class CodeService {
     @Transactional
     public CodeResponse updateCode(String codeId, String groupId, String codeNm, int sortSn, String useAt, String userId) {
         Code code = codeRepository.findById(CodeId.builder().codeId(codeId).groupId(groupId).build())
-                .orElseThrow(() -> new IllegalArgumentException("코드를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException("코드를 찾을 수 없습니다."));
         code.setCodeNm(codeNm);
         code.setSortSn(sortSn);
         code.setUseAt(useAt);
@@ -136,7 +137,7 @@ public class CodeService {
     public void deleteCode(String codeId, String groupId) {
         CodeId id = CodeId.builder().codeId(codeId).groupId(groupId).build();
         if (!codeRepository.existsById(id)) {
-            throw new IllegalArgumentException("코드를 찾을 수 없습니다.");
+            throw new BusinessException("코드를 찾을 수 없습니다.");
         }
         codeRepository.deleteById(id);
     }

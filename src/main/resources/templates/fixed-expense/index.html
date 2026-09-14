@@ -2,6 +2,12 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <body>
 <th:block th:fragment="content">
+    <style>
+        /* 검색바 계좌 필터: 선택 전엔 너무 좁고, 긴 계좌명 선택 시 무한정 늘어나 필터바가 밀리므로 폭을 고정한다.
+           라벨 span의 truncate(공통 fragment)와 함께 상한을 넘으면 "…"로 잘린다. */
+        #fe-account-filter-btn { min-width: 10rem; max-width: 15rem; }
+        #fe-cycle-filter-btn   { min-width: 6rem; }
+    </style>
     <main class="flex-1 overflow-y-auto h-screen p-9">
         <div class="flex items-center gap-3.5 mb-8">
             <button onclick="toggleSidebar()" class="w-8 h-8 rounded-xl border border-cream-border bg-cream-surface flex items-center justify-center text-ink-soft hover:bg-cream-subtle transition-colors shrink-0">
@@ -20,8 +26,9 @@
 
             <!-- 필터 바 -->
             <div class="px-6 py-3 border-b border-cream-border flex items-center gap-3 flex-wrap">
-                <div th:replace="~{fragments/dropdown :: dropdown('fe-payment-filter', '결제수단', ${paymentMethods}, 'cream')}"></div>
-                <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-filter', '주기', ${expenseCycles}, 'cream')}"></div>
+                <!-- 계좌 옵션 라벨("이름 (기관 ****1234)")은 서버(AccountService.findMyAccountOptions)에서 조립해 CodeResponse로 내려준다 -->
+                <div th:replace="~{fragments/dropdown :: dropdown('fe-account-filter', '계좌', ${accountOptions}, 'cream', true)}"></div>
+                <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-filter', '주기', ${expenseCycles}, 'cream', true)}"></div>
 
                 <div class="relative">
                     <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted pointer-events-none" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -49,7 +56,7 @@
 
             <!-- 컬럼 헤더 -->
             <div class="grid px-6 py-3 bg-cream-subtle border-b border-cream-border text-xs font-semibold text-ink-muted uppercase tracking-wide" style="grid-template-columns:1fr 140px 120px 130px 70px">
-                <span>내용</span><span>결제수단</span><span>지출주기</span><span>금액</span><span class="text-right">관리</span>
+                <span>내용</span><span>계좌·카드</span><span>지출주기</span><span>금액</span><span class="text-right">관리</span>
             </div>
 
             <!-- 목록 -->
@@ -108,29 +115,45 @@
                 </button>
             </div>
 
-            <!-- 본문 -->
-            <div class="px-6 py-5 space-y-3">
-                <div class="grid grid-cols-[100px_1fr] gap-x-4 gap-y-3 text-sm">
-                    <span class="text-ink-muted">내용</span>
-                    <span id="fe-view-content" class="text-ink break-all"></span>
-
-                    <span class="text-ink-muted">결제수단</span>
-                    <span id="fe-view-payment" class="text-ink"></span>
-
-                    <span class="text-ink-muted">지출주기</span>
-                    <span id="fe-view-cycle" class="text-ink"></span>
-
-                    <span class="text-ink-muted">카테고리</span>
-                    <span id="fe-view-category" class="text-ink"></span>
-
-                    <span class="text-ink-muted">기준일(시작일)</span>
-                    <span id="fe-view-anchor" class="text-ink"></span>
-
-                    <span class="text-ink-muted">다음 지출일</span>
-                    <span id="fe-view-next" class="text-ink"></span>
-
-                    <span class="text-ink-muted">금액</span>
-                    <span id="fe-view-amount" class="font-semibold text-ink"></span>
+            <!-- 본문 — 한 행에 2개씩, 라벨(작게)+값 스택으로 높이를 낮춘다 -->
+            <div class="px-6 py-4 space-y-3">
+                <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+                    <div class="col-span-2">
+                        <p class="text-2xs-1 text-ink-muted mb-0.5">내용</p>
+                        <p id="fe-view-content" class="text-sm text-ink break-all"></p>
+                    </div>
+                    <div>
+                        <p class="text-2xs-1 text-ink-muted mb-0.5">계좌·카드</p>
+                        <p id="fe-view-account" class="text-sm text-ink"></p>
+                    </div>
+                    <div>
+                        <p class="text-2xs-1 text-ink-muted mb-0.5">이체방식</p>
+                        <p id="fe-view-autopay" class="text-sm text-ink"></p>
+                    </div>
+                    <div>
+                        <p class="text-2xs-1 text-ink-muted mb-0.5">지출주기</p>
+                        <p id="fe-view-cycle" class="text-sm text-ink"></p>
+                    </div>
+                    <div>
+                        <p class="text-2xs-1 text-ink-muted mb-0.5">카테고리</p>
+                        <p id="fe-view-category" class="text-sm text-ink"></p>
+                    </div>
+                    <div>
+                        <p class="text-2xs-1 text-ink-muted mb-0.5">기준일(시작일)</p>
+                        <p id="fe-view-anchor" class="text-sm text-ink"></p>
+                    </div>
+                    <div>
+                        <p class="text-2xs-1 text-ink-muted mb-0.5">종료일</p>
+                        <p id="fe-view-end" class="text-sm text-ink"></p>
+                    </div>
+                    <div>
+                        <p class="text-2xs-1 text-ink-muted mb-0.5">다음 지출일</p>
+                        <p id="fe-view-next" class="text-sm text-ink"></p>
+                    </div>
+                    <div>
+                        <p class="text-2xs-1 text-ink-muted mb-0.5">금액</p>
+                        <p id="fe-view-amount" class="text-sm font-semibold text-ink"></p>
+                    </div>
                 </div>
 
                 <!-- 메모 (있을 때만) -->
@@ -178,15 +201,39 @@
                 </div>
             </div>
             <div class="px-7 py-5 flex flex-col gap-4">
-                <div class="grid grid-cols-3 gap-4 items-end [&>div>div>button]:w-full">
+                <div class="grid grid-cols-[1fr_auto] gap-4 items-end [&>div>div>button]:w-full">
                     <div>
-                        <label class="block text-xs font-medium text-ink-soft mb-1.5">결제수단</label>
-                        <div th:replace="~{fragments/dropdown :: dropdown('fe-payment-dd', '선택', ${paymentMethods}, 'cream')}"></div>
+                        <label class="block text-xs font-medium text-ink-soft mb-1.5">계좌·카드 <span class="text-blush">*</span></label>
+                        <!-- 옵션 라벨("이름 (기관 ****1234)")은 서버(AccountService.findMyAccountOptions)에서 조립한다 -->
+                        <div th:replace="~{fragments/dropdown :: dropdown('fe-account-dd', '선택', ${accountOptions}, 'cream', false)}"></div>
+                    </div>
+                    <!-- 자동이체: 카드 전체가 클릭 영역. 체크 시 sage-light로 반응.
+                         빈 라벨 줄로 옆 계좌 드롭다운 입력부와 세로 정렬한다 (grid items-end) -->
+                    <div>
+                        <span class="block text-xs mb-1.5" aria-hidden="true">&nbsp;</span>
+                        <!-- 패딩·보더는 옆 드롭다운 버튼과 동일. 글자는 다른 폼 라벨과 같은 text-xs,
+                             leading-5로 라인박스만 20px 확보해 높이(34px)를 드롭다운과 맞춘다 -->
+                        <label class="group flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream-surface cursor-pointer select-none whitespace-nowrap transition-colors hover:border-sage-mid has-[:checked]:border-sage has-[:checked]:bg-sage-light has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-sage/15">
+                            <input type="checkbox" id="fe-autopay" class="peer sr-only">
+                            <span class="grid place-items-center w-4.5 h-4.5 shrink-0 rounded-md border-hairline border-ink-muted bg-cream text-white transition-colors peer-checked:border-sage peer-checked:bg-sage">
+                                <svg class="w-3 h-3 opacity-0 scale-50 transition-all group-has-[:checked]:opacity-100 group-has-[:checked]:scale-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                            </span>
+                            <span class="text-xs font-medium text-ink-soft leading-5 transition-colors peer-checked:text-ink">자동이체</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 items-end [&>div>div>button]:w-full">
+                    <div>
+                        <label class="block text-xs font-medium text-ink-soft mb-1.5">지출주기 <span class="text-blush">*</span></label>
+                        <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-dd', '선택', ${expenseCycles}, 'cream', false)}"></div>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-ink-soft mb-1.5">지출주기</label>
-                        <div th:replace="~{fragments/dropdown :: dropdown('fe-cycle-dd', '선택', ${expenseCycles}, 'cream')}"></div>
+                        <label class="block text-xs font-medium text-ink-soft mb-1.5">카테고리 <span class="text-blush">*</span></label>
+                        <div th:replace="~{fragments/dropdown :: dropdown('fe-category-dd', '선택', ${categories}, 'cream', false)}"></div>
                     </div>
+                </div>
+                <!-- 기준일·종료일은 함께 읽어야 하므로 한 행에 묶고 간격을 좁힌다 -->
+                <div class="grid grid-cols-[1fr_1fr_auto] gap-3 items-end">
                     <div>
                         <label class="block text-xs font-medium text-ink-soft mb-1.5">기준일(시작일) <span class="text-blush">*</span></label>
                         <div class="relative" id="fe-anchor-dt-wrap">
@@ -198,13 +245,22 @@
                             <div id="fe-anchor-dt-cal" class="hidden z-50 anim-slideDown"></div>
                         </div>
                     </div>
+                    <div>
+                        <label class="block text-xs font-medium text-ink-soft mb-1.5">종료일 <span class="font-normal text-ink-muted">(선택)</span></label>
+                        <div class="relative" id="fe-end-dt-wrap">
+                            <button type="button" id="fe-end-dt-btn" onclick="togglePicker('fe-end-dt')"
+                                    class="w-full flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink hover:bg-cream-subtle transition-colors">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4m8-4v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+                                <span id="fe-end-dt-label">무기한</span>
+                            </button>
+                            <div id="fe-end-dt-cal" class="hidden z-50 anim-slideDown"></div>
+                        </div>
+                    </div>
+                    <!-- 종료일·기준일·주기가 모두 정해지면 총 회차를 즉시 보여준다 -->
+                    <span id="fe-total-installments" class="pb-2 text-xs font-semibold text-sage whitespace-nowrap"></span>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-ink-soft mb-1.5">카테고리</label>
-                    <div th:replace="~{fragments/dropdown :: dropdown('fe-category-dd', '선택', ${categories}, 'cream')}"></div>
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-ink-soft mb-1.5">금액</label>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">금액 <span class="text-blush">*</span></label>
                     <div class="relative">
                         <input type="text" inputmode="numeric" id="fe-amount" placeholder="0"
                                class="w-full px-3.5 py-1.5 pr-8 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
@@ -212,7 +268,7 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-ink-soft mb-1.5">내용</label>
+                    <label class="block text-xs font-medium text-ink-soft mb-1.5">내용 <span class="text-blush">*</span></label>
                     <input id="fe-content"
                            class="w-full px-3.5 py-1.5 rounded-xl border border-cream-border bg-cream text-sm text-ink outline-none focus:border-sage transition-colors">
                 </div>
@@ -244,8 +300,19 @@
         var UPCOMING = /*[[${upcoming}]]*/ { summary: {}, upcoming: [] };
     </script>
     <script>
+    // htmx는 swap마다 이 조각의 인라인 스크립트를 전역 스코프에서 다시 실행한다.
+    // IIFE로 감싸 최상위 const/let 재선언 SyntaxError를 막고 전역 오염을 없앤다.
+    // 인라인 onclick에서 참조하는 핸들러만 아래에서 window에 노출한다.
+    (function () {
+        'use strict';
+
         var feFileGroupId = '';
         var feAttachedFiles = [];
+        // 첨부파일은 저장 시점에 확정한다.
+        //  - feStagedRemovalIds: 모달에서 "삭제"한 파일. 저장 성공 시 실제 삭제, 취소 시 폐기
+        //  - feSessionUploadIds: 이 모달에서 올린 파일. 저장 시 유지, 취소 시 삭제
+        var feStagedRemovalIds = [];
+        var feSessionUploadIds = [];
         var feEditingId = null;
         var feDeletingId = null;
         var feCurrentList = FIXED_EXPENSES;
@@ -269,8 +336,14 @@
                 return `
                     <div class="group grid items-center px-6 py-4 cursor-pointer hover:bg-cream-subtle transition-colors ${border}" style="grid-template-columns:1fr 140px 120px 130px 70px"
                          onclick="openFixedExpenseViewModal(${fe.fixedExpenseId})">
-                        <span class="text-sm text-ink">${feEscapeHtml(fe.content)}</span>
-                        <span class="text-sm text-ink-soft">${feEscapeHtml(fe.paymentMethodNm) || '-'}</span>
+                        <span class="flex items-center gap-2 min-w-0">
+                            <span class="text-sm text-ink truncate">${feEscapeHtml(fe.content)}</span>
+                            ${fe.ended ? `<span class="shrink-0 px-1.5 py-0.5 rounded-md bg-cream-subtle text-ink-muted text-2xs-1 font-semibold">종료</span>` : ''}
+                        </span>
+                        <span class="flex items-center gap-1.5 min-w-0">
+                            <span class="text-sm text-ink-soft truncate">${feEscapeHtml(fe.accountNm) || '-'}</span>
+                            ${fe.autoPayAt === 'Y' ? `<span class="shrink-0 px-1.5 py-0.5 rounded-md bg-sage-light text-sage text-2xs-1 font-semibold">자동</span>` : ''}
+                        </span>
                         <span class="text-sm text-ink-soft">${feEscapeHtml(fe.expenseCycleNm) || '-'}</span>
                         <span class="text-sm font-semibold text-ink">${Math.round(Number(fe.amount)).toLocaleString('ko-KR')}원</span>
                         <span class="flex justify-end gap-1.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
@@ -326,6 +399,64 @@
             document.getElementById('fe-summary-remaining').textContent = feFormatWon(summary.remaining);
         }
 
+        /**
+         * 회차 라벨. 총 회차를 알면 "3/12회", 무기한이면 "3회차".
+         * 매일·매주·격주는 서버가 installmentNo를 null로 내려주므로 아무것도 붙이지 않는다.
+         */
+        /*
+         * 모달에서 총 회차를 즉시 보여주기 위한 클라이언트 계산.
+         * 서버 FixedExpenseService 의 occurrenceOf / totalInstallmentsOf 와 같은 규칙이므로
+         * 한쪽만 바꾸면 화면과 저장 결과가 어긋난다. 주기 코드는 TB_CO_CODE_EXPENSECYCLE 기준.
+         */
+        const FE_CYCLE_MONTHS = {
+            'EXPENSECYCLE_004': 1,   // 매월
+            'EXPENSECYCLE_005': 2,   // 격월
+            'EXPENSECYCLE_006': 3,   // 분기
+            'EXPENSECYCLE_007': 6,   // 반기
+            'EXPENSECYCLE_008': 12,  // 매년
+        };
+
+        /** 기준일의 일자가 대상 월의 마지막 날보다 크면 마지막 날로 당긴다 (서버 clampToMonth 와 동일) */
+        function feClampToMonth(year, monthIndex, day) {
+            const lastDay = new Date(year, monthIndex + 1, 0).getDate();
+            return new Date(year, monthIndex, Math.min(day, lastDay));
+        }
+
+        /** 기준일~종료일 사이 총 회차. 월 기반 주기가 아니거나 값이 비면 null */
+        function feTotalInstallments(anchorDt, endDt, cycleCd) {
+            const months = FE_CYCLE_MONTHS[cycleCd];
+            if (!months || !anchorDt || !endDt) return null;
+
+            const anchor = new Date(`${anchorDt}T00:00:00`);
+            const end = new Date(`${endDt}T00:00:00`);
+            if (end < anchor) return null;
+
+            let index = 0;
+            let due = anchor;
+            while (due < end) {
+                index++;
+                due = feClampToMonth(anchor.getFullYear(), anchor.getMonth() + months * index, anchor.getDate());
+            }
+            return (due > end ? index - 1 : index) + 1;
+        }
+
+        /** 모달의 기준일·종료일·주기가 바뀔 때마다 총 회차 표시를 갱신한다 */
+        function feUpdateTotalInstallments() {
+            const total = feTotalInstallments(
+                CalendarPicker.getDate('fe-anchor-dt'),
+                CalendarPicker.getDate('fe-end-dt'),
+                Dropdown.getValue('fe-cycle-dd'));
+            document.getElementById('fe-total-installments').textContent = total != null ? `총 ${total}회` : '';
+        }
+
+        function feInstallmentLabel(fe) {
+            if (fe.installmentNo == null) return '';
+            const text = fe.totalInstallments != null
+                ? `${fe.installmentNo}/${fe.totalInstallments}회`
+                : `${fe.installmentNo}회차`;
+            return ` · ${text}`;
+        }
+
         function renderFeUpcoming(list) {
             const box = document.getElementById('fe-upcoming-list');
             if (list.length === 0) {
@@ -337,28 +468,57 @@
                 const border = i < list.length - 1 ? 'border-b border-cream-border' : '';
                 const dday = feDday(fe.nextDueDt);
                 const [, mm, dd] = fe.nextDueDt.split('-');
+                // 수동이체 건은 "직접 이체해야 할 일"이라 왼쪽 액센트 바 + 태그로 구분한다
+                const manual = fe.autoPayAt !== 'Y';
                 return `
-                    <div class="flex items-center gap-3 px-6 py-3.5 ${border}">
+                    <div class="flex items-center gap-3 px-6 py-3.5 ${border} ${manual ? 'border-l-2 border-l-gold' : ''}">
                         <span class="w-11 shrink-0 text-xs font-bold ${dday.cls}">${dday.label}</span>
                         <div class="min-w-0 flex-1">
-                            <p class="text-sm text-ink truncate">${feEscapeHtml(fe.content)}</p>
-                            <p class="text-xs text-ink-muted">${Number(mm)}/${Number(dd)} · ${feEscapeHtml(fe.expenseCycleNm)}</p>
+                            <p class="flex items-center gap-1.5 min-w-0">
+                                <span class="text-sm text-ink truncate">${feEscapeHtml(fe.content)}</span>
+                                ${manual ? `<span class="shrink-0 px-1.5 py-0.5 rounded-md bg-cream-subtle text-ink-soft text-2xs-1 font-semibold">직접이체</span>` : ''}
+                            </p>
+                            <p class="text-xs text-ink-muted">${Number(mm)}/${Number(dd)} · ${feEscapeHtml(fe.expenseCycleNm)}${feInstallmentLabel(fe)}</p>
                         </div>
                         <span class="shrink-0 text-sm font-semibold text-ink">${feFormatWon(fe.amount)}</span>
                     </div>`;
             }).join('');
         }
 
-        async function searchFixedExpenses() {
-            const keyword = document.getElementById('fe-keyword').value.trim();
-            const paymentMethodCd = Dropdown.getValue('fe-payment-filter');
-            const expenseCycleCd = Dropdown.getValue('fe-cycle-filter');
-            const params = new URLSearchParams({ keyword, paymentMethodCd, expenseCycleCd });
+        /**
+         * 현재 필터 입력값을 검색 쿼리스트링으로 만든다.
+         * accountId는 Long으로 바인딩되므로 빈 값이면 파라미터 자체를 빼야 서버가 400을 내지 않는다.
+         */
+        function feFilterParams() {
+            const params = new URLSearchParams();
+            params.set('keyword', document.getElementById('fe-keyword').value.trim());
+            const accountId = Dropdown.getValue('fe-account-filter');
+            if (accountId) params.set('accountId', accountId);
+            params.set('expenseCycleCd', Dropdown.getValue('fe-cycle-filter'));
+            return params;
+        }
 
+        /**
+         * 현재 필터로 목록과 우측 패널(요약·다가오는 지출)을 함께 조회해 다시 그린다.
+         * 우측 패널도 같은 필터를 태워 "현재 조회된 고정지출"만 반영한다.
+         * @returns {Promise<Array>} 조회된 목록 (건수 표시용)
+         */
+        async function loadFixedExpenses() {
+            const query = feFilterParams().toString();
+            const [list, upcoming] = await Promise.all([
+                feApi(`/fixed-expense/data?${query}`),
+                feApi(`/fixed-expense/upcoming?${query}`),
+            ]);
+            renderFixedExpenses(list);
+            renderFeSummary(upcoming.summary);
+            renderFeUpcoming(upcoming.upcoming);
+            return list;
+        }
+
+        async function searchFixedExpenses() {
             try {
-                const result = await feApi(`/fixed-expense/data?${params}`);
-                renderFixedExpenses(result);
-                Toast.info('조회되었습니다.', `총 ${result.length}건`);
+                const list = await loadFixedExpenses();
+                Toast.info('조회되었습니다.', `총 ${list.length}건`);
             } catch (e) {
                 Toast.error('에러가 발생하였습니다.', e.message);
             }
@@ -366,13 +526,25 @@
 
         async function resetFixedExpenseFilter() {
             document.getElementById('fe-keyword').value = '';
-            Dropdown.reset('fe-payment-filter');
+            Dropdown.reset('fe-account-filter');
             Dropdown.reset('fe-cycle-filter');
 
             try {
-                const result = await feApi('/fixed-expense/data');
-                renderFixedExpenses(result);
-                Toast.info('초기화되었습니다.', `총 ${result.length}건`);
+                const list = await loadFixedExpenses();
+                Toast.info('초기화되었습니다.', `총 ${list.length}건`);
+            } catch (e) {
+                Toast.error('에러가 발생하였습니다.', e.message);
+            }
+        }
+
+        /**
+         * 추가/수정/삭제 후 목록과 우측 패널을 서버 최신 데이터로 다시 그린다.
+         * 프래그먼트를 통째로 리로드(htmx.ajax)하면 인라인 스크립트가 전역에서 재실행되므로
+         * 데이터만 JSON으로 받아 갱신한다. 현재 필터 입력값은 유지한다.
+         */
+        async function refreshFixedExpenses() {
+            try {
+                await loadFixedExpenses();
             } catch (e) {
                 Toast.error('에러가 발생하였습니다.', e.message);
             }
@@ -387,22 +559,30 @@
             const method = (opts.method || 'GET').toUpperCase();
             const headers = { 'Content-Type': 'application/json' };
             if (method !== 'GET') headers['X-XSRF-TOKEN'] = feCsrf();
-            const res = await fetch(url, { ...opts, headers });
-            if (!res.ok) throw new Error(await feErrorMessage(res));
-            return res.status === 204 ? null : res.json();
+            Loading.begin();
+            try {
+                const res = await fetch(url, { ...opts, headers });
+                if (!res.ok) throw new Error(await feErrorMessage(res));
+                return res.status === 204 ? null : await res.json();
+            } finally {
+                Loading.end();
+            }
         }
 
         /**
          * 오류 응답에서 사용자에게 보여줄 메시지만 뽑는다.
-         * 서버는 { success, data, message } 형태로 내려주므로 본문을 그대로 쓰면 JSON이 노출된다.
+         * 공통 AjaxResponse({ success:false, message }) 의 message 만 신뢰하고,
+         * 스프링 기본 /error·비 JSON 본문(HTML·스택트레이스·SQL 등)은 노출하지 않고 일반 문구로 대체한다.
          */
         async function feErrorMessage(res) {
             const body = await res.text().catch(() => '');
             try {
-                return JSON.parse(body).message || res.statusText;
-            } catch {
-                return body || res.statusText;
-            }
+                const parsed = JSON.parse(body);
+                if (parsed && parsed.success === false && typeof parsed.message === 'string' && parsed.message.trim()) {
+                    return parsed.message;
+                }
+            } catch { /* JSON 아님 */ }
+            return '요청을 처리하는 중 오류가 발생했습니다.';
         }
 
         function feFormatFileSize(bytes) {
@@ -411,11 +591,17 @@
             return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
         }
 
+
         function renderFeFileList() {
             const box = document.getElementById('fe-file-list');
             box.innerHTML = feAttachedFiles.map(f => `
                 <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-cream border border-cream-border text-xs">
-                    <span class="truncate text-ink" title="${feEscapeHtml(f.orgFileNm)}">${feEscapeHtml(f.orgFileNm)}</span>
+                    <button type="button" title="${feEscapeHtml(f.orgFileNm)}"
+                            data-fgid="${feEscapeHtml(f.fileGroupId)}" data-fid="${feEscapeHtml(f.fileId)}" data-fname="${feEscapeHtml(f.orgFileNm)}"
+                            class="flex items-center gap-1.5 min-w-0 text-ink hover:text-sage transition-colors">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                        <span class="truncate">${feEscapeHtml(f.orgFileNm)}</span>
+                    </button>
                     <span class="flex items-center gap-2 shrink-0 ml-2">
                         <span class="text-ink-muted">${feFormatFileSize(f.fileSize)}</span>
                         <button type="button" class="text-ink-muted hover:text-blush transition-colors" onclick="removeFeFile('${f.fileId}')">삭제</button>
@@ -436,6 +622,7 @@
                 const uploaded = await res.json();
                 if (uploaded.length > 0) feFileGroupId = uploaded[0].fileGroupId;
                 feAttachedFiles = feAttachedFiles.concat(uploaded);
+                feSessionUploadIds.push(...uploaded.map(f => f.fileId));
                 renderFeFileList();
             } catch (err) {
                 Toast.error('에러가 발생하였습니다.', err.message);
@@ -463,14 +650,39 @@
             feUploadFiles(Array.from(e.dataTransfer.files));
         }
 
-        async function removeFeFile(fileId) {
-            try {
-                await feApi(`/files/${feFileGroupId}/${fileId}`, { method: 'DELETE' });
-                feAttachedFiles = feAttachedFiles.filter(f => f.fileId !== fileId);
-                renderFeFileList();
-            } catch (err) {
-                Toast.error('에러가 발생하였습니다.', err.message);
-            }
+        /**
+         * 화면에서만 제거하고 삭제를 스테이징한다. 실제 삭제는 저장 시점(commitFeFileChanges).
+         * feSessionUploadIds 는 건드리지 않는다 — 이 모달에서 올렸다가 뺀 파일도 취소 시엔 지워야 하므로.
+         */
+        function removeFeFile(fileId) {
+            feAttachedFiles = feAttachedFiles.filter(f => f.fileId !== fileId);
+            if (!feStagedRemovalIds.includes(fileId)) feStagedRemovalIds.push(fileId);
+            renderFeFileList();
+        }
+
+        /** 파일ID 목록을 병렬 삭제 (best-effort). 실패한 건 수를 반환한다. */
+        async function feDeleteFiles(ids) {
+            const results = await Promise.allSettled(
+                ids.map(id => feApi(`/files/${feFileGroupId}/${id}`, { method: 'DELETE' })));
+            return results.filter(r => r.status === 'rejected').length;
+        }
+
+        /** 저장 성공 후: 스테이징된 삭제를 실제 반영하고 첨부 상태를 초기화한다. */
+        async function commitFeFileChanges() {
+            const toRemove = feStagedRemovalIds;
+            feStagedRemovalIds = [];
+            feSessionUploadIds = [];
+            if (!toRemove.length) return;
+            const failed = await feDeleteFiles(toRemove);
+            if (failed) console.warn(`첨부파일 ${failed}건 정리 실패`);
+        }
+
+        /** 취소/닫기: 이 모달에서 올린 파일을 지우고, 스테이징된 삭제는 폐기한다. */
+        async function revertFeFileChanges() {
+            const toRemove = feSessionUploadIds;
+            feStagedRemovalIds = [];
+            feSessionUploadIds = [];
+            if (toRemove.length) await feDeleteFiles(toRemove);
         }
 
         async function openFixedExpenseViewModal(id) {
@@ -478,10 +690,12 @@
             if (!fe) return;
 
             document.getElementById('fe-view-content').textContent = fe.content || '-';
-            document.getElementById('fe-view-payment').textContent = fe.paymentMethodNm || '-';
+            document.getElementById('fe-view-account').textContent = fe.accountNm || '-';
+            document.getElementById('fe-view-autopay').textContent = fe.autoPayAt === 'Y' ? '자동이체' : '수동이체';
             document.getElementById('fe-view-cycle').textContent = fe.expenseCycleNm || '-';
             document.getElementById('fe-view-category').textContent = fe.categoryNm || '-';
             document.getElementById('fe-view-anchor').textContent = fe.anchorDt || '-';
+            document.getElementById('fe-view-end').textContent = fe.endDt || '무기한';
             document.getElementById('fe-view-next').textContent = fe.nextDueDt || '-';
             document.getElementById('fe-view-amount').textContent =
                 `${Math.round(Number(fe.amount)).toLocaleString('ko-KR')}원`;
@@ -491,17 +705,22 @@
 
             document.getElementById('fe-view-file-list').innerHTML = '';
             document.getElementById('fe-view-file-wrap').classList.add('hidden');
-            document.getElementById('fixed-expense-view-modal').classList.remove('hidden');
+            Modal.open('fixed-expense-view-modal');
 
             if (fe.fileGroupId) {
                 try {
                     const files = await feApi(`/files/${fe.fileGroupId}`);
                     if (files.length > 0) {
                         document.getElementById('fe-view-file-list').innerHTML = files.map(f => `
-                            <div class="flex items-center justify-between px-3 py-2 rounded-lg bg-cream border border-cream-border text-xs">
-                                <span class="truncate text-ink" title="${feEscapeHtml(f.orgFileNm)}">${feEscapeHtml(f.orgFileNm)}</span>
-                                <span class="text-ink-muted shrink-0 ml-2">${feFormatFileSize(f.fileSize)}</span>
-                            </div>`).join('');
+                            <button type="button" title="${feEscapeHtml(f.orgFileNm)}"
+                                    data-fgid="${feEscapeHtml(f.fileGroupId)}" data-fid="${feEscapeHtml(f.fileId)}" data-fname="${feEscapeHtml(f.orgFileNm)}"
+                                    class="flex items-center justify-between gap-2 w-full px-3 py-2 rounded-lg bg-cream border border-cream-border text-xs text-left hover:border-sage hover:bg-cream-subtle transition-colors">
+                                <span class="flex items-center gap-1.5 min-w-0">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-ink-muted"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                                    <span class="truncate text-ink">${feEscapeHtml(f.orgFileNm)}</span>
+                                </span>
+                                <span class="text-ink-muted shrink-0">${feFormatFileSize(f.fileSize)}</span>
+                            </button>`).join('');
                         document.getElementById('fe-view-file-wrap').classList.remove('hidden');
                     }
                 } catch (err) {
@@ -511,24 +730,29 @@
         }
 
         function closeFixedExpenseViewModal() {
-            document.getElementById('fixed-expense-view-modal').classList.add('hidden');
+            Modal.close('fixed-expense-view-modal');
         }
 
         function openFixedExpenseModal() {
             feEditingId = null;
             feFileGroupId = '';
             feAttachedFiles = [];
+            feStagedRemovalIds = [];
+            feSessionUploadIds = [];
             document.getElementById('fe-modal-title').textContent = '추가';
             document.getElementById('btn-submit-fixed-expense').textContent = '추가하기';
-            Dropdown.reset('fe-payment-dd');
+            Dropdown.reset('fe-account-dd');
             Dropdown.reset('fe-cycle-dd');
             Dropdown.reset('fe-category-dd');
+            document.getElementById('fe-autopay').checked = false;
             CalendarPicker.reset('fe-anchor-dt');
+            CalendarPicker.reset('fe-end-dt');
+            feUpdateTotalInstallments();
             document.getElementById('fe-amount').value = '';
             document.getElementById('fe-content').value = '';
             document.getElementById('fe-memo').value = '';
             renderFeFileList();
-            document.getElementById('fixed-expense-modal').classList.remove('hidden');
+            Modal.open('fixed-expense-modal');
         }
 
         async function openEditFixedExpenseModal(id) {
@@ -538,18 +762,28 @@
             feEditingId = fe.fixedExpenseId;
             feFileGroupId = fe.fileGroupId || '';
             feAttachedFiles = [];
+            feStagedRemovalIds = [];
+            feSessionUploadIds = [];
 
             document.getElementById('fe-modal-title').textContent = '수정';
             document.getElementById('btn-submit-fixed-expense').textContent = '저장하기';
-            Dropdown.select('fe-payment-dd', fe.paymentMethodCd || '', fe.paymentMethodNm || '선택');
+            // 드롭다운 옵션 라벨("이름 (기관 ****1234)")은 서버가 조립하므로 렌더된 옵션에서 그대로 읽는다
+            const feAccountOpt = fe.accountId != null
+                ? document.querySelector(`#fe-account-dd-dd [data-code="${fe.accountId}"]`)
+                : null;
+            Dropdown.select('fe-account-dd', fe.accountId != null ? String(fe.accountId) : '',
+                feAccountOpt ? feAccountOpt.dataset.name : (fe.accountNm || '선택'));
+            document.getElementById('fe-autopay').checked = fe.autoPayAt === 'Y';
             Dropdown.select('fe-cycle-dd', fe.expenseCycleCd || '', fe.expenseCycleNm || '선택');
             Dropdown.select('fe-category-dd', fe.categoryCd || '', fe.categoryNm || '선택');
             CalendarPicker.setDate('fe-anchor-dt', fe.anchorDt || '');
+            CalendarPicker.setDate('fe-end-dt', fe.endDt || '');
+            feUpdateTotalInstallments();
             document.getElementById('fe-amount').value = fe.amount ? Math.round(Number(fe.amount)).toLocaleString('ko-KR') : '';
             document.getElementById('fe-content').value = fe.content || '';
             document.getElementById('fe-memo').value = fe.memo || '';
             renderFeFileList();
-            document.getElementById('fixed-expense-modal').classList.remove('hidden');
+            Modal.open('fixed-expense-modal');
 
             if (feFileGroupId) {
                 try {
@@ -562,11 +796,14 @@
         }
 
         function closeFixedExpenseModal() {
-            document.getElementById('fixed-expense-modal').classList.add('hidden');
-            document.getElementById('fe-payment-dd-dd')?.classList.add('hidden');
+            Modal.close('fixed-expense-modal');
+            document.getElementById('fe-account-dd-dd')?.classList.add('hidden');
             document.getElementById('fe-cycle-dd-dd')?.classList.add('hidden');
             document.getElementById('fe-category-dd-dd')?.classList.add('hidden');
             CalendarPicker.closeAll();
+            // 저장 없이 닫으면 이 모달에서 올린 파일을 되돌린다 (스테이징된 삭제는 폐기).
+            // 저장 경로에서는 submitFixedExpense가 먼저 commit하여 목록이 비므로 아무것도 지우지 않는다.
+            revertFeFileChanges();
         }
 
         /** 삭제할 고정지출 항목명을 표시하고 삭제 확인 모달을 연다 */
@@ -576,13 +813,13 @@
 
             feDeletingId = fe.fixedExpenseId;
             document.getElementById('fe-delete-name').textContent = fe.content || '';
-            document.getElementById('fixed-expense-delete-modal').classList.remove('hidden');
+            Modal.open('fixed-expense-delete-modal');
         }
 
         /** 삭제 확인 모달을 닫고 삭제 대상 상태를 초기화한다 */
         function closeDeleteFixedExpenseModal() {
             feDeletingId = null;
-            document.getElementById('fixed-expense-delete-modal').classList.add('hidden');
+            Modal.close('fixed-expense-delete-modal');
         }
 
         /** 삭제 확인 버튼 클릭 시 고정지출을 삭제하고 목록/요약을 갱신한다 */
@@ -593,7 +830,7 @@
                 await feApi(`/fixed-expense/${feDeletingId}`, { method: 'DELETE' });
                 closeDeleteFixedExpenseModal();
                 Toast.delete('삭제되었습니다.');
-                htmx.ajax('GET', '/fixed-expense', '#main-content');
+                await refreshFixedExpenses();
             } catch (e) {
                 Toast.error('에러가 발생하였습니다.', e.message);
             }
@@ -608,14 +845,23 @@
             const amountVal = document.getElementById('fe-amount').value.replace(/,/g, '');
             const content = document.getElementById('fe-content').value.trim();
             const memo = document.getElementById('fe-memo').value.trim();
+            const accountId = Dropdown.getValue('fe-account-dd');
+            const expenseCycleCd = Dropdown.getValue('fe-cycle-dd');
+            const categoryCd = Dropdown.getValue('fe-category-dd');
             const anchorDt = CalendarPicker.getDate('fe-anchor-dt');
-            if (!anchorDt || !content || !amountVal) { Toast.error('기준일(시작일), 내용, 금액을 입력해주세요.'); return; }
+            // 메모·자동이체·종료일·첨부파일을 제외한 값은 모두 필수
+            if (!accountId || !expenseCycleCd || !categoryCd || !anchorDt || !content || !amountVal) {
+                Toast.error('계좌·카드, 지출주기, 카테고리, 기준일(시작일), 내용, 금액을 모두 입력해주세요.');
+                return;
+            }
 
             const body = JSON.stringify({
-                paymentMethodCd: Dropdown.getValue('fe-payment-dd') || null,
-                expenseCycleCd: Dropdown.getValue('fe-cycle-dd') || null,
-                categoryCd: Dropdown.getValue('fe-category-dd') || null,
+                accountId: Number(accountId),
+                autoPayAt: document.getElementById('fe-autopay').checked ? 'Y' : 'N',
+                expenseCycleCd,
+                categoryCd,
                 anchorDt,
+                endDt: CalendarPicker.getDate('fe-end-dt') || null,
                 fileGroupId: feFileGroupId || null,
                 amount: Number(amountVal),
                 content,
@@ -628,10 +874,10 @@
                 } else {
                     await feApi('/fixed-expense', { method: 'POST', body });
                 }
-                // htmx가 #main-content를 갈아끼워도 토스트 컨테이너는 body 직속이라 살아남는다
+                await commitFeFileChanges();
                 Toast.success(feEditingId ? '수정되었습니다.' : '추가되었습니다.');
                 closeFixedExpenseModal();
-                htmx.ajax('GET', '/fixed-expense', '#main-content');
+                await refreshFixedExpenses();
             } catch (e) {
                 Toast.error('에러가 발생하였습니다.', e.message);
             }
@@ -640,7 +886,16 @@
         renderFixedExpenses(FIXED_EXPENSES);
         renderFeSummary(UPCOMING.summary);
         renderFeUpcoming(UPCOMING.upcoming);
-        CalendarPicker.init(['fe-anchor-dt'], 'cream');
+        CalendarPicker.init(['fe-anchor-dt', 'fe-end-dt'], 'cream');
+
+        // Dropdown·CalendarPicker의 팝업은 body로 옮겨져 모달 click 이벤트에 안 잡힌다.
+        // 값이 반영되는 라벨(기준일·종료일·주기) 텍스트 변화를 관찰해 총 회차를 다시 계산한다.
+        // 관찰 대상이 모두 이 조각 안의 요소라 htmx 재전환 시 옵저버가 함께 정리된다.
+        const feInstallmentObserver = new MutationObserver(feUpdateTotalInstallments);
+        ['fe-anchor-dt-label', 'fe-end-dt-label', 'fe-cycle-dd-label'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) feInstallmentObserver.observe(el, { childList: true, characterData: true, subtree: true });
+        });
 
         document.getElementById('btn-open-fixed-expense-modal').addEventListener('click', openFixedExpenseModal);
         document.getElementById('btn-close-fixed-expense-modal').addEventListener('click', closeFixedExpenseModal);
@@ -656,6 +911,17 @@
         document.getElementById('fe-file-dropzone').addEventListener('dragover', onFeFileDragOver);
         document.getElementById('fe-file-dropzone').addEventListener('dragleave', onFeFileDragLeave);
         document.getElementById('fe-file-dropzone').addEventListener('drop', onFeFileDrop);
+        // 파일 행 클릭 시 다운로드 (공통 AttachFile). 위임이라 목록 재렌더에도 유지된다
+        AttachFile.bindList(document.getElementById('fe-file-list'));
+        AttachFile.bindList(document.getElementById('fe-view-file-list'));
+
+        // 정적 마크업 + 렌더 결과의 인라인 onclick에서 참조하므로 전역으로 노출한다.
+        window.openFixedExpenseViewModal = openFixedExpenseViewModal;
+        window.openEditFixedExpenseModal = openEditFixedExpenseModal;
+        window.openDeleteFixedExpenseModal = openDeleteFixedExpenseModal;
+        window.removeFeFile = removeFeFile;
+        window.closeFixedExpenseViewModal = closeFixedExpenseViewModal;
+    }());
     </script>
 </th:block>
 </body>

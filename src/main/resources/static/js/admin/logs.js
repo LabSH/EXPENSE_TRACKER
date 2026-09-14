@@ -136,14 +136,10 @@ function openLogDetail(index) {
     document.getElementById('detail-error').textContent     = log.errorMsg    || '—';
     document.getElementById('detail-error-wrap').classList.toggle('hidden', !log.errorMsg);
 
-    document.getElementById('log-detail-modal').classList.remove('hidden');
-
-    const box = document.querySelector('#log-detail-modal .anim-slideUp');
-    box.classList.remove('anim-slideUp');
-    void box.offsetWidth;
-    box.classList.add('anim-slideUp');
+    Modal.open('log-detail-modal');
 }
 
+/** 로그 상세 모달을 닫는다 */
 function closeLogDetail() {
-    document.getElementById('log-detail-modal').classList.add('hidden');
+    Modal.close('log-detail-modal');
 }
